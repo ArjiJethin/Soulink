@@ -25,7 +25,7 @@ Soulink is an empathetic, AI-powered journaling app that helps people reflect on
 4. Dashboard visualizes emotional trends, streaks, and gamified stats.  
 5. Avatars & nicknames personalize the experience.  
 
-## 🚀 Setup Instructions  
+## Setup Instructions  
 ### 1. Clone the repo  
 ```bash
 git clone https://github.com/your-username/Soulink.git
