@@ -51,7 +51,7 @@ uvicorn app:app --reload
 ```
 
 ## Developers:
-<a href="https://github.com/ArjiJethin">@Arji Jethin Naga Sai Eswar Status:Dead</a><br> 
-<a href="https://github.com/alurubalakarthikeya">@Aluru Bala Karthikeya - Nothing beats a Jet 2 holiday</a><br>
-<a href="https://github.com/Veda-1503">@Vedeshwari Nakate aka The Einstien</a><br>
-<a href="https://github.com/ayushsingh08-ds">@Ayush Singh The Nigga</a><br>
+<a href="https://github.com/ArjiJethin">@Arji Jethin Naga Sai Eswar</a><p> Status: Dead</p><br> 
+<a href="https://github.com/alurubalakarthikeya">@Aluru Bala Karthikeya</a><p> - Nothing beats a Jet 2 holiday</p><br>
+<a href="https://github.com/Veda-1503">@Vedeshwari Nakate</a><p> aka The Einstien</p><br>
+<a href="https://github.com/ayushsingh08-ds">@Ayush Singh</a><p> The Nigga</p><br>
