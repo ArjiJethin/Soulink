@@ -8,6 +8,7 @@ Soulink is an empathetic, AI-powered journaling app that helps people reflect on
 - Character Companions → Interact with fun avatars and personalities to make journaling engaging with your real life characters.  
 - AI-Generated Nicknames & Tags → Reflect your unique identity with creative nicknames for yourself and your friends.  
 - Gamified Dashboard → Earn streaks, badges, and rewards for consistent journaling.  
+- Lumos AI - Your Personal AI therapist helps you with mental health concerns (if any exists).
 
 ## Tech Stack  
 - Frontend: React.js, Vite, CSS  
