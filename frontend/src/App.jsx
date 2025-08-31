@@ -5,6 +5,7 @@ import Preferences from "./pages/Preferences";
 import "./App.css";
 
 function App() {
+  document.addEventListener("contextmenu", (e) => e.preventDefault());
   return (
     <Router>
       <Routes>
