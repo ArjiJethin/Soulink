@@ -1,0 +1,304 @@
+.landing {
+  background-color: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 0;
+  text-align: center;
+  box-shadow: none;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.card {
+  display: flex;
+  flex-direction: row;
+  background: #fff;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: hidden;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.card-left {
+  flex: 1;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: left;
+}
+
+.logo {
+  width: 150px;
+  margin-bottom: 20px;
+}
+
+h1.app-name {
+  font-size: 3vh;
+  font-weight: 700;
+  color: #202124;
+  margin-bottom: 0.5rem;
+}
+
+.tagline {
+  margin-top: 8px;
+  font-size: 16px;
+  text-align: justify;
+  color: #ffffff;
+  line-height: 1.5;
+}
+
+.card-right {
+  flex: 1;
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.mascot {
+  width: 200px;
+  margin-bottom: 20px;
+}
+
+.card-right h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.google-btn {
+  width: 80%;
+  background: #4285f4;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.email-btn {
+  width: 80%;
+  background: rgba(211, 211, 211, 0.18);
+  border: 1px solid #ddd;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 16px;
+}
+
+.alt-option {
+  font-size: 14px;
+  color: #ffffff;
+  margin-bottom: 8px;
+}
+.login-text a {
+  color: #4285f4;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    min-height: 100vh;
+  }
+
+  .google-btn,
+  .email-btn {
+    width: 100%;
+  }
+
+  .card-left {
+    padding: 40px 20px 10px 20px;
+    text-align: center;
+    align-items: center;
+  }
+
+  .card-right {
+    padding: 20px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .landing {
+    position: relative;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  }
+
+  .login-text {
+  font-size: 0.7rem;
+  color: #ffffff;
+}
+
+
+  .bg-circle {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.6;
+  }
+
+  .bg-blue {
+    background: #4286f48c;
+    top: 10%;
+    left: 0%;
+  }
+
+  .bg-red {
+    background: #ea44357e;
+    bottom: 15%;
+    right: 5%;
+  }
+
+  .bg-yellow {
+    background: #fbbd057d;
+    top: 10%;
+    right: 30%;
+  }
+
+  .bg-green {
+    background: #34a85369;
+    bottom: 0%;
+    left: 20%;
+  }
+
+  .buttons button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .card {
+    width: 1200px;
+    min-height: 600px;
+    border-radius: 12px;
+    background: rgba(156, 156, 156, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(66, 66, 66, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(68, 83, 171, 0.5);
+  }
+
+  .logo {
+    width: 200px;
+  }
+
+  .mascot {
+    width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing {
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background: #fff;
+  }
+
+  .bg-circle {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+  }
+
+  .bg-blue {
+    background: #4286f4af;
+    top: -10%;
+    left: -10%;
+  }
+
+  .bg-red {
+    background: #ea443592;
+    bottom: -5%;
+    right: -10%;
+  }
+
+  .bg-yellow {
+    background: #effb058b;
+    top: 25%;
+    right: -15%;
+  }
+
+  .bg-green {
+    background: #34a85380;
+    bottom: -15%;
+    left: -10%;
+  }
+
+  .logo {
+    width: 120px;
+    margin-bottom: 1rem;
+  }
+
+  h1.app-name {
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    text-align: center;
+  }
+
+  .tagline {
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .mascot {
+    width: 180px;
+    margin: 1.5rem 0;
+  }
+
+  .google-btn,
+  .email-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+    margin-bottom: 12px;
+  }
+
+  .alt-option {
+    margin: 12px 0 6px 0;
+  }
+
+  .login-text {
+    font-size: 0.2rem;
+    text-align: center;
+  }
+}
+

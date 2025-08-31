@@ -1,42 +1,105 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: #f1f3f4; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.landing {
+  background-color: #ffffff;
+  padding: 2.5rem 2rem;
   text-align: center;
+  width: 100vw;
+  height: 100vh;
+  box-shadow: 0 2px 10px rgba(60, 64, 67, 0.15), 0 4px 8px rgba(60, 64, 67, 0.1);
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.landing h1 {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+  color: #202124;
+  font-weight: 700;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.landing p {
+  font-size: 1rem;
+  margin-bottom: 2rem;
+  color: #363636; 
+}
+
+
+.buttons {
+  display: flex;
+  flex-direction: column; 
+  gap: 0.8rem;
+}
+
+button {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+Route{
+  width: 100%;
+}
+
+button:hover {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+}
+
+button:first-of-type {
+  background-color: #1a73e8;
+  color: #fff;
+  font-weight: 500;
+}
+
+button:last-of-type {
+  background-color: #ffffff;
+  color: #1a73e8;
+  border: 1px solid #dadce0;
+  font-weight: 500;
+}
+
+Navbar {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .landing {
+    padding: 1.5rem 1rem;
+    height: auto;
   }
-  to {
-    transform: rotate(360deg);
+
+  .landing h1 {
+    font-size: 2.5rem;
   }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+  .landing p {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .buttons {
+    gap: 0.6rem;
+  }
 
-.read-the-docs {
-  color: #888;
+  button {
+    font-size: 0.9rem;
+    padding: 0.65rem 0.8rem;
+  }
+  
 }
