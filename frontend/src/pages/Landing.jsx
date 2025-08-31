@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import "./page-styles/Landing.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,7 +10,13 @@ import Cartoon from "../assets/imgs/cartoon.png";
 import Droplet from "../assets/imgs/flame.png";
 
 function Landing() {
-  const [formType, setFormType] = useState(null); // null | "signup" | "login"
+    const navigate = useNavigate();
+
+  const handleSignup = (e) => {
+    e.preventDefault();
+    navigate("/Preferences"); // instantly redirect
+  };
+  const [formType, setFormType] = useState(null); 
 
   const renderForm = () => {
     if (formType === "signup") {
@@ -19,7 +26,7 @@ function Landing() {
           <input type="text" placeholder="Name" required />
           <input type="email" placeholder="Email" required />
           <input type="password" placeholder="Password" required />
-          <button type="submit">Create Account</button>
+          <button type="submit" onClick={handleSignup}>Create Account</button>
           <p>
             Already have an account?{" "}
             <span className="form-switch" onClick={() => setFormType("login")}>
