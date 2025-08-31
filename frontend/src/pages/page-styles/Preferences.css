@@ -10,7 +10,6 @@
   padding: 2rem;
 }
 
-/* Background circles */
 .bg-circle {
   position: absolute;
   border-radius: 50%;
@@ -48,7 +47,8 @@
 }
 
 .auth-form {
-  width: 100%;
+  width: 100vw;
+  height: 100vh;
   border-radius: 1rem;
   display: flex;
   flex-direction: column;
@@ -165,7 +165,6 @@ button:hover {
   }
 }
 
-/* Mobile first */
 @media (max-width: 600px) {
   .auth-form {
     max-width: 100%;
@@ -200,7 +199,6 @@ button:hover {
   }
 }
 
-/* Tablet */
 @media (min-width: 601px) and (max-width: 1024px) {
   .auth-form {
     max-width: 700px;
@@ -223,7 +221,6 @@ button:hover {
   }
 }
 
-/* Large Desktop */
 @media (min-width: 1200px) {
   .auth-form {
     max-width: 1000px;

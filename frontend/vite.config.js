@@ -11,8 +11,8 @@ export default defineConfig({
         name: 'Soulink',
         short_name: 'Soulink',
         description: 'Your AI Diary Companion',
-        theme_color: '#ffffff',
-        background_color: '#ffffff',
+        theme_color: '#ebebebff',
+        background_color: '#efefefff',
         display: 'standalone',
         orientation: 'portrait',
         icons: [

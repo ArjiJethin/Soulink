@@ -14,7 +14,7 @@ function Landing() {
 
   const handleSignup = (e) => {
     e.preventDefault();
-    navigate("/Preferences"); // instantly redirect
+    navigate("/Preferences");
   };
   const [formType, setFormType] = useState(null); 
 
