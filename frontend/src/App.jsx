@@ -1,6 +1,7 @@
-// App.jsx
+
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Landing from "./assets/pages/Landing";
+import Landing from "./pages/Landing";
+import Preferences from "./pages/Preferences";
 import "./App.css";
 
 function App() {
@@ -8,6 +9,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/preferences" element={<Preferences />} />
       </Routes>
     </Router>
   );
