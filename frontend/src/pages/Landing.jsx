@@ -49,8 +49,16 @@ function Landing() {
           <img src={Cartoon} alt="Mascot" className="mascot" />
           <h2>Join the Soulink community</h2>
 
+          {/*
           <button className="google-btn">
             <FontAwesomeIcon icon={faGoogle} /> Sign up with Google
+          </button>
+          */}
+          <button
+            className="google-btn"
+            onClick={() => setFormType("login")}
+          >
+            <FontAwesomeIcon icon={faUser} /> Log in with Email
           </button>
           <button
             className="email-btn"
@@ -58,12 +66,6 @@ function Landing() {
           >
             <FontAwesomeIcon icon={faUser} /> Sign up with Email
           </button>
-          <p className="login-text">
-            Already have an account?{" "}
-            <span className="form-switch" onClick={() => setFormType("login")}>
-              Log in
-            </span>
-          </p>
         </>
       );
     }

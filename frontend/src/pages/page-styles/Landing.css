@@ -89,6 +89,7 @@ h1.app-name {
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1000000;
 }
 
 .app-name {
@@ -114,6 +115,7 @@ h1.app-name {
   color: #4285f4;
   cursor: pointer;
   font-weight: 600;
+  z-index: 1000000;
 }
 
 
@@ -127,7 +129,13 @@ h1.app-name {
   border-radius: 8px;
   cursor: pointer;
   margin-bottom: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px; 
+  z-index: 100;
 }
+
 
 .alt-option {
   font-size: 14px;
@@ -200,7 +208,7 @@ h1.app-name {
 
   .bg-blue {
     background: #4286f48c;
-    top: 10%;
+    top: 25%;
     left: 0%;
   }
 
@@ -212,7 +220,7 @@ h1.app-name {
 
   .bg-yellow {
     background: #fbbd057d;
-    top: 10%;
+    top: 25%;
     right: 30%;
   }
 
@@ -274,19 +282,19 @@ h1.app-name {
 
   .bg-blue {
     background: #4286f4af;
-    top: -10%;
+    top: 20%;
     left: -10%;
   }
 
   .bg-red {
-    background: #ea443592;
-    bottom: -5%;
-    right: -10%;
+    background: #ea4435be;
+    bottom: -10%;
+    right: 10%;
   }
 
   .bg-yellow {
-    background: #effb058b;
-    top: 25%;
+    background: #effb0597;
+    top: 35%;
     right: -15%;
   }
 
