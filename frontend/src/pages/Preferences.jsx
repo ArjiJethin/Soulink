@@ -2,16 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./page-styles/Preferences.css";
 
-// Import avatar images
-import avatar1 from "../assets/imgs/avatar/row-1-column-1.png";
-import avatar2 from "../assets/imgs/avatar/row-1-column-2.png";
-import avatar3 from "../assets/imgs/avatar/row-1-column-3.png";
-import avatar4 from "../assets/imgs/avatar/row-2-column-1.png";
-import avatar5 from "../assets/imgs/avatar/row-2-column-2.png";
-import avatar6 from "../assets/imgs/avatar/row-2-column-3.png";
-import avatar7 from "../assets/imgs/avatar/row-3-column-1.png";
-import avatar8 from "../assets/imgs/avatar/row-3-column-2.png";
-import avatar9 from "../assets/imgs/avatar/row-3-column-3.png";
+import diary from "../assets/imgs/diary.png";
+import avatar1 from "../../RAW/gp1.png";
+import avatar2 from "../../RAW/gp2.png";
+import avatar3 from "../../RAW/bp1.png";
+import avatar4 from "../../RAW/bp2.png";
 
 export default function Preferences() {
   const [diaryOption, setDiaryOption] = useState("Diary");
@@ -27,11 +22,6 @@ export default function Preferences() {
     { id: "avatar2", name: "Calm", image: avatar2, description: "Peaceful and centered" },
     { id: "avatar3", name: "Wise", image: avatar3, description: "Thoughtful and intelligent" },
     { id: "avatar4", name: "Adventurous", image: avatar4, description: "Bold and confident" },
-    { id: "avatar5", name: "Creative", image: avatar5, description: "Artistic and imaginative" },
-    { id: "avatar6", name: "Nature Lover", image: avatar6, description: "Connected to nature" },
-    { id: "avatar7", name: "Energetic", image: avatar7, description: "Dynamic and lively" },
-    { id: "avatar8", name: "Mystical", image: avatar8, description: "Spiritual and intuitive" },
-    { id: "avatar9", name: "Professional", image: avatar9, description: "Focused and determined" }
   ];
 
   const handleNext = () => {
@@ -75,30 +65,47 @@ export default function Preferences() {
         </p>
 
         <div className="input-group">
-          <label htmlFor="username" className="input-label">
-            Username
-          </label>
-          <input
-            type="text"
-            id="username"
-            placeholder="Enter your username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+          <div className="flex-row">
+            <div className="sub-flex">
+              <label htmlFor="username" className="input-label">
+                Username
+              </label>
+              <input
+                type="text"
+                id="username"
+                placeholder="Enter your username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="sub-flex">
+              <label htmlFor="interests" className="input-label">
+                Interests
+              </label>
+              <input
+                type="text"
+                id="interests"
+                placeholder="Enter your interests"
+                value={interests}
+                onChange={(e) => setInterests(e.target.value)}
+              />
+            </div>
+            <div className="sub-flex">
+              <label htmlFor="characters" className="input-label">
+                Characters
+              </label>
+              <input
+                type="text"
+                id="characters"
+                placeholder="Enter important people (comma separated)"
+                value={characters}
+                onChange={(e) => setCharacters(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="input-group">
-          <label htmlFor="interests" className="input-label">
-            Interests
-          </label>
-          <input
-            type="text"
-            id="interests"
-            placeholder="Enter your interests"
-            value={interests}
-            onChange={(e) => setInterests(e.target.value)}
-          />
-        </div>
+
 
         <div className="section">
           <p className="section-title">Choose Your Avatar:</p>
@@ -122,7 +129,7 @@ export default function Preferences() {
         </div>
 
         <div className="section">
-          <p className="section-title">Diary Type:</p>
+          <p className="section-title">Journal Type:</p>
           <div className="toggle-buttons">
             <button
               className={`toggle-btn ${diaryOption === "Diary" ? "active" : ""}`}
@@ -137,23 +144,12 @@ export default function Preferences() {
               Questionnaire
             </button>
           </div>
+          <div className="type-info">
+            <img src={diaryOption === "Diary" ? {diary} : {avatar2}} alt="image" />
+            <p>{diaryOption === "Diary" ? "Write free-form entries about your day." : "Answer daily questions to reflect on your experiences."}</p>
+          </div>
         </div>
-
-        <div className="input-group">
-          <label htmlFor="characters" className="input-label">
-            Important real life characters
-          </label>
-          <input
-            type="text"
-            id="characters"
-            placeholder="Enter important people (comma separated)"
-            value={characters}
-            onChange={(e) => setCharacters(e.target.value)}
-          />
-          <small className="input-hint">
-            Example: Mom, Best Friend, Teacher
-          </small>
-        </div>
+        <br />
 
         <button onClick={handleNext}>Next</button>
       </div>
