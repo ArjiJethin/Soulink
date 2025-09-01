@@ -1,0 +1,997 @@
+{
+  "session_id": "session_2025-09-01_cce8887e",
+  "created_at": "2025-09-01T01:11:18.186972",
+  "user_id": "default_user",
+  "journals": [
+    {
+      "id": 1,
+      "content": "hi im ayush",
+      "sentiment_score": 0.5,
+      "sentiment_label": "neutral",
+      "mood": "calm",
+      "created_at": "2025-09-01T01:11:18.286252"
+    },
+    {
+      "id": 2,
+      "content": "tonight I feel my energy level is around 6/10 and my mood is calm with a hint of tiredness. Today I learned/tested how to structure hackathon themes effectively and noticed how small design tweaks make a big difference in presentation quality. The best part of my day was brainstorming creative website elements, while I think I could improve on managing my breaks to avoid late-night fatigue tomorrow. I am grateful for a productive study session, good conversations with friends, and fresh ideas for my projects. My plan for tomorrow is to focus on finishing one prototype and polishing my event plan, and ensure I rest well by sleeping at 11:30 PM. My mind feels clear and slightly reflective as I prepare to sleep.",
+      "sentiment_score": 0.6541666666666667,
+      "sentiment_label": "positive",
+      "mood": "happy",
+      "created_at": "2025-09-01T01:12:27.510123"
+    },
+    {
+      "id": 3,
+      "content": "Tonight I feel my energy level is around 4/10 and my mood is heavy and a little lost. Today I went through some moments that didn’t feel right, and I kept thinking about things I can’t fully control. The best part of my day was a small quiet moment where I felt okay, while I think I could improve on finding ways to handle my emotions instead of holding them in tomorrow. I am grateful for having someone to talk to, a space to express myself, and the strength to keep going even when I feel low. My plan for tomorrow is to focus on something small but positive and ensure I rest well by sleeping at a decent time. My mind feels a little heavy but hopeful as I prepare to sleep.",
+      "sentiment_score": 0.5347943722943723,
+      "sentiment_label": "positive",
+      "mood": "calm",
+      "created_at": "2025-09-01T01:13:08.328554"
+    },
+    {
+      "id": 4,
+      "content": "Tonight I feel my energy level is around 4/10 and my mood is heavy and a little lost. Today I went through some moments that didn’t feel right, and I kept thinking about things I can’t fully control. The best part of my day was a small quiet moment where I felt okay, while I think I could improve on finding ways to handle my emotions instead of holding them in tomorrow. I am grateful for having someone to talk to, a space to express myself, and the strength to keep going even when I feel low. My plan for tomorrow is to focus on something small but positive and ensure I rest well by sleeping at a decent time. My mind feels a little heavy but hopeful as I prepare to sleep.",
+      "sentiment_score": 0.5347943722943723,
+      "sentiment_label": "positive",
+      "mood": "calm",
+      "created_at": "2025-09-01T01:21:51.949366"
+    },
+    {
+      "id": 5,
+      "content": "Tonight I feel my energy level is around 3/10 and my mood is disappointed. I had a bad day because I missed an important opportunity—I was supposed to present an idea in class, but I froze and forgot my points. The best part of my day was a friend saying, “It’s okay, you’ll do better next time.” I think I could improve on preparing more confidently tomorrow. I’m grateful for supportive people, the chance to try again, and the lessons failure teaches. My mind feels heavy but ready to bounce back.",
+      "sentiment_score": 0.5711111111111111,
+      "sentiment_label": "positive",
+      "mood": "happy",
+      "created_at": "2025-09-01T01:22:48.081657"
+    },
+    {
+      "id": 6,
+      "content": "Tonight I feel my energy level is 4/10 and my mood is upset. I had a bad day because I argued with a close friend over something small, but it turned into a bigger fight. I didn’t expect it to affect me so much, but I keep replaying it in my head. I’m grateful for the good times we’ve had, the fact that we care enough to argue, and the hope that we can fix things. My mind feels sad yet still hopeful.",
+      "sentiment_score": 0.46071428571428574,
+      "sentiment_label": "negative",
+      "mood": "calm",
+      "created_at": "2025-09-01T01:23:01.207615"
+    },
+    {
+      "id": 7,
+      "content": "Tonight I feel my energy level is 2/10 and my mood is exhausted. I had a bad day because I felt buried under assignments and tasks, and no matter how much I did, it felt like I achieved nothing. I’m grateful that tomorrow is a fresh start, that I have the ability to keep going, and that I can still learn to prioritize better. My mind feels tired but willing to try again.",
+      "sentiment_score": 0.48214285714285715,
+      "sentiment_label": "negative",
+      "mood": "calm",
+      "created_at": "2025-09-01T01:23:15.305941"
+    },
+    {
+      "id": 8,
+      "content": "Tonight I feel my energy level is 5/10 and my mood is lonely. I had a bad day because I felt invisible, like no one really noticed how I was feeling. Even though I laughed with people, deep down I felt disconnected. I’m grateful for small joys—like music, a good meal, and a kind message from someone far away. My mind feels a little hollow but still searching for light.",
+      "sentiment_score": 0.5464209401709402,
+      "sentiment_label": "positive",
+      "mood": "calm",
+      "created_at": "2025-09-01T01:23:45.957343"
+    },
+    {
+      "id": 9,
+      "content": "I am so stressed about work deadlines and my boss keeps adding more tasks",
+      "sentiment_score": 0.75,
+      "sentiment_label": "positive",
+      "mood": "stressed",
+      "created_at": "2025-09-01T01:35:16.851061"
+    },
+    {
+      "id": 10,
+      "content": "I am so stressed about work deadlines and my boss keeps adding more tasks",
+      "sentiment_score": 0.75,
+      "sentiment_label": "positive",
+      "mood": "stressed",
+      "created_at": "2025-09-01T01:36:27.180787"
+    },
+    {
+      "id": 11,
+      "content": "I had a fight with my friend and now I feel really sad about it",
+      "sentiment_score": 0.25,
+      "sentiment_label": "negative",
+      "mood": "sad",
+      "created_at": "2025-09-01T01:36:49.073915"
+    },
+    {
+      "id": 12,
+      "content": "I had an amazing day! Got promoted at work and feeling so grateful",
+      "sentiment_score": 0.875,
+      "sentiment_label": "positive",
+      "mood": "happy",
+      "created_at": "2025-09-01T01:36:58.521844"
+    },
+    {
+      "id": 13,
+      "content": "I am really angry about the situation and tired of everything",
+      "sentiment_score": 0.275,
+      "sentiment_label": "negative",
+      "mood": "angry",
+      "created_at": "2025-09-01T01:37:13.659839"
+    },
+    {
+      "id": 14,
+      "content": "Test Mistral",
+      "sentiment_score": 0.5,
+      "sentiment_label": "neutral",
+      "mood": "calm",
+      "created_at": "2025-09-01T01:39:04.094659"
+    },
+    {
+      "id": 15,
+      "content": "hi",
+      "sentiment_score": 0.5,
+      "sentiment_label": "neutral",
+      "mood": "calm",
+      "created_at": "2025-09-01T01:45:06.961313"
+    },
+    {
+      "id": 16,
+      "content": "Tonight I feel my energy level is 5/10 and my mood is lonely. I had a bad day because I felt invisible, like no one really noticed how I was feeling. Even though I laughed with people, deep down I felt disconnected. I’m grateful for small joys—like music, a good meal, and a kind message from someone far away. My mind feels a little hollow but still searching for light.",
+      "sentiment_score": 0.5464209401709402,
+      "sentiment_label": "neutral",
+      "mood": "happy",
+      "created_at": "2025-09-01T01:45:21.048195"
+    },
+    {
+      "id": 17,
+      "content": "So i got rejected by my crush today",
+      "sentiment_score": 0.5,
+      "sentiment_label": "neutral",
+      "mood": "stressed",
+      "created_at": "2025-09-01T01:58:04.944137"
+    },
+    {
+      "id": 18,
+      "content": "I had a fight today",
+      "sentiment_score": 0.5,
+      "sentiment_label": "negative",
+      "mood": "angry",
+      "created_at": "2025-09-01T02:10:24.388632"
+    },
+    {
+      "id": 19,
+      "content": "Had a boring day",
+      "sentiment_score": 0.5,
+      "sentiment_label": "negative",
+      "mood": "sad",
+      "created_at": "2025-09-01T02:15:24.703614"
+    },
+    {
+      "id": 20,
+      "content": "I found out today that my best friend has been lying to me for months. I feel like my trust was ripped out of me. Now, I second-guess every conversation, every smile, every memory. I can’t tell what’s real anymore.",
+      "sentiment_score": 0.0,
+      "sentiment_label": "negative",
+      "mood": "sad",
+      "created_at": "2025-09-01T02:18:05.915313"
+    },
+    {
+      "id": 21,
+      "content": "SO i have to get back to work today and i dont have any sleep",
+      "sentiment_score": 0.25,
+      "sentiment_label": "negative",
+      "mood": "stressed",
+      "created_at": "2025-09-01T02:42:45.055865"
+    },
+    {
+      "id": 22,
+      "content": "\"I spend entire days without speaking to anyone. The silence feels alive, like it’s swallowing me. Sometimes I forget what my own voice sounds like. I don’t know who I am when no one’s around to remind me.\"",
+      "sentiment_score": 0.09999999999999998,
+      "sentiment_label": "negative",
+      "mood": "sad",
+      "created_at": "2025-09-01T02:52:03.166847"
+    },
+    {
+      "id": 23,
+      "content": "They left without saying goodbye. It’s not just loneliness—it’s like a part of my identity went with them. I keep thinking I wasn’t enough. The thought loops in my head until I feel like I can’t breathe",
+      "sentiment_score": 0.09999999999999998,
+      "sentiment_label": "negative",
+      "mood": "sad",
+      "created_at": "2025-09-01T02:52:57.968369"
+    },
+    {
+      "id": 24,
+      "content": "Everything was normal until the accident. Now, every loud sound makes me flinch. I smile at people, but inside I’m stuck on that day, replaying it again and again. I don’t feel safe in my own head anymore.\"",
+      "sentiment_score": 0.0,
+      "sentiment_label": "negative",
+      "mood": "stressed",
+      "created_at": "2025-09-01T03:01:36.951965"
+    },
+    {
+      "id": 25,
+      "content": "I woke up today and slept again then again woke up and slept then again woke up ate and fir se soo gyi.............................",
+      "sentiment_score": 0.5,
+      "sentiment_label": "neutral",
+      "mood": "tired",
+      "created_at": "2025-09-01T09:24:04.421321"
+    },
+    {
+      "id": 26,
+      "content": "Hehehehehe",
+      "sentiment_score": 0.8,
+      "sentiment_label": "positive",
+      "mood": "happy",
+      "created_at": "2025-09-01T10:32:45.559229"
+    }
+  ],
+  "wellness_metrics": {
+    "wellness_score": 3,
+    "mood_trend": 46,
+    "total_entries": 26,
+    "weekly_average": 0.4607909825217517
+  },
+  "mood_history": [],
+  "ai_interactions": [
+    {
+      "timestamp": "2025-09-01T01:11:18.625980",
+      "journal_entry_id": 1,
+      "suggestions": [
+        {
+          "text": "Try journaling before sleep tonight",
+          "icon": "📝"
+        },
+        {
+          "text": "Consider a 5-minute meditation",
+          "icon": "🧘"
+        },
+        {
+          "text": "Reflect on your goals for tomorrow",
+          "icon": "🎯"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "neutral",
+        "mood": "calm",
+        "polarity": 0.0
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:12:27.773122",
+      "journal_entry_id": 2,
+      "suggestions": [
+        {
+          "text": "Share your positive energy with someone",
+          "icon": "✨"
+        },
+        {
+          "text": "Continue what you're doing - you're on the right track!",
+          "icon": "🌟"
+        },
+        {
+          "text": "Document this moment for future reference",
+          "icon": "📸"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.6541666666666667,
+        "sentiment_label": "positive",
+        "mood": "happy",
+        "polarity": 0.3083333333333333
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:13:08.607879",
+      "journal_entry_id": 3,
+      "suggestions": [
+        {
+          "text": "Try journaling before sleep tonight",
+          "icon": "📝"
+        },
+        {
+          "text": "Consider a 5-minute meditation",
+          "icon": "🧘"
+        },
+        {
+          "text": "Reflect on your goals for tomorrow",
+          "icon": "🎯"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5347943722943723,
+        "sentiment_label": "positive",
+        "mood": "calm",
+        "polarity": 0.06958874458874459
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:21:52.333154",
+      "journal_entry_id": 4,
+      "suggestions": [
+        {
+          "text": "Plan one small goal you can achieve tomorrow",
+          "icon": "🎯"
+        },
+        {
+          "text": "Practice gentle stretching or yoga poses",
+          "icon": "🤸‍♀️"
+        },
+        {
+          "text": "Try 5 minutes of mindfulness meditation",
+          "icon": "🧘"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5347943722943723,
+        "sentiment_label": "positive",
+        "mood": "calm",
+        "polarity": 0.06958874458874459
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:22:48.715977",
+      "journal_entry_id": 5,
+      "suggestions": [
+        {
+          "text": "Take a photo or create something to remember this moment",
+          "icon": "📸"
+        },
+        {
+          "text": "Share your positive energy with someone you care about",
+          "icon": "✨"
+        },
+        {
+          "text": "Plan a small celebration or treat for yourself",
+          "icon": "�"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5711111111111111,
+        "sentiment_label": "positive",
+        "mood": "happy",
+        "polarity": 0.14222222222222225
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:23:01.601981",
+      "journal_entry_id": 6,
+      "suggestions": [
+        {
+          "text": "Watch a funny video or movie that makes you smile",
+          "icon": "😊"
+        },
+        {
+          "text": "Step outside for some fresh air and sunlight",
+          "icon": "☀️"
+        },
+        {
+          "text": "Write down 3 things you're grateful for today",
+          "icon": "🙏"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.46071428571428574,
+        "sentiment_label": "negative",
+        "mood": "calm",
+        "polarity": -0.07857142857142854
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:23:15.598484",
+      "journal_entry_id": 7,
+      "suggestions": [
+        {
+          "text": "Call a trusted friend or family member to connect",
+          "icon": "📞"
+        },
+        {
+          "text": "Write down 3 things you're grateful for today",
+          "icon": "🙏"
+        },
+        {
+          "text": "Listen to music that matches then lifts your mood",
+          "icon": "🎶"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.48214285714285715,
+        "sentiment_label": "negative",
+        "mood": "calm",
+        "polarity": -0.0357142857142857
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:23:46.321591",
+      "journal_entry_id": 8,
+      "suggestions": [
+        {
+          "text": "Reflect on one thing you learned about yourself today",
+          "icon": "🤔"
+        },
+        {
+          "text": "Set a positive intention for the rest of your day",
+          "icon": "🌟"
+        },
+        {
+          "text": "Practice gentle stretching or yoga poses",
+          "icon": "🤸‍♀️"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5464209401709402,
+        "sentiment_label": "positive",
+        "mood": "calm",
+        "polarity": 0.09284188034188036
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:35:17.176118",
+      "journal_entry_id": 9,
+      "suggestions": [
+        {
+          "text": "Try the 4-7-8 breathing technique: inhale 4, hold 7, exhale 8",
+          "icon": "�"
+        },
+        {
+          "text": "Listen to calming nature sounds or meditation music",
+          "icon": "🎵"
+        },
+        {
+          "text": "Try progressive muscle relaxation starting with your toes",
+          "icon": "🧘"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.75,
+        "sentiment_label": "positive",
+        "mood": "stressed",
+        "polarity": 0.5,
+        "subjectivity": 0.5,
+        "intensity": "medium",
+        "keyword_matches": {
+          "stressed": 2,
+          "happy": 1
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:36:27.607655",
+      "journal_entry_id": 10,
+      "suggestions": [
+        {
+          "text": "Write down your top 3 priorities to regain focus",
+          "icon": "📝"
+        },
+        {
+          "text": "Take a 5-minute break and step away from your workspace",
+          "icon": "⏰"
+        },
+        {
+          "text": "Practice desk yoga or shoulder rolls to release tension",
+          "icon": "🧘‍♀️"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.75,
+        "sentiment_label": "positive",
+        "mood": "stressed",
+        "polarity": 0.5,
+        "subjectivity": 0.5,
+        "intensity": "medium",
+        "keyword_matches": {
+          "stressed": 2,
+          "happy": 1
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:36:49.350556",
+      "journal_entry_id": 11,
+      "suggestions": [
+        {
+          "text": "Try progressive muscle relaxation starting with your toes",
+          "icon": "🧘"
+        },
+        {
+          "text": "Listen to calming nature sounds or meditation music",
+          "icon": "🎵"
+        },
+        {
+          "text": "Take a 10-minute walk outside to clear your mind",
+          "icon": "🚶‍♀️"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.25,
+        "sentiment_label": "negative",
+        "mood": "sad",
+        "polarity": -0.5,
+        "subjectivity": 1.0,
+        "intensity": "high",
+        "keyword_matches": {
+          "stressed": 0.5,
+          "sad": 1.8,
+          "angry": 0.7
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:36:59.087954",
+      "journal_entry_id": 12,
+      "suggestions": [
+        {
+          "text": "Share your positive energy with someone you care about",
+          "icon": "✨"
+        },
+        {
+          "text": "Send a thank you message to someone who helped you",
+          "icon": "�"
+        },
+        {
+          "text": "Prepare for restful sleep with a calming routine",
+          "icon": "🌙"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.875,
+        "sentiment_label": "positive",
+        "mood": "happy",
+        "polarity": 0.7500000000000001,
+        "subjectivity": 0.9,
+        "intensity": "high",
+        "keyword_matches": {
+          "happy": 3
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:37:14.189693",
+      "journal_entry_id": 13,
+      "suggestions": [
+        {
+          "text": "Prepare for restful sleep with a calming routine",
+          "icon": "🌙"
+        },
+        {
+          "text": "Listen to calming nature sounds or meditation music",
+          "icon": "🎵"
+        },
+        {
+          "text": "Take a 10-minute walk outside to clear your mind",
+          "icon": "🚶‍♀️"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.275,
+        "sentiment_label": "negative",
+        "mood": "angry",
+        "polarity": -0.45,
+        "subjectivity": 0.85,
+        "intensity": "high",
+        "keyword_matches": {
+          "stressed": 0.5,
+          "sad": 0.8,
+          "angry": 1.7,
+          "tired": 1
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:39:04.370584",
+      "journal_entry_id": 14,
+      "suggestions": [
+        {
+          "text": "Set a positive intention for the rest of your day",
+          "icon": "🌟"
+        },
+        {
+          "text": "Try 5 minutes of mindfulness meditation",
+          "icon": "🧘"
+        },
+        {
+          "text": "Organize a small area of your space mindfully",
+          "icon": "🏠"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "neutral",
+        "mood": "calm",
+        "polarity": 0.0,
+        "subjectivity": 0.0,
+        "intensity": "low",
+        "keyword_matches": {
+          "calm": 0.3
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:45:07.283827",
+      "journal_entry_id": 15,
+      "suggestions": [
+        {
+          "text": "Practice gentle stretching or yoga poses",
+          "icon": "🤸‍♀️"
+        },
+        {
+          "text": "Try 5 minutes of mindfulness meditation",
+          "icon": "🧘"
+        },
+        {
+          "text": "Organize a small area of your space mindfully",
+          "icon": "🏠"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "neutral",
+        "mood": "calm",
+        "polarity": 0.0,
+        "subjectivity": 0.0,
+        "intensity": "low",
+        "keyword_matches": {
+          "calm": 0.3
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:45:21.325083",
+      "journal_entry_id": 16,
+      "suggestions": [
+        {
+          "text": "Share your positive energy with someone you care about",
+          "icon": "✨"
+        },
+        {
+          "text": "Take a photo or create something to remember this moment",
+          "icon": "📸"
+        },
+        {
+          "text": "Prepare for restful sleep with a calming routine",
+          "icon": "🌙"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5464209401709402,
+        "sentiment_label": "neutral",
+        "mood": "happy",
+        "polarity": 0.09284188034188036,
+        "subjectivity": 0.5081196581196581,
+        "intensity": "medium",
+        "keyword_matches": {
+          "happy": 2,
+          "sad": 2,
+          "calm": 0.3
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T01:58:05.887449",
+      "journal_entry_id": 17,
+      "suggestions": [
+        {
+          "text": "Have a warm cup of herbal tea and sit quietly",
+          "icon": "🍵"
+        },
+        {
+          "text": "Try the 4-7-8 breathing technique: inhale 4, hold 7, exhale 8",
+          "icon": "�"
+        },
+        {
+          "text": "Write down 3 things you can control right now",
+          "icon": "✏️"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "neutral",
+        "mood": "stressed",
+        "polarity": 0.0,
+        "subjectivity": 0.0,
+        "intensity": "medium",
+        "keyword_matches": {
+          "stressed": 1,
+          "calm": 0.3
+        }
+      }
+    },
+    {
+      "timestamp": "2025-09-01T02:10:28.418913",
+      "journal_entry_id": 18,
+      "suggestions": [
+        {
+          "text": "Set a positive intention for the rest of your day",
+          "icon": "🌟"
+        },
+        {
+          "text": "Reflect on one thing you learned about yourself today",
+          "icon": "🤔"
+        },
+        {
+          "text": "Try 5 minutes of mindfulness meditation",
+          "icon": "🧘"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "negative",
+        "mood": "angry",
+        "polarity": 0.0,
+        "subjectivity": 0.0,
+        "intensity": "medium",
+        "emotional_indicators": [
+          "fight"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The word 'fight' is often used to denote a conflict or disagreement, which is typically associated with feelings of anger or frustration. The absence of words indicating positive emotions and the presence of a conflict suggest a negative sentiment.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-01T02:15:26.684976",
+      "journal_entry_id": 19,
+      "suggestions": [
+        {
+          "text": "Prepare for restful sleep with a calming routine",
+          "icon": "🌙"
+        },
+        {
+          "text": "Watch a funny video or movie that makes you smile",
+          "icon": "😊"
+        },
+        {
+          "text": "Call a trusted friend or family member to connect",
+          "icon": "📞"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "negative",
+        "mood": "sad",
+        "polarity": 0.0,
+        "subjectivity": 0.0,
+        "intensity": "medium",
+        "emotional_indicators": [
+          "boring"
+        ],
+        "confidence": 0.8,
+        "reasoning": "The word 'boring' is often used to express a lack of interest or enjoyment, which can be associated with feelings of sadness or dissatisfaction. The context suggests a negative emotional experience, as the individual is describing their day as 'boring'.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-01T02:18:10.777145",
+      "journal_entry_id": 20,
+      "suggestions": [
+        {
+          "text": "Prepare for restful sleep with a calming routine",
+          "icon": "🌙"
+        },
+        {
+          "text": "Take a 10-minute walk outside to clear your mind",
+          "icon": "🚶‍♀️"
+        },
+        {
+          "text": "Try the 4-7-8 breathing technique: inhale 4, hold 7, exhale 8",
+          "icon": "�"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.0,
+        "sentiment_label": "negative",
+        "mood": "sad",
+        "polarity": -1.0,
+        "subjectivity": 1.0,
+        "intensity": "high",
+        "emotional_indicators": [
+          "trust",
+          "ripped",
+          "second-guess",
+          "every",
+          "can’t",
+          "real"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The journal entry expresses feelings of betrayal and loss of trust, which are indicative of sadness. The use of words such as 'ripped', 'second-guess', and 'can’t tell what’s real' suggest a high level of emotional intensity. The phrase 'I feel like my trust was ripped out of me' is a clear emotional indicator of sadness. The subjectivity is high due to the personal nature of the entry.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-01T02:42:47.862178",
+      "journal_entry_id": 21,
+      "suggestions": [
+        {
+          "text": ":",
+          "icon": "💡"
+        },
+        {
+          "text": ":",
+          "icon": "💡"
+        },
+        {
+          "text": ":",
+          "icon": "💡"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.25,
+        "sentiment_label": "negative",
+        "mood": "stressed",
+        "polarity": -0.5,
+        "subjectivity": 0.8,
+        "intensity": "high",
+        "emotional_indicators": [
+          "work",
+          "no sleep"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The individual mentions having to work and not having any sleep, which indicates a high level of stress. The use of the word 'have to' suggests an obligation or pressure, further supporting the stress sentiment. The lack of positive emotional indicators and the high subjectivity score indicate a negative sentiment.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-01T02:52:05.910550",
+      "journal_entry_id": 22,
+      "suggestions": [
+        {
+          "text": "Consider reaching out to a trusted friend or family member for at least one conversation per day to combat feelings of isolation. This could be over the phone, video call, or even a written message.",
+          "icon": "💭"
+        },
+        {
+          "text": "See if you can schedule a short daily mindfulness practice, such as a 5-minute body scan or focused breathing, to help manage feelings of being overwhelmed. This can help ground you and bring awareness to your present moment.",
+          "icon": "🧘"
+        },
+        {
+          "text": "Make a list of activities or hobbies that bring you joy and connect with at least one of them daily to help rediscover and reinforce your identity. This can serve as a reminder of who you are outside of your relationships with others.",
+          "icon": "🌱"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.09999999999999998,
+        "sentiment_label": "negative",
+        "mood": "sad",
+        "polarity": -0.8,
+        "subjectivity": 0.9,
+        "intensity": "high",
+        "emotional_indicators": [
+          "silence",
+          "swallowing",
+          "forget",
+          "remind"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The individual expresses feelings of isolation, loneliness, and self-doubt. The use of words like 'silence', 'swallowing', and 'forget' indicate a sense of being overwhelmed and disconnected. The statement 'I don't know who I am when no one’s around to remind me' suggests a loss of identity and self-worth, which are common indicators of sadness.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-01T02:53:01.748990",
+      "journal_entry_id": 23,
+      "suggestions": [
+        {
+          "text": "Consider reaching out to a trusted friend or family member to share your feelings and receive support. This can help you process the abandonment and validate your emotions.",
+          "icon": "💭"
+        },
+        {
+          "text": "Mindfulness meditation can help you stay present and reduce the thought loops that are causing you distress. Try a 10-minute guided mindfulness exercise daily to help manage these thoughts.",
+          "icon": "🧘"
+        },
+        {
+          "text": "Engage in a creative activity, like journaling, painting, or music, to explore and express your emotions. This can help you reconnect with your identity and develop a sense of self-compassion.",
+          "icon": "🌱"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.09999999999999998,
+        "sentiment_label": "negative",
+        "mood": "sad",
+        "polarity": -0.8,
+        "subjectivity": 0.9,
+        "intensity": "high",
+        "emotional_indicators": [
+          "left",
+          "goodbye",
+          "loneliness",
+          "identity",
+          "not enough",
+          "thought loops",
+          "can't breathe"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The individual expresses feelings of abandonment and loss, which are common indicators of sadness. The use of words such as 'loneliness', 'not enough', and 'can't breathe' suggest a high level of emotional intensity. The subjectivity score is high due to the personal nature of the text, focusing on the individual's feelings and thoughts.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-01T03:01:40.043268",
+      "journal_entry_id": 24,
+      "suggestions": [
+        {
+          "text": "Consider audio therapy or guided imagery exercises to help manage your reactions to loud sounds and reduce anxiety responses.",
+          "icon": "💭"
+        },
+        {
+          "text": "Try progressive muscle relaxation techniques to help manage the physical tension associated with anxiety and stress.",
+          "icon": "🧘"
+        },
+        {
+          "text": "Engage in activities that promote a sense of mastery and control, such as learning a new skill or setting small, achievable goals.",
+          "icon": "🌱"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.0,
+        "sentiment_label": "negative",
+        "mood": "stressed",
+        "polarity": -1.0,
+        "subjectivity": 1.0,
+        "intensity": "high",
+        "emotional_indicators": [
+          "loud sound makes me flinch",
+          "stuck on that day",
+          "replaying it again and again",
+          "don't feel safe in my own head"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The individual's journal entry expresses feelings of anxiety and distress, as indicated by their sensitivity to loud sounds, repetitive thoughts about a traumatic event, and a lack of feeling safe in their own head. These emotional indicators suggest a high level of stress.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-01T09:24:08.999083",
+      "journal_entry_id": 25,
+      "suggestions": [
+        {
+          "text": "Consider keeping a sleep diary to identify any patterns or triggers related to your sleep issues. This may help you pinpoint the root cause and develop a plan to improve your sleep quality.",
+          "icon": "💭"
+        },
+        {
+          "text": "Try a progressive muscle relaxation technique to help release tension and promote restful sleep. Begin by tensing and then releasing each muscle group, starting at your toes and moving up to your head.",
+          "icon": "🧘"
+        },
+        {
+          "text": "Focus on finding activities that bring you joy and relaxation during your waking hours. This can help you build a strong foundation for better sleep at night. Consider activities like reading, drawing, or listening to calming music.",
+          "icon": "🌱"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "neutral",
+        "mood": "tired",
+        "polarity": 0.0,
+        "subjectivity": 0.0,
+        "intensity": "high",
+        "emotional_indicators": [
+          "slept",
+          "awake",
+          "eat",
+          "fir se soo gyi"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The repeated mention of sleeping and waking up multiple times suggests a state of tiredness or fatigue. The lack of any positive or negative emotional language indicates a neutral sentiment. The high intensity is due to the repetitive nature of the text, which can be indicative of distress or confusion.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-01T10:32:48.968537",
+      "journal_entry_id": 26,
+      "suggestions": [
+        {
+          "text": "Consider exploring the laughter as a way to release stress and anxiety from recent sleepless nights. Try looking for a funny movie or stand-up comedy to watch, which can help provide a moment of joy and relaxation.",
+          "icon": "💭"
+        },
+        {
+          "text": "Given the high repetition of laughter, it may be helpful to practice mindfulness meditation focusing on the breath and body sensations. This can help ground you in the present moment and reduce feelings of anxiety or restlessness.",
+          "icon": "🧘"
+        },
+        {
+          "text": "Since you've shown resilience by remaining hopeful and light-hearted despite recent sleep challenges, consider setting a consistent sleep schedule to promote better rest and self-care. This can help you build a healthier routine and continue to cope with life's challenges.",
+          "icon": "🌱"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.8,
+        "sentiment_label": "positive",
+        "mood": "happy",
+        "polarity": 0.6,
+        "subjectivity": 0.0,
+        "intensity": "high",
+        "emotional_indicators": [
+          "hehehehe"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The repeated use of laughter indicators (hehehehe) suggests a happy and light-hearted mood. The high repetition indicates a high level of intensity. However, it's important to note that this analysis is based on a limited context and the absence of other emotional indicators.",
+        "analysis_method": "mistral_ai"
+      }
+    }
+  ],
+  "updated_at": "2025-09-01T10:32:48.969538"
+}

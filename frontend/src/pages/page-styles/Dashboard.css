@@ -1,0 +1,850 @@
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
+  color: #e0e0e0;
+}
+
+.dashboard-content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+  padding-top: 100px; /* Account for navbar */
+}
+
+.character-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 3rem;
+  text-align: center;
+}
+
+.character-avatar {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.avatar-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+}
+
+.avatar-image-large {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #64b5f6, #42a5f5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 32px rgba(100, 181, 246, 0.3);
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.avatar-emoji-large {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-info-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 400px;
+}
+
+.username-display {
+  color: #ffffff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #64b5f6, #42a5f5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.avatar-name-display {
+  color: #64b5f6;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.avatar-description-display {
+  color: #b0b0b0;
+  font-size: 1.1rem;
+  margin: 0;
+  max-width: 350px;
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.avatar-image {
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.loading-indicator {
+  margin-top: 1rem;
+  color: #64b5f6;
+  font-size: 0.9rem;
+  text-align: center;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.dashboard-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 2rem;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  /* Touch-friendly interactions */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.dashboard-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  border-color: rgba(100, 181, 246, 0.3);
+}
+
+.dashboard-card:active {
+  transform: translateY(-4px);
+  transition: transform 0.1s ease;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-header h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #ffffff;
+  flex: 1;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+}
+
+.card-description {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.refresh-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.8rem;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.refresh-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(180deg);
+  border-color: rgba(100, 181, 246, 0.5);
+}
+
+/* Journal Card */
+.journal-card {
+  background: linear-gradient(135deg, rgba(100, 181, 246, 0.1), rgba(66, 165, 245, 0.1));
+  border: 1px solid rgba(100, 181, 246, 0.2);
+}
+
+.journal-card:hover {
+  background: linear-gradient(135deg, rgba(100, 181, 246, 0.2), rgba(66, 165, 245, 0.2));
+}
+
+/* Mood Card */
+.mood-card {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(139, 195, 74, 0.1));
+  border: 1px solid rgba(76, 175, 80, 0.2);
+}
+
+.mood-content {
+  text-align: center;
+}
+
+.mood-emoji {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.mood-message {
+  font-size: 1.1rem;
+  color: #e0e0e0;
+  margin-bottom: 0.5rem;
+}
+
+.mood-encouragement {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+/* AI Suggestions Card */
+.suggestions-card {
+  background: linear-gradient(135deg, rgba(156, 39, 176, 0.1), rgba(142, 36, 170, 0.1));
+  border: 1px solid rgba(156, 39, 176, 0.2);
+}
+
+.suggestions-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.suggestion-icon {
+  font-size: 1.2rem;
+}
+
+.suggestion-text {
+  flex: 1;
+  color: #e0e0e0;
+}
+
+/* Wellness Card */
+.wellness-card {
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 193, 7, 0.1));
+  border: 1px solid rgba(255, 152, 0, 0.2);
+}
+
+.wellness-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.wellness-score {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.score-icon {
+  font-size: 2rem;
+}
+
+.score-number {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #ff9800;
+}
+
+.wellness-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stat-label {
+  color: #b0b0b0;
+  min-width: 80px;
+  flex-shrink: 0;
+}
+
+.trend-container {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex: 1;
+  min-width: 120px;
+}
+
+.trend-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+  min-width: 80px;
+}
+
+.trend-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #64b5f6, #42a5f5);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.stat-value {
+  color: #64b5f6;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Achievements Card */
+.achievements-card {
+  background: linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(236, 64, 122, 0.1));
+  border: 1px solid rgba(233, 30, 99, 0.2);
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+}
+
+.achievement-item.unlocked {
+  background: rgba(76, 175, 80, 0.2);
+  border-color: rgba(76, 175, 80, 0.3);
+}
+
+.achievement-item.locked {
+  opacity: 0.4;
+  filter: grayscale(100%);
+}
+
+.achievement-icon {
+  font-size: 1.5rem;
+}
+
+/* Characters Card */
+.characters-card {
+  background: linear-gradient(135deg, rgba(63, 81, 181, 0.1), rgba(92, 107, 192, 0.1));
+  border: 1px solid rgba(63, 81, 181, 0.2);
+}
+
+.characters-grid, .characters-placeholder {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.character-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.character-avatar-small {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #64b5f6, #42a5f5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  color: white;
+  flex-shrink: 0;
+}
+
+.character-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  flex: 1;
+  min-width: 0; /* Allow text to truncate */
+}
+
+.character-name {
+  font-weight: 600;
+  color: #e0e0e0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.character-relation {
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Placeholder text styles */
+.api-placeholder, .edit-placeholder, .preferences-note {
+  text-align: center;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  margin-top: 1rem;
+}
+
+.api-placeholder small, .edit-placeholder small, .preferences-note small {
+  color: #888;
+  font-style: italic;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+  .dashboard-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 1000px;
+  }
+}
+
+@media (max-width: 968px) {
+  .dashboard-content {
+    padding: 1.5rem 1rem;
+    padding-top: 100px;
+  }
+  
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 600px;
+  }
+  
+  .avatar-image-large {
+    width: 150px;
+    height: 150px;
+  }
+  
+  .username-display {
+    font-size: 2rem;
+  }
+  
+  .avatar-name-display {
+    font-size: 1.2rem;
+  }
+  
+  .avatar-description-display {
+    font-size: 1rem;
+    max-width: 300px;
+  }
+  
+  .avatar-emoji-large {
+    font-size: 3rem;
+  }
+  
+  .avatar-image {
+    width: 130px;
+    height: 130px;
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 1rem;
+    padding-top: 90px;
+  }
+  
+  .dashboard-card {
+    padding: 1.5rem;
+  }
+  
+  .card-header {
+    margin-bottom: 1rem;
+  }
+  
+  .card-header h3 {
+    font-size: 1.3rem;
+  }
+  
+  .mood-emoji {
+    font-size: 2.5rem;
+  }
+  
+  .wellness-score .score-number {
+    font-size: 2.5rem;
+  }
+  
+  .achievements-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.8rem;
+  }
+  
+  .achievement-item {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .achievement-icon {
+    font-size: 1.2rem;
+  }
+  
+  .suggestion-item {
+    padding: 0.8rem;
+  }
+  
+  .character-item {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-content {
+    padding: 0.8rem;
+    padding-top: 85px;
+  }
+  
+  .character-section {
+    margin-bottom: 2rem;
+  }
+  
+  .avatar-image-large {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .username-display {
+    font-size: 1.8rem;
+  }
+  
+  .avatar-name-display {
+    font-size: 1.1rem;
+  }
+  
+  .avatar-description-display {
+    font-size: 0.95rem;
+    max-width: 250px;
+  }
+  
+  .avatar-emoji-large {
+    font-size: 2.5rem;
+    padding: 0.8rem;
+  }
+  
+  .avatar-image {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .dashboard-grid {
+    gap: 1.2rem;
+  }
+  
+  .dashboard-card {
+    padding: 1.2rem;
+  }
+  
+  .card-header h3 {
+    font-size: 1.2rem;
+  }
+  
+  .mood-content {
+    text-align: center;
+  }
+  
+  .mood-message {
+    font-size: 1rem;
+  }
+  
+  .wellness-stats {
+    gap: 0.8rem;
+  }
+  
+  .stat-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .trend-container {
+    width: 100%;
+    gap: 0.6rem;
+  }
+  
+  .trend-bar {
+    width: 100%;
+    height: 6px;
+  }
+  
+  .achievements-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+  }
+  
+  .achievement-item {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .achievement-icon {
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-content {
+    padding: 0.5rem;
+    padding-top: 80px;
+  }
+  
+  .avatar-image-large {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .username-display {
+    font-size: 1.6rem;
+  }
+  
+  .avatar-name-display {
+    font-size: 1rem;
+  }
+  
+  .avatar-description-display {
+    font-size: 0.9rem;
+    max-width: 220px;
+  }
+  
+  .avatar-emoji-large {
+    font-size: 2rem;
+    padding: 0.6rem;
+  }
+  
+  .avatar-image {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .dashboard-card {
+    padding: 1rem;
+    border-radius: 16px;
+  }
+  
+  .card-header {
+    gap: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .card-header h3 {
+    font-size: 1.1rem;
+  }
+  
+  .card-icon {
+    font-size: 1.3rem;
+  }
+  
+  .mood-emoji {
+    font-size: 2rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .mood-message {
+    font-size: 0.95rem;
+  }
+  
+  .mood-encouragement {
+    font-size: 0.9rem;
+  }
+  
+  .wellness-score {
+    gap: 0.8rem;
+  }
+  
+  .score-icon {
+    font-size: 1.5rem;
+  }
+  
+  .score-number {
+    font-size: 2rem;
+  }
+  
+  .suggestion-item {
+    padding: 0.7rem;
+    gap: 0.8rem;
+  }
+  
+  .suggestion-text {
+    font-size: 0.9rem;
+  }
+  
+  .character-item {
+    padding: 0.7rem;
+    gap: 0.8rem;
+  }
+  
+  .character-avatar-small {
+    width: 35px;
+    height: 35px;
+    font-size: 1rem;
+  }
+  
+  .character-name {
+    font-size: 0.9rem;
+  }
+  
+  .character-relation {
+    font-size: 0.8rem;
+  }
+  
+  .achievements-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+  }
+  
+  .achievement-item {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+  
+  .achievement-icon {
+    font-size: 0.9rem;
+  }
+  
+  .api-placeholder, .edit-placeholder, .preferences-note {
+    padding: 0.8rem;
+    margin-top: 0.8rem;
+  }
+  
+  .api-placeholder small, .edit-placeholder small, .preferences-note small {
+    font-size: 0.75rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .dashboard-content {
+    padding: 0.3rem;
+    padding-top: 75px;
+  }
+  
+  .character-section {
+    margin-bottom: 1.5rem;
+  }
+  
+  .avatar-image-large {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .username-display {
+    font-size: 1.4rem;
+  }
+  
+  .avatar-name-display {
+    font-size: 0.9rem;
+  }
+  
+  .avatar-description-display {
+    font-size: 0.8rem;
+    max-width: 180px;
+  }
+  
+  .avatar-emoji-large {
+    font-size: 1.8rem;
+    padding: 0.5rem;
+  }
+  
+  .avatar-image {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .dashboard-grid {
+    gap: 1rem;
+  }
+  
+  .dashboard-card {
+    padding: 0.8rem;
+    border-radius: 12px;
+  }
+  
+  .card-header h3 {
+    font-size: 1rem;
+  }
+  
+  .mood-emoji {
+    font-size: 1.8rem;
+  }
+  
+  .score-number {
+    font-size: 1.8rem;
+  }
+  
+  .achievement-item {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .achievement-icon {
+    font-size: 0.8rem;
+  }
+}
