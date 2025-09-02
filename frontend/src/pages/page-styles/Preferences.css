@@ -3,11 +3,10 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* changed to allow natural scrolling */
+  justify-content: flex-start;
   align-items: center;
   background: #fff;
   padding: 2rem;
-  overflow-y: auto; /* enable vertical scrolling */
 }
 
 .bg-circle {
@@ -31,12 +30,38 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  border: none;
+  border: 1px solid rgba(160, 160, 160, 0.3);
   animation: fadeIn 0.3s ease-in-out;
   z-index: 10;
   padding: 2rem;
   max-width: 500px;
+    overflow-y: auto; 
 }
+
+/* Works on Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(88, 88, 88, 0.4); 
+  border-radius: 10px;
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(48, 48, 48, 0.7);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(82, 83, 83, 0.4) transparent;
+}
+
 
 .auth-form h2 {
   font-size: 1.8rem;
@@ -138,7 +163,6 @@ button:hover {
   justify-items: center;
 }
 
-/* Rectangular avatar card */
 .avatar-option {
   display: flex;
   align-items: center;
@@ -194,7 +218,7 @@ button:hover {
 .type-info {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 5px;
   color: white;
   margin-top: 40px;
   padding: 10px;
@@ -203,7 +227,10 @@ button:hover {
   border-radius: 20px;
 }
 
-/* Name and description on the right */
+.type-image {
+  height: 80px;
+}
+
 .avatar-info {
   display: flex;
   flex-direction: column;
@@ -225,6 +252,12 @@ button:hover {
 .avatar-image-container:active {
   transform: scale(0.95);
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.avatar-option.selected {
+  border-color: #2575fc;
+  background: rgba(37, 117, 252, 0.1);
+  box-shadow: 0 0 12px rgba(37, 116, 252, 0.171);
 }
 
 /* Mobile Overrides */
@@ -298,4 +331,46 @@ button:hover {
   .sub-flex:nth-child(3) {
     flex-basis: 100%; /* force 3rd input to next row */
   }
+}
+
+
+.tag-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  border: 1px solid #58585891;
+  border-radius: 8px;
+  padding: 6px;
+}
+
+.tag-input-container input {
+  border: none;
+  outline: none;
+  flex: 1;
+  min-width: 120px;
+  padding: 6px;
+  background: transparent;
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto; 
+}
+
+.tag {
+  background: #2574fc;
+  color: #fff;
+  padding: 4px 9px;
+  border-radius: 12px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.remove-tag {
+  cursor: pointer;
+  font-size: 2vh;
 }

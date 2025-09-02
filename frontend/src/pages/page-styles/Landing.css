@@ -175,6 +175,7 @@ h1.app-name {
 
   .card-right {
     padding: 10px 20px;
+    margin-bottom: 50px;
   }
 }
 
@@ -255,6 +256,7 @@ h1.app-name {
     box-shadow: 0 10px 30px rgba(66, 66, 66, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(68, 83, 171, 0.5);
+    margin-top: 30px;
   }
 
   .logo {

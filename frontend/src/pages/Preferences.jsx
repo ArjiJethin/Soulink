@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./page-styles/Preferences.css";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+
 
 import diary from "../assets/imgs/diary.png";
+import questionnaire from "../assets/imgs/questionnaire.png";
 import avatar1 from "../../RAW/gp1.png";
 import avatar2 from "../../RAW/gp2.png";
 import avatar3 from "../../RAW/bp1.png";
@@ -11,8 +14,8 @@ import avatar4 from "../../RAW/bp2.png";
 export default function Preferences() {
   const [diaryOption, setDiaryOption] = useState("Diary");
   const [username, setUsername] = useState("");
-  const [interests, setInterests] = useState("");
-  const [characters, setCharacters] = useState("");
+  const [interests, setInterests] = useState([]);   // array now
+  const [characters, setCharacters] = useState([]); // array now
   const [selectedAvatar, setSelectedAvatar] = useState("avatar1");
   const navigate = useNavigate();
 
@@ -30,7 +33,11 @@ export default function Preferences() {
       username: username || "User",
       interests: interests,
       diaryType: diaryOption,
-      characters: parseCharacters(characters),
+      characters: characters.map((char, index) => ({
+        id: index + 1,
+        name: char,
+        relation: index === 0 ? "Family" : index === 1 ? "Friend" : "Important Person"
+      })),
       selectedAvatar: avatarOptions.find(avatar => avatar.id === selectedAvatar)
     };
     
@@ -41,14 +48,26 @@ export default function Preferences() {
     navigate("/dashboard");
   };
 
-  const parseCharacters = (charactersString) => {
-    if (!charactersString.trim()) return [];
-    
-    return charactersString.split(',').map((char, index) => ({
-      id: index + 1,
-      name: char.trim(),
-      relation: index === 0 ? "Family" : index === 1 ? "Friend" : "Important Person"
-    }));
+  // Add tag on Enter
+  const handleKeyDown = (e, type) => {
+    if (e.key === "Enter" && e.target.value.trim() !== "") {
+      e.preventDefault();
+      if (type === "interests") {
+        setInterests([...interests, e.target.value.trim()]);
+      } else {
+        setCharacters([...characters, e.target.value.trim()]);
+      }
+      e.target.value = "";
+    }
+  };
+
+  // Remove tag
+  const removeTag = (type, index) => {
+    if (type === "interests") {
+      setInterests(interests.filter((_, i) => i !== index));
+    } else {
+      setCharacters(characters.filter((_, i) => i !== index));
+    }
   };
 
   return (
@@ -78,34 +97,54 @@ export default function Preferences() {
                 onChange={(e) => setUsername(e.target.value)}
               />
             </div>
+
+            {/* Interests with tags */}
             <div className="sub-flex">
               <label htmlFor="interests" className="input-label">
                 Interests
               </label>
-              <input
-                type="text"
-                id="interests"
-                placeholder="Enter your interests"
-                value={interests}
-                onChange={(e) => setInterests(e.target.value)}
-              />
+              <div className="tag-input-container">
+                <input
+                  type="text"
+                  id="interests"
+                  placeholder="Type and press Enter"
+                  onKeyDown={(e) => handleKeyDown(e, "interests")}
+                />
+                <div className="tags-list">
+                  {interests.map((interest, index) => (
+                    <div key={index} className="tag">
+                      {interest}
+                      <span className="remove-tag" onClick={() => removeTag("interests", index)}>×</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
+
+            {/* Characters with tags */}
             <div className="sub-flex">
               <label htmlFor="characters" className="input-label">
                 Characters
               </label>
-              <input
-                type="text"
-                id="characters"
-                placeholder="Enter important people (comma separated)"
-                value={characters}
-                onChange={(e) => setCharacters(e.target.value)}
-              />
+              <div className="tag-input-container">
+                <input
+                  type="text"
+                  id="characters"
+                  placeholder="Type and press Enter"
+                  onKeyDown={(e) => handleKeyDown(e, "characters")}
+                />
+                <div className="tags-list">
+                  {characters.map((char, index) => (
+                    <div key={index} className="tag">
+                      {char}
+                      <span className="remove-tag" onClick={() => removeTag("characters", index)}><i className="fa-solid fa-xmark"></i></span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-
 
         <div className="section">
           <p className="section-title">Choose Your Avatar:</p>
@@ -145,9 +184,18 @@ export default function Preferences() {
             </button>
           </div>
           <div className="type-info">
-            <img src={diaryOption === "Diary" ? {diary} : {avatar2}} alt="image" />
-            <p>{diaryOption === "Diary" ? "Write free-form entries about your day." : "Answer daily questions to reflect on your experiences."}</p>
+            <img 
+              src={diaryOption === "Diary" ? diary : questionnaire} 
+              alt="image" 
+              className="type-image"
+            />
+            <p>
+              {diaryOption === "Diary" 
+                ? "Choose the Diary mode if you like to freely express your thoughts, feelings, and daily moments without restrictions. It's your personal space to vent, reflect, or even be creative—just like a traditional handwritten diary."
+                : "Choose the Questionnaire mode if you prefer guided prompts. Each day you'll answer thoughtful questions designed to help you reflect, track your mood, and gain insights into your growth over time."}
+            </p>
           </div>
+
         </div>
         <br />
 
@@ -156,4 +204,3 @@ export default function Preferences() {
     </div>
   );
 }
-
