@@ -6,7 +6,7 @@ import "./page-styles/Dashboard.css";
 // Import default avatar
 import defaultAvatar from "../assets/imgs/avatar/row-1-column-1.png";
 
-const API_BASE_URL = "http://localhost:5000/api";
+const API_BASE_URL = "https://soul-link-1y76.onrender.com/api";
 
 export default function Dashboard() {
     const [userPreferences, setUserPreferences] = useState({
