@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
-import Preferences from "./pages/Preferences";
-import Dashboard from "./pages/Dashboard";
-import Journal from "./pages/Journal";
+import Preferences from "./pages/Preferences.jsx";
+import Dashboard from "./pages/dashboard";
+import Journal from "./pages/Journal.jsx";
 import "./App.css";
 
 function App() {
