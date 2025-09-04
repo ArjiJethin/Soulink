@@ -7,7 +7,6 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import requests
 import uuid
-from mistralai import Mistral
 
 load_dotenv()
 
