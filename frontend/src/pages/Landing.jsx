@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import "./page-styles/Landing.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-regular-svg-icons";
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import Drop from "../assets/imgs/logo-nbg.png";
 import Cartoon from "../assets/imgs/cartoon.png";
 import Droplet from "../assets/imgs/flame.png";
@@ -100,7 +99,6 @@ function Landing() {
             Your personal AI companion for <br /> journaling and mental wellness
           </p>
         </div>
-
         <div className="card-right">{renderForm()}</div>
       </div>
     </div>
