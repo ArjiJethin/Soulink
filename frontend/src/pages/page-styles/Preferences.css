@@ -490,4 +490,9 @@ input::placeholder { color: rgba(30,30,30,0.35); }
     grid-template-columns: 1fr 1fr;
     gap: 16px;
   }
+
+  .preferences-card{
+    min-width: 1200px;
+  }
+
 }
