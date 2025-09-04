@@ -22,10 +22,10 @@ function Landing() {
       return (
         <form className="auth-form">
           <h2>Sign Up</h2>
-          <input type="text" placeholder="Name" required />
+          <input placeholder="Name" required />
           <input type="email" placeholder="Email" required />
           <input type="password" placeholder="Password" required />
-          <button type="submit" onClick={handleSignup}>Create Account</button>
+          <button type="submit" onClick={handleSignup} className="blue-button">Create Account</button>
           <p>
             Already have an account?{" "}
             <span className="form-switch" onClick={() => setFormType("login")}>
@@ -40,7 +40,7 @@ function Landing() {
           <h2>Log In</h2>
           <input type="email" placeholder="Email" required />
           <input type="password" placeholder="Password" required />
-          <button type="submit">Log In</button>
+          <button type="submit" className="blue-button">Log In</button>
           <p>
             Don't have an account?{" "}
             <span className="form-switch" onClick={() => setFormType("signup")}>
@@ -83,7 +83,7 @@ function Landing() {
       <div className="bg-circle bg-red"></div>
       <div className="bg-circle bg-yellow"></div>
       <div className="bg-circle bg-green"></div>
-      <div className="card">
+      <div className="card center-form">
         <div className="card-left">
           <img src={Drop} alt="Soul Ink Logo" className="logo" />
           <h1 className="app-name">
