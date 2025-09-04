@@ -10,6 +10,7 @@ import avatar1 from "../../RAW/gp1.png";
 import avatar2 from "../../RAW/gp2.png";
 import avatar3 from "../../RAW/bp1.png";
 import avatar4 from "../../RAW/bp2.png";
+import { color } from "framer-motion";
 
 export default function Preferences() {
   const [diaryOption, setDiaryOption] = useState("Diary");
@@ -19,7 +20,6 @@ export default function Preferences() {
   const [selectedAvatar, setSelectedAvatar] = useState("avatar1");
   const navigate = useNavigate();
 
-  // Available avatar options
   const avatarOptions = [
     { id: "avatar1", name: "Friendly", image: avatar1, description: "Cheerful and optimistic" },
     { id: "avatar2", name: "Calm", image: avatar2, description: "Peaceful and centered" },
@@ -27,8 +27,10 @@ export default function Preferences() {
     { id: "avatar4", name: "Adventurous", image: avatar4, description: "Bold and confident" },
   ];
 
+  const [toast, setToast] = useState("");
+
+
   const handleNext = () => {
-    // Save preferences to localStorage
     const preferences = {
       username: username || "User",
       interests: interests,
@@ -44,24 +46,58 @@ export default function Preferences() {
     localStorage.setItem('userPreferences', JSON.stringify(preferences));
     console.log("Saved preferences:", preferences);
     
-    // Navigate to dashboard
     navigate("/dashboard");
   };
 
-  // Add tag on Enter
-  const handleKeyDown = (e, type) => {
-    if (e.key === "Enter" && e.target.value.trim() !== "") {
-      e.preventDefault();
-      if (type === "interests") {
-        setInterests([...interests, e.target.value.trim()]);
-      } else {
-        setCharacters([...characters, e.target.value.trim()]);
-      }
-      e.target.value = "";
+const handleKeyDown = (e, type) => {
+  if (e.key === "Enter" && e.target.value.trim() !== "") {
+    e.preventDefault();
+
+    // Split by comma and trim spaces
+    const values = e.target.value
+      .split(",")
+      .map((v) => v.trim())
+      .filter((v) => v !== "");
+
+    if (type === "interests") {
+      let newTags = [...interests];
+      values.forEach((val) => {
+        if (!newTags.includes(val) && newTags.length < 6) {
+          newTags.push(val);
+        } else if (newTags.includes(val)) {
+          showToast(`"${val}" is already added!`);
+        } else if (newTags.length >= 6) {
+          showToast("You can only add up to 6 interests!");
+        }
+      });
+      setInterests(newTags);
+    } else if (type === "characters") {
+      let newTags = [...characters];
+      values.forEach((val) => {
+        if (!newTags.includes(val) && newTags.length < 6) {
+          newTags.push(val);
+        } else if (newTags.includes(val)) {
+          showToast(`"${val}" is already added!`);
+        } else if (newTags.length >= 6) {
+          showToast("You can only add up to 6 characters!");
+        }
+      });
+      setCharacters(newTags);
     }
+
+    e.target.value = ""; // clear input
+  }
+};
+
+  
+  // Helper function
+  const showToast = (msg) => {
+    setToast(msg);
+    setTimeout(() => setToast(""), 1500); // disappears after 1.5s
   };
 
-  // Remove tag
+
+
   const removeTag = (type, index) => {
     if (type === "interests") {
       setInterests(interests.filter((_, i) => i !== index));
@@ -77,6 +113,12 @@ export default function Preferences() {
       <div className="bg-circle bg-yellow"></div>
       <div className="bg-circle bg-green"></div>
 
+      {toast && (
+        <div className="toast">
+          <i className="fa-solid fa-circle-exclamation"></i> {toast}
+        </div>
+      )}
+      
       <div className="auth-form">
         <h2>Preferences</h2>
         <p className="subtitle">
@@ -137,7 +179,7 @@ export default function Preferences() {
                   {characters.map((char, index) => (
                     <div key={index} className="tag">
                       {char}
-                      <span className="remove-tag" onClick={() => removeTag("characters", index)}><i className="fa-solid fa-xmark"></i></span>
+                      <span className="remove-tag" onClick={() => removeTag("characters", index)}>×</span>
                     </div>
                   ))}
                 </div>
@@ -166,7 +208,6 @@ export default function Preferences() {
             ))}
           </div>
         </div>
-
         <div className="section">
           <p className="section-title">Journal Type:</p>
           <div className="toggle-buttons">
@@ -174,31 +215,38 @@ export default function Preferences() {
               className={`toggle-btn ${diaryOption === "Diary" ? "active" : ""}`}
               onClick={() => setDiaryOption("Diary")}
             >
-              Diary
+              <div className="content-wrapper">
+                <div className="content-img">
+                  <img src={diary} alt="Diary" className="type-image" />
+                </div>
+                <div className="text-content">
+                  <p className="type-text">
+                    <span className="type-title">Diary</span>: <span className="type-description">If you like to freely express your thoughts,
+                    feelings, and daily moments like a traditional diary.</span>
+                  </p>
+                </div>
+              </div>
             </button>
+        
             <button
               className={`toggle-btn ${diaryOption === "Questionnaire" ? "active" : ""}`}
               onClick={() => setDiaryOption("Questionnaire")}
             >
-              Questionnaire
+              <div className="content-wrapper">
+                <div className="content-img">
+                  <img src={questionnaire} alt="Questionnaire" className="type-image" />
+                </div>
+                <div className="text-content">
+                  <p className="type-text">
+                    <span className="type-title">Questionnaire</span>:<span className="type-description"> If you prefer guided prompts. Each day
+                    you'll answer thoughtful questions</span> 
+                  </p>
+                </div>
+              </div>
             </button>
           </div>
-          <div className="type-info">
-            <img 
-              src={diaryOption === "Diary" ? diary : questionnaire} 
-              alt="image" 
-              className="type-image"
-            />
-            <p>
-              {diaryOption === "Diary" 
-                ? "Choose the Diary mode if you like to freely express your thoughts, feelings, and daily moments without restrictions. It's your personal space to vent, reflect, or even be creative—just like a traditional handwritten diary."
-                : "Choose the Questionnaire mode if you prefer guided prompts. Each day you'll answer thoughtful questions designed to help you reflect, track your mood, and gain insights into your growth over time."}
-            </p>
-          </div>
-
         </div>
         <br />
-
         <button onClick={handleNext}>Next</button>
       </div>
     </div>
