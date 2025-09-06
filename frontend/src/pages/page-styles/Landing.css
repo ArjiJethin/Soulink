@@ -77,7 +77,7 @@ h1.app-name {
 
 .google-btn {
   width: 80%;
-  background: #4285f4;
+  background: #2779ff;
   color: white;
   font-size: 16px;
   font-weight: 500;
@@ -91,6 +91,29 @@ h1.app-name {
   align-items: center;
   z-index: 1000000;
   gap: 8px;
+}
+
+.auth-form button.blue-button {
+  width: 100%;
+  background: #2779ff;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 12px;
+  border: 1px solid #357ae8;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000000;
+  gap: 8px;
+}
+
+.auth-form button.blue-button:hover {
+  background: #357ae8;
+  color: white;
 }
 
 .google-btn:hover {
@@ -143,6 +166,13 @@ h1.app-name {
   z-index: 100;
 }
 
+
+.center-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 
 .alt-option {
   font-size: 14px;

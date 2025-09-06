@@ -98,9 +98,7 @@ export default function Journal() {
     };
 
     return (
-        <div className="journal-container dark-theme">
-            <Navbar />
-
+        <div className="journal-container">
             <div className="journal-content">
                 <div className="journal-header">
                     <button
@@ -110,7 +108,7 @@ export default function Journal() {
                     >
                         ← Back to Dashboard
                     </button>
-                    <h1>Daily Journal</h1>
+                    <h2>Daily Journal</h2>
                     <p>
                         Write down your thoughts, feelings, and reflections for
                         today
