@@ -319,9 +319,19 @@ export default function Preferences() {
                 </button>
               </div>
             </div>
-        </div>
-
-        {/* bottom actions row like the wireframe */}
+            <div className="mode-section">
+            <div className="modes">
+                <label className="input-label">
+                  Modes
+                </label> <br />
+              <p className="mode">
+                <button className="mode light-mode"> <i className="fa-solid fa-sun"></i> Light</button>
+              </p>
+              <p className="mode">
+                <button className="mode dark-mode"> <i className="fa-solid fa-moon"></i> Dark</button>
+              </p>
+            </div>
+            {/* bottom actions row like the wireframe */}
         <div className="actions-row">
           <button
             type="button"
@@ -341,6 +351,9 @@ export default function Preferences() {
             Accept
           </button>
         </div>
+        </div>
+        </div>
+
       </div>
     </div>
   );
