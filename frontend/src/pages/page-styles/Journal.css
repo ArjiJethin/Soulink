@@ -37,11 +37,18 @@
   overflow-x: hidden;
 }
 
+.heading .page-headin{
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: .25rem;
+  text-align: left;
+}
+
 /* main centered card */
 /* Use min()/max() so card never exceeds viewport width and is centered */
 .journal-card{
-  width: min(var(--max-card-width), 100%);
-  max-width: var(--max-card-width);
+  width: 100%;
   margin: 0 auto; /* center on very wide screens */
   border-radius: 14px;
   background: var(--card-bg);
@@ -67,18 +74,6 @@
   align-items:center;
   gap: .9rem;
   min-width: 0; /* allow children to shrink properly in flexbox */
-}
-
-.logo-fallback{
-  display: flex;
-  justify-content: center;
-  align-items:center;
-  gap: .6rem;
-}
-
-.logo{
-  width: 30px;
-  height: 30px;
 }
 
 .brand-title{
@@ -135,7 +130,7 @@
   margin: 0;
   font-size: clamp(22px, 4vw, 40px); /* scales smoothly */
   line-height: 1;
-  font-weight: 800;
+  font-weight: 750;
   color: var(--text);
   margin-bottom: .25rem;
 }
@@ -190,13 +185,10 @@
   font-size: 16px;
   line-height: 1.6;
   color: #111827;
-  border: 1px solid var(--border);
+  border: 1px solid #2d88ff52;
   background: linear-gradient(0deg, rgba(255,255,255,0.95), rgba(255,255,255,0.95));
   box-shadow: 0 10px 26px rgba(20,30,60,0.04);
   outline: none;
-  resize: vertical;
-  min-height: 32vh; /* relative to viewport for responsiveness */
-  max-height: min(60vh, calc(100vh - 260px)); /* avoids pushing footer off-screen */
   overflow: auto;
   transition: box-shadow .14s ease, border-color .14s ease;
 }
@@ -266,6 +258,10 @@
   transition: transform .14s ease, box-shadow .14s ease;
 }
 
+.color-blue {
+  color: var(--primary);
+}
+
 /* primary Save */
 .btn.primary{
   background: linear-gradient(180deg, var(--primary), var(--primary-strong));
@@ -298,10 +294,10 @@
 /* Medium devices */
 @media (max-width: 980px){
   :root { --max-card-width: 920px; } /* slightly narrower */
-  .journal-card{ padding: clamp(10px, 2.2vw, 18px); }
+  .journal-card{ padding: clamp(10px, 2.2vw, 18px); height: 97vh; }
   .page-title{ font-size: clamp(24px, 3.6vw, 34px); }
-  .journal-textarea{ min-height: 300px; max-height: calc(100vh - 240px); }
-  .journal-actions{ gap: .6rem; }
+  .journal-textarea{ height: 45vh;  }
+  .journal-actions{ width: 90%; gap: .6rem; position: fixed; bottom: 22px; left: 22px; right: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 }
 
 /* Small devices (mobile) */
@@ -373,6 +369,16 @@
 @media (min-width: 1200px){
   .journal-page{
     min-width: 1520px;
+  }
+
+  .journal-card{
+    min-width: 1200px;
+    height: 90vh;
+  }
+
+  .journal-textarea{
+    min-height: 50vh;
+    
   }
 }
 

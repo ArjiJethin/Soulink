@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./page-styles/Journal.css";
-import Logo from "../assets/imgs/logo-nbg.png";
+import userAvatarUrl from "../assets/imgs/bp1.png";
 
 const API_BASE_URL = "https://soul-link-1y76.onrender.com/api";
 
@@ -100,30 +100,30 @@ export default function Journal() {
   };
 
   return (
-    <div className="journal-page">
+    <div className="journal-page landing">
+      <div className="bg-circle bg-blue"></div>
+      <div className="bg-circle bg-red"></div>
+      <div className="bg-circle bg-yellow"></div>
+      <div className="bg-circle bg-green"></div>
 
       <div className="journal-card">
 
         <main className="card-body">
             <div className="side-side">
                 <div className="heading">
-                     <h1 className="page-title">Daily Journal</h1>
+                     <h1 className="page-headin">Daily Journal</h1>
                      <p className="subtitle">Write down your thoughts, feelings, and reflections for today</p>
                 </div>
                 <header className="card-header">
 
           <div className="header-actions">
             <button className="back-btn" onClick={handleBack} aria-label="Back">
-              ← Back
+              <i className="fa-regular fa-house color-blue"></i>
             </button>
 
             {/* Replace with user avatar if available */}
             <div className="avatar-circle" title="Your profile">
-              {/* <img src="/assets/avatar.png" alt="Avatar" /> */}
-              <svg width="40" height="40" viewBox="0 0 24 24" aria-hidden>
-                <circle cx="12" cy="8" r="3.2" fill="#f1c27d"></circle>
-                <path fill="#6b7280" d="M12 14c-4 0-6 2-6 3.5V20h12v-2.5C18 16 16 14 12 14z"></path>
-              </svg>
+              <img src={userAvatarUrl} alt="Avatar" className="avatar-circle" />
             </div>
           </div>
         </header>
@@ -151,13 +151,6 @@ export default function Journal() {
               aria-label="Journal entry text area"
               disabled={isLoading}
             />
-
-
-            {saveStatus && (
-              <div className={`save-status ${saveStatus.toLowerCase().includes("error") ? "error" : "success"}`}>
-                {saveStatus}
-              </div>
-            )}
 
             <div className="journal-actions">
               <button
