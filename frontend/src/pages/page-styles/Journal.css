@@ -177,11 +177,10 @@
   white-space: nowrap;
 }
 
-/* Lined textarea style (paper-like lines with subtle glass) */
 .journal-textarea {
   width: 100%;
   border-radius: 14px;
-  padding: 22px 22px 140px 22px; /* extra bottom padding to reveal Save button when scrolled */
+  padding: 22px 22px 140px 22px; 
   font-size: 16px;
   line-height: 1.6;
   color: #111827;
@@ -193,8 +192,6 @@
   transition: box-shadow .14s ease, border-color .14s ease;
 }
 
-/* overlay repeating lines effect using layered background */
-/* line spacing can be adjusted by changing the 40px value */
 .lined-textarea {
   background-image:
     repeating-linear-gradient(to bottom, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 40px);
@@ -202,13 +199,11 @@
   background-clip: padding-box;
 }
 
-/* placeholder color */
 .journal-textarea::placeholder{
   color: rgba(20,20,20,0.36);
   font-weight: 500;
 }
 
-/* focus */
 .journal-textarea:focus{
   border-color: var(--primary-strong);
   box-shadow: 0 20px 50px rgba(37,116,252,0.06);
@@ -287,14 +282,118 @@
   box-shadow: none;
 }
 
-/* =========================
-   RESPONSIVE BREAKPOINTS
-   ========================= */
+/* Ensure suggestions are positioned relative to editor */
+.journal-editor {
+  position: relative;
+}
 
-/* Medium devices */
+/* Hidden mirror used to compute caret pixel position */
+.mirror-div {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+}
+
+/* Suggestions dropdown */
+.mention-suggestions {
+  position: absolute; /* JS will set top/left */
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  min-width: 180px;
+  max-width: 260px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 999; /* keep over UI */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
+  animation: fadeInUp 0.15s ease-out;
+  font-size: 14px;
+}
+
+/* Suggestion item */
+.suggestion-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s ease-in-out;
+}
+
+.suggestion-item:hover {
+  background: #f4f7ff;
+}
+
+.suggestion-item strong {
+  color: #2d5be3;
+  font-weight: 600;
+}
+
+.suggestion-item span {
+  color: #666;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Highlighted @mentions */
+.mention {
+  background: linear-gradient(135deg, #e3f2ff, #d0e7ff);
+  color: #1a73e8;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin: 0 2px;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+/* Hover effect */
+.mention:hover {
+  background: linear-gradient(135deg, #d6e9ff, #c2ddff);
+  color: #0b5bd3;
+  box-shadow: 0 2px 6px rgba(26, 115, 232, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Optional: subtle underline effect */
+.mention::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 0%;
+  background: #1a73e8;
+  transition: width 0.25s ease-in-out;
+  margin-top: 2px;
+  border-radius: 2px;
+}
+
+.mention:hover::after {
+  width: 100%;
+}
+
+
 @media (max-width: 980px){
   :root { --max-card-width: 920px; } /* slightly narrower */
-  .journal-card{ padding: clamp(10px, 2.2vw, 18px); height: 97vh; }
+  .journal-card{height: 100vh; width: 100vw; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 255, 255, 0.087);}
   .page-title{ font-size: clamp(24px, 3.6vw, 34px); }
   .journal-textarea{ height: 45vh;  }
   .journal-actions{ width: 90%; gap: .6rem; position: fixed; bottom: 22px; left: 22px; right: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
