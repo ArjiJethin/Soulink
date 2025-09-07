@@ -1,311 +1,488 @@
 /* =========================
-   THEME TOKENS (match base)
+   Soulink - Journal (RESPONSIVE)
+   Replaces previous Journal.css
    ========================= */
+
+/* Ensure consistent sizing everywhere */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* THEME TOKENS */
 :root{
-  --primary: #3782fc;
-  --primary-strong: #2574fc;
-  --text: #111827;
-  --muted: #565656;
-  --border: rgba(20,20,20,0.08);
-  --card-bg: rgba(255,255,255,0.075);
-  --input-bg: rgba(255,255,255,0.55);
-  --white-blur: rgba(255,255,255,0.6);
+  --primary: #2d88ff;
+  --primary-strong: #1b6df6;
+  --text: #0f1724;
+  --muted: #6b7280;
+  --card-bg: rgba(255,255,255,0.95);
+  --glass: rgba(255,255,255,0.65);
+  --border: rgba(20,20,20,0.06);
+  --max-card-width: 1100px;
 }
 
-/* =========================
-   BASE CONTAINER (reuse)
-   ========================= */
-.landing{
-  position: relative;
+/* page background & subtle color glows
+   Making the page full width so the card sits centered inside it */
+.journal-page{
+  width: 100%;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
   align-items: flex-start;
-  background: linear-gradient(180deg, #fafbfd 0%, #fff 100%);
-  padding: 2.25rem;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  justify-content: center;
+  padding: clamp(12px, 2.25vw, 36px); /* responsive padding */
+  background: linear-gradient(180deg,#fbfdfc 0%, #fff 100%);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x: hidden;
 }
 
-/* Background glow circles (unchanged) */
-.bg-circle{
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(110px);
-  opacity: 0.45;
-  height: 140px; width: 140px;
-  z-index: 1; pointer-events: none;
+.heading .page-headin{
+  font-size: clamp(28px, 4vw, 36px);
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: .25rem;
+  text-align: left;
 }
-.bg-blue{ background:#4286f473; top:14%; left:4%; width:360px; height:360px; }
-.bg-red{ background:#ea443576; bottom:-3%; right:4%; width:360px; height:360px; }
-.bg-yellow{ background:#fbbd0569; top:22%; right:24%; width:360px; height:360px; }
-.bg-green{ background:#34a8538a; bottom:-3%; left:18%; width:360px; height:360px; }
 
-/* Main card (reuse preferences-card aesthetics) */
-.preferences-card{
-  position: relative;
+/* main centered card */
+/* Use min()/max() so card never exceeds viewport width and is centered */
+.journal-card{
   width: 100%;
-  max-width: 900px; /* narrower for focus */
+  margin: 0 auto; /* center on very wide screens */
   border-radius: 14px;
-  padding: 2rem;
   background: var(--card-bg);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(20, 20, 20, 0.164);
-  box-shadow: 0 10px 30px rgba(7, 22, 40, 0.06), inset 0 1px 0 rgba(255,255,255,0.6);
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
+  padding: clamp(12px, 1.6vw, 24px);
+  box-shadow: 0 30px 80px rgba(14,24,40,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
+  border: 1px solid rgba(20,20,60,0.05);
+  overflow: visible;
+}
+
+/* header: logo + avatar + back button */
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content: space-between;
   gap: 1rem;
-  animation: fadeIn 360ms ease-in-out;
+  margin-bottom: 1rem;
+  flex-wrap: wrap; /* allow wrapping on smaller screens */
 }
 
-.journal-container{
-  background: #f9faff;
-  min-height: 100vh;
-  width: 100%;
+/* brand & logo */
+.brand{
+  display:flex;
+  align-items:center;
+  gap: .9rem;
+  min-width: 0; /* allow children to shrink properly in flexbox */
 }
 
-.journal-content{
-  width: 1200px;
-  margin: 0 auto;
-  padding: 2rem 1rem 4rem 1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-@media (max-width: 768px){
-  .journal-content{ width: 100%; padding: 1.2rem; }
-  
-}
-
-/* =========================
-   JOURNAL PAGE
-   ========================= */
-.journal-landing{ padding-top: 1.25rem; }
-.journal-card{ overflow: hidden; }
-
-/* Header */
-.auth-form h2{
-  margin: 0;
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
+.brand-title{
+  font-weight: 800;
+  font-size: 1.12rem;
   color: var(--text);
   letter-spacing: -0.02em;
-  background: linear-gradient(45deg, #79b4ff, var(--primary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.subtitle{
-  margin: 0;
-  text-align: center;
-  color: var(--muted);
-  font-size: 1rem;
-  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Back button styled like your theme (glass + border) */
-.back-btn{
-  align-self: flex-start;
-  background: rgba(255,255,255,0.66);
-  border: 1px solid rgba(20,20,20,0.12);
-  color: #222;
-  padding: 0.5rem 0.9rem;
-  border-radius: 10px;
-  cursor: pointer;
-  margin-bottom: 0.5rem;
-  transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
-  font-size: .95rem;
-  -webkit-tap-highlight-color: transparent;
-  display: inline-flex; align-items: center; justify-content: center;
-  box-shadow: 0 6px 18px rgba(12, 26, 60, 0.04);
-}
-.back-btn:hover{ transform: translateY(-2px); box-shadow: 0 8px 22px rgba(12,22,40,0.08); }
-.back-btn:active{ transform: translateY(0); }
-
-/* Editor block (glass card inside) */
-.journal-editor{
-  background: rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 1.25rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(20,20,20,0.12);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45);
-}
-
-/* Toolbar */
-.editor-toolbar{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+/* header actions group (back + avatar) */
+.header-actions{
+  display:flex;
+  align-items:center;
   gap: .75rem;
-  margin-bottom: .75rem;
-  padding-bottom: .75rem;
-  border-bottom: 1px solid rgba(20,20,20,0.08);
-  flex-wrap: wrap;
+  flex: 0 0 auto;
 }
-.date{
-  color: var(--primary-strong);
+
+/* back button small glass */
+.back-btn{
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--border);
+  padding: .45rem .9rem;
+  border-radius: 10px;
   font-weight: 600;
+  color: #111;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(12,26,60,0.04);
+}
+.back-btn:hover{ transform: translateY(-2px); box-shadow: 0 8px 22px rgba(12,22,40,0.06); }
+
+/* avatar circle */
+.avatar-circle{
+  width:44px; height:44px; border-radius:50%;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background: linear-gradient(180deg,#fff,#fbfbff);
+  box-shadow: 0 6px 18px rgba(22,32,60,0.06);
+  border: 1px solid rgba(20,20,20,0.05);
+}
+
+/* main title / subtitle */
+.card-body{
+  width: 100%;
+  padding: .25rem 0;
+}
+
+/* responsive title size using clamp */
+.page-title{
+  margin: 0;
+  font-size: clamp(22px, 4vw, 40px); /* scales smoothly */
+  line-height: 1;
+  font-weight: 750;
+  color: var(--text);
+  margin-bottom: .25rem;
+}
+
+.subtitle{
+  margin: 1rem 0;
+  color: var(--muted);
+  text-align: left;
+  font-size: clamp(0.95rem, 1.25vw, 1rem);
+}
+
+/* editor block */
+.journal-editor{
+  margin-top: .4rem;
+  background: transparent;
+  border-radius: 12px;
+  padding: .25rem 0 0 0;
+}
+
+/* toolbar */
+.editor-toolbar{
+  display:flex;
+  justify-content: space-between;
+  align-items:center;
+  margin-bottom: .6rem;
+  padding-bottom: .6rem;
+  border-bottom: 1px solid rgba(20,20,20,0.03);
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.date{
+  color: var(--primary);
+  font-weight: 700;
   font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .word-count{
-  color: #6b7280;
+  color: var(--muted);
   font-size: .92rem;
   font-style: italic;
+  white-space: nowrap;
 }
 
-/* Input label + textarea share your theme inputs */
-.input-label{
-  display: block;
-  font-weight: 600;
-  color: var(--text);
-  margin: .25rem 0 .5rem;
-  font-size: .98rem;
-}
-.journal-textarea{
+.journal-textarea {
   width: 100%;
-  background: var(--input-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.1rem 1.1rem;
-  color: #222;
-  font-size: .98rem;
+  border-radius: 14px;
+  padding: 22px 22px 140px 22px; 
+  font-size: 16px;
   line-height: 1.6;
-  resize: vertical;
-  min-height: 340px;
-  box-shadow: 0 6px 14px rgba(20,30,60,0.03);
+  color: #111827;
+  border: 1px solid #2d88ff52;
+  background: linear-gradient(0deg, rgba(255,255,255,0.95), rgba(255,255,255,0.95));
+  box-shadow: 0 10px 26px rgba(20,30,60,0.04);
   outline: none;
-  transition: box-shadow .14s ease, transform .14s ease, border-color .14s ease;
-  -webkit-appearance: none; -moz-appearance: none; appearance: none;
+  overflow: auto;
+  transition: box-shadow .14s ease, border-color .14s ease;
 }
+
+.lined-textarea {
+  background-image:
+    repeating-linear-gradient(to bottom, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 40px);
+  background-size: 100% 40px;
+  background-clip: padding-box;
+}
+
+.journal-textarea::placeholder{
+  color: rgba(20,20,20,0.36);
+  font-weight: 500;
+}
+
 .journal-textarea:focus{
   border-color: var(--primary-strong);
-  box-shadow: 0 10px 30px rgba(37,116,252,0.06);
+  box-shadow: 0 20px 50px rgba(37,116,252,0.06);
 }
-.journal-textarea::placeholder{ color: rgba(30,30,30,0.35); }
 
-/* Save status (subtle) */
+/* status message */
 .save-status{
+  margin-top: 1rem;
   padding: .85rem;
   border-radius: 10px;
   text-align: center;
-  margin: .9rem 0 0;
-  font-weight: 600;
+  font-weight: 700;
   transition: all .2s ease;
   border: 1px solid transparent;
 }
 .save-status.success{
-  background: linear-gradient(180deg, rgba(76,175,80,0.14), rgba(76,175,80,0.08));
-  border-color: rgba(76,175,80,0.18);
-  color: #2d7f31;
+  background: linear-gradient(180deg, rgba(34,197,94,0.08), rgba(34,197,94,0.05));
+  border-color: rgba(34,197,94,0.14);
+  color: #166534;
 }
 .save-status.error{
-  background: linear-gradient(180deg, rgba(244,67,54,0.14), rgba(244,67,54,0.08));
-  border-color: rgba(244,67,54,0.18);
-  color: #b4362d;
+  background: linear-gradient(180deg, rgba(244,67,54,0.06), rgba(244,67,54,0.04));
+  border-color: rgba(244,67,54,0.12);
+  color: #7f1d1d;
 }
 
-/* Actions (reuse your .btn style, add .secondary) */
+/* actions - align to the right and keep Save prominent */
 .journal-actions{
-  display: flex; gap: .9rem; justify-content: center; margin-top: 1.1rem;
+  display:flex;
+  gap: .85rem;
+  justify-content: flex-end;
+  align-items:center;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
 }
+
+/* base button */
 .btn{
-  min-width: 150px;
   padding: 12px 18px;
-  border-radius: 14px;
-  font-weight: 700;
-  font-size: 1.02rem;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 15px;
   cursor: pointer;
   border: 1px solid var(--border);
+  min-width: 140px;
+  letter-spacing: .01em;
   transition: transform .14s ease, box-shadow .14s ease;
-  box-shadow: 0 8px 22px rgba(12,22,40,0.06);
 }
+
+.color-blue {
+  color: var(--primary);
+}
+
+/* primary Save */
 .btn.primary{
-  background: var(--primary);
+  background: linear-gradient(180deg, var(--primary), var(--primary-strong));
   color: #fff;
   border: none;
-  box-shadow: 0 10px 32px rgba(17,24,39,0.28), 0 1px 0 rgba(255,255,255,0.02) inset;
+  box-shadow: 0 14px 42px rgba(17, 24, 39, 0.18), 0 1px 0 rgba(255,255,255,0.02) inset;
 }
-.btn.primary:hover{ transform: translateY(-3px); box-shadow: 0 14px 40px rgba(17,24,39,0.36); }
+.btn.primary:hover{ transform: translateY(-3px); box-shadow: 0 20px 60px rgba(17,24,39,0.2); }
+
+/* secondary */
 .btn.secondary{
-  background: rgba(255,255,255,0.66);
-  color: #222;
-  border: 1px solid rgba(20,20,20,0.12);
+  background: rgba(255,255,255,0.94);
+  border: 1px solid rgba(20,20,20,0.06);
+  color: var(--text);
 }
-.btn.secondary:hover{ transform: translateY(-3px); box-shadow: 0 12px 30px rgba(12,22,40,0.09); }
+.btn.secondary:hover{ transform: translateY(-2px); }
 
-/* Scrollbar (keep your theme) */
-::-webkit-scrollbar{ width: 10px; height: 10px; }
-::-webkit-scrollbar-track{ background: rgba(255,255,255,0.05); border-radius: 10px; }
-::-webkit-scrollbar-thumb{
-  background: rgba(90,162,255,0.35);
-  border-radius: 10px;
-  border: 2px solid rgba(255,255,255,0.1);
-  backdrop-filter: blur(6px);
+/* disabled states */
+.btn[disabled], button[disabled]{
+  opacity: .62;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
-::-webkit-scrollbar-thumb:hover{
-  background: rgba(108,108,108,0.6);
-  border: 2px solid rgba(255,255,255,0.2);
+
+/* Ensure suggestions are positioned relative to editor */
+.journal-editor {
+  position: relative;
 }
-*{ scrollbar-width: thin; scrollbar-color: rgba(119,119,119,0.35) rgba(255,255,255,0.05); }
 
-/* Utility */
-button, .btn{ -webkit-tap-highlight-color: transparent; }
-@keyframes fadeIn{ from{opacity:0; transform:translateY(8px)} to{opacity:1; transform:translateY(0)} }
+/* Hidden mirror used to compute caret pixel position */
+.mirror-div {
+  position: absolute;
+  visibility: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
+  top: 0;
+  left: 0;
+}
 
-/* =========================
-   RESPONSIVE (minimal)
-   ========================= */
+/* Suggestions dropdown */
+.mention-suggestions {
+  position: absolute; /* JS will set top/left */
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  min-width: 180px;
+  max-width: 260px;
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 999; /* keep over UI */
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
+  animation: fadeInUp 0.15s ease-out;
+  font-size: 14px;
+}
+
+/* Suggestion item */
+.suggestion-item {
+  padding: 10px 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.15s ease-in-out;
+}
+
+.suggestion-item:hover {
+  background: #f4f7ff;
+}
+
+.suggestion-item strong {
+  color: #2d5be3;
+  font-weight: 600;
+}
+
+.suggestion-item span {
+  color: #666;
+  font-size: 12px;
+  margin-left: 8px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* Highlighted @mentions */
+.mention {
+  background: linear-gradient(135deg, #e3f2ff, #d0e7ff);
+  color: #1a73e8;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin: 0 2px;
+  display: inline-block;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  text-decoration: none;
+}
+
+/* Hover effect */
+.mention:hover {
+  background: linear-gradient(135deg, #d6e9ff, #c2ddff);
+  color: #0b5bd3;
+  box-shadow: 0 2px 6px rgba(26, 115, 232, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Optional: subtle underline effect */
+.mention::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 0%;
+  background: #1a73e8;
+  transition: width 0.25s ease-in-out;
+  margin-top: 2px;
+  border-radius: 2px;
+}
+
+.mention:hover::after {
+  width: 100%;
+}
+
+
 @media (max-width: 980px){
-  .preferences-card{ max-width: 760px; padding: 1.6rem; }
-  .auth-form h2{ font-size: 1.9rem; }
-  .journal-textarea{ min-height: 300px; }
-  .btn{ min-width: 140px; padding: 12px 16px; border-radius: 12px; }
+  :root { --max-card-width: 920px; } /* slightly narrower */
+  .journal-card{height: 100vh; width: 100vw; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(255, 255, 255, 0.087);}
+  .page-title{ font-size: clamp(24px, 3.6vw, 34px); }
+  .journal-textarea{ height: 45vh;  }
+  .journal-actions{ width: 90%; gap: .6rem; position: fixed; bottom: 22px; left: 22px; right: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
 }
+
+/* Small devices (mobile) */
 @media (max-width: 640px){
-  .landing{ padding: 1.2rem; }
-  .preferences-card{ padding: 1.2rem; border-radius: 12px; }
-  .auth-form h2{ font-size: 1.7rem; }
-  .subtitle{ font-size: .95rem; }
-  .editor-toolbar{ gap: .5rem; padding-bottom: .6rem; }
-  .journal-textarea{ min-height: 260px; padding: .95rem; font-size: .95rem; border-radius: 10px; }
-  .journal-actions{ flex-direction: column; gap: .75rem; }
-  .btn{ width: 100%; min-width: auto; }
-  .back-btn{ font-size: .9rem; padding: .45rem .8rem; }
-}
-@media (max-width: 420px){
-  .landing{ padding: .9rem; }
-  .preferences-card{ padding: 1rem; }
-  .auth-form h2{ font-size: 1.55rem; }
-  .journal-textarea{ min-height: 230px; font-size: .92rem; }
-  .word-count{ font-size: .88rem; }
-}
-
-/* Larger glow positions (unchanged) */
-@media (min-width: 769px){
-  .bg-circle{ width: 400px; height: 400px; }
-  .bg-blue{ top:10%; left:5%; }
-  .bg-red{ bottom:-5%; right:5%; }
-  .bg-yellow{ top:20%; left:10%; }
-  .bg-green{ bottom:-5%; left:20%; }
-}
-
-/* Print */
-@media print{
-  .landing{ background:#fff; padding: 0.5rem; }
-  .bg-circle, .back-btn, .journal-actions{ display:none !important; }
-  .preferences-card, .journal-editor{
-    background: transparent;
-    border: 1px solid #ccc;
-    box-shadow: none;
+  :root { --max-card-width: 100%; }
+  .journal-card{
+    padding: 12px;
+    border-radius: 12px;
   }
+
+  .header-actions{ gap: .5rem; display: flex; flex-direction: column-reverse;}
+
+  /* header stacks vertically */
+  .card-header{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .header-actions{
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* toolbar stacks, date above word-count */
+  .editor-toolbar{
+    flex-direction: column;
+    align-items: flex-start;
+    gap: .4rem;
+    padding-bottom: .5rem;
+  }
+
+  .page-title{ font-size: 26px; }
+
+  /* textarea uses more vertical space but bounded to viewport */
   .journal-textarea{
-    background: transparent;
-    border: none;
-    color: #000;
-    min-height: auto;
+    min-height: calc(40vh);
+    max-height: calc(100vh - 210px);
+    padding: 16px;
+    padding-bottom: 110px; /* keep bottom space for actions */
   }
+
+  /* actions become full-width stacked buttons */
+  .journal-actions{
+    flex-direction: column-reverse;
+    gap: .6rem;
+    align-items: stretch;
+    margin-top: 1rem;
+  }
+  .btn{ width: 100%; min-width: unset; padding: 12px 14px; border-radius: 10px; }
+}
+
+/* Very small devices */
+@media (max-width: 420px){
+  .page-title{ font-size: 22px; }
+  .journal-textarea{ min-height: 38vh; max-height: calc(100vh - 190px); }
+  .back-btn{ font-size: .9rem; padding: .4rem .75rem; }
+}
+
+/* print */
+@media print {
+  .journal-page{ background:white; padding: .5rem; }
+  .back-btn, .journal-actions, .avatar-circle { display:none !important; }
+  .journal-textarea{ background:transparent; border: none; box-shadow:none; color:#000; max-height: none; }
+}
+
+@media (min-width: 1200px){
+  .journal-page{
+    min-width: 1520px;
+  }
+
+  .journal-card{
+    min-width: 1200px;
+    height: 90vh;
+  }
+
+  .journal-textarea{
+    min-height: 50vh;
+    
+  }
+}
+
+.side-side {
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
 }
