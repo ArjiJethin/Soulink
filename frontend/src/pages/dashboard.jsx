@@ -1,484 +1,459 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "./page-styles/Dashboard.css";
-
 // Import default avatar
 import defaultAvatar from "../assets/imgs/avatar/row-1-column-1.png";
+import avatar from "../assets/imgs/avatar/Male1-no bg.png";
+
+// FontAwesome Icons
+import {
+  FaPen,
+  FaSyncAlt,
+  FaLightbulb,
+  FaSmile,
+  FaLeaf,
+  FaCommentDots,
+  FaStar,
+  FaAppleAlt,
+  FaUser,
+  FaUsers,
+  FaHome,
+  FaBook,
+  FaUserFriends,
+  FaUserCircle,
+} from "react-icons/fa";
 
 const API_BASE_URL = "https://soul-link-1y76.onrender.com/api";
 
 export default function Dashboard() {
-    const [userPreferences, setUserPreferences] = useState({
-        username: "User",
-        characters: [],
-        selectedAvatar: {
-            id: "avatar1",
-            name: "Friendly",
-            image: defaultAvatar,
-            description: "Cheerful and optimistic",
-        },
-    });
-    const [todaysMood, setTodaysMood] = useState({
-        mood: "calm",
-        message: "You seem calm today",
-        encouragement: "Keep it going!",
-    });
-    const [aiSuggestions, setAiSuggestions] = useState([
-        { id: 1, text: "Start your day with journaling", icon: "📝" },
-        { id: 2, text: "Take a moment to breathe deeply", icon: "🧘" },
-    ]);
-    const [wellnessData, setWellnessData] = useState({
-        score: 3,
-        trend: 75,
-        entries: 8,
-    });
-    const [achievements] = useState([
-        { id: 1, icon: "😊", name: "Happy Mood", unlocked: true },
-        { id: 2, icon: "🌱", name: "Growth", unlocked: true },
-        { id: 3, icon: "💬", name: "Social", unlocked: true },
-        { id: 4, icon: "⭐", name: "Achievement", unlocked: false },
-    ]);
-    const [isLoading, setIsLoading] = useState(true);
+  // --- state (kept identical to your existing logic) ---
+  const [userPreferences, setUserPreferences] = useState({
+    username: "User",
+    characters: [],
+    selectedAvatar: {
+      id: "avatar1",
+      name: "Friendly",
+      image: defaultAvatar,
+      description: "Cheerful and optimistic",
+    },
+  });
+  const [todaysMood, setTodaysMood] = useState({
+    mood: "calm",
+    message: "You seem calm today",
+    encouragement: "Keep it going!",
+  });
+  const [aiSuggestions, setAiSuggestions] = useState([
+    { id: 1, text: "Start your day with journaling", icon: <FaPen /> },
+    { id: 2, text: "Take a moment to breathe deeply", icon: <FaLeaf /> },
+  ]);
+  const [wellnessData, setWellnessData] = useState({
+    score: 3,
+    trend: 75,
+    entries: 8,
+  });
+  const [achievements] = useState([
+    { id: 1, icon: <FaSmile />, name: "Happy Mood", unlocked: true },
+    { id: 2, icon: <FaLeaf />, name: "Growth", unlocked: true },
+    { id: 3, icon: <FaCommentDots />, name: "Social", unlocked: true },
+    { id: 4, icon: <FaStar />, name: "Achievement", unlocked: false },
+  ]);
+  const [isLoading, setIsLoading] = useState(true);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        // Load user preferences from localStorage
-        const savedPreferences = localStorage.getItem("userPreferences");
-        if (savedPreferences) {
-            setUserPreferences(JSON.parse(savedPreferences));
-        }
+  useEffect(() => {
+    // Load user preferences from localStorage
+    const savedPreferences = localStorage.getItem("userPreferences");
+    if (savedPreferences) {
+      setUserPreferences(JSON.parse(savedPreferences));
+    }
 
-        // Check for latest journal analysis in localStorage
-        const latestAnalysis = localStorage.getItem("latestJournalAnalysis");
-        if (latestAnalysis) {
-            const analysis = JSON.parse(latestAnalysis);
-            // Update with fresh analysis if available
-            if (analysis.ai_suggestions) {
-                setAiSuggestions(analysis.ai_suggestions);
-            }
-            if (analysis.wellness_metrics) {
-                setWellnessData({
-                    score: analysis.wellness_metrics.wellness_score,
-                    trend: analysis.wellness_metrics.mood_trend,
-                    entries: analysis.wellness_metrics.total_entries,
-                });
-            }
-            if (analysis.sentiment_analysis) {
-                updateMoodFromSentiment(analysis.sentiment_analysis);
-            }
-        }
-
-        // Fetch fresh data from backend
-        fetchDashboardData();
-    }, []);
-
-    const updateMoodFromSentiment = (sentimentData) => {
-        const moodMessages = {
-            happy: {
-                message: "You're radiating positivity today!",
-                encouragement: "Keep spreading that joy!",
-            },
-            calm: {
-                message: "You seem peaceful and centered",
-                encouragement: "Your balance is inspiring!",
-            },
-            sad: {
-                message: "It seems like a tough day",
-                encouragement: "Tomorrow is a new beginning!",
-            },
-            stressed: {
-                message: "You seem overwhelmed today",
-                encouragement: "Take it one step at a time!",
-            },
-            angry: {
-                message: "You seem frustrated today",
-                encouragement: "Take a moment to breathe and reset!",
-            },
-            tired: {
-                message: "You seem exhausted today",
-                encouragement: "Rest is productive too!",
-            },
-            neutral: {
-                message: "How are you feeling today?",
-                encouragement: "Your mood matters to us!",
-            },
-        };
-
-        const moodInfo = moodMessages[sentimentData.mood] || moodMessages.calm;
-        setTodaysMood({
-            mood: sentimentData.mood,
-            message: moodInfo.message,
-            encouragement: moodInfo.encouragement,
+    // Check for latest journal analysis in localStorage
+    const latestAnalysis = localStorage.getItem("latestJournalAnalysis");
+    if (latestAnalysis) {
+      const analysis = JSON.parse(latestAnalysis);
+      if (analysis.ai_suggestions) {
+        setAiSuggestions(
+          analysis.ai_suggestions.map((s, idx) => ({
+            id: idx + 1,
+            text: s.text,
+            icon: <FaLightbulb />,
+          }))
+        );
+      }
+      if (analysis.wellness_metrics) {
+        setWellnessData({
+          score: analysis.wellness_metrics.wellness_score,
+          trend: analysis.wellness_metrics.mood_trend,
+          entries: analysis.wellness_metrics.total_entries,
         });
+      }
+      if (analysis.sentiment_analysis) {
+        updateMoodFromSentiment(analysis.sentiment_analysis);
+      }
+    }
+
+    // Fetch fresh data from backend
+    fetchDashboardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const updateMoodFromSentiment = (sentimentData) => {
+    const moodMessages = {
+      happy: {
+        message: "You're radiating positivity today!",
+        encouragement: "Keep spreading that joy!",
+      },
+      calm: {
+        message: "You seem peaceful and centered",
+        encouragement: "Your balance is inspiring!",
+      },
+      sad: {
+        message: "It seems like a tough day",
+        encouragement: "Tomorrow is a new beginning!",
+      },
+      stressed: {
+        message: "You seem overwhelmed today",
+        encouragement: "Take it one step at a time!",
+      },
+      angry: {
+        message: "You seem frustrated today",
+        encouragement: "Take a moment to breathe and reset!",
+      },
+      tired: {
+        message: "You seem exhausted today",
+        encouragement: "Rest is productive too!",
+      },
+      neutral: {
+        message: "How are you feeling today?",
+        encouragement: "Your mood matters to us!",
+      },
     };
 
-    const fetchDashboardData = async () => {
-        setIsLoading(true);
-        try {
-            // Fetch mood data
-            await fetchTodaysMood();
-            // Fetch AI suggestions
-            await fetchAISuggestions();
-            // Fetch wellness data
-            await fetchWellnessData();
-        } catch (error) {
-            console.error("Error fetching dashboard data:", error);
-        } finally {
-            setIsLoading(false);
-        }
+    const moodInfo = moodMessages[sentimentData.mood] || moodMessages.calm;
+    setTodaysMood({
+      mood: sentimentData.mood,
+      message: moodInfo.message,
+      encouragement: moodInfo.encouragement,
+    });
+  };
+
+  const fetchDashboardData = async () => {
+    setIsLoading(true);
+    try {
+      await fetchTodaysMood();
+      await fetchAISuggestions();
+      await fetchWellnessData();
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const fetchAISuggestions = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/dashboard/suggestions?user_id=default_user`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setAiSuggestions(
+          data.suggestions.map((suggestion, index) => ({
+            id: index + 1,
+            text: suggestion.text,
+            icon: <FaLightbulb />,
+          }))
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching AI suggestions:", error);
+    }
+  };
+
+  const fetchWellnessData = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/dashboard/wellness?user_id=default_user`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        const wellness = data.wellness_data;
+        setWellnessData({
+          score: wellness.wellness_score,
+          trend: wellness.mood_trend,
+          entries: wellness.total_entries,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching wellness data:", error);
+    }
+  };
+
+  const fetchTodaysMood = async () => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/dashboard/mood?user_id=default_user`
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setTodaysMood({
+          mood: data.mood,
+          message: data.message,
+          encouragement: data.encouragement,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching mood data:", error);
+    }
+  };
+
+  const handleJournalClick = () => {
+    navigate("/journal");
+  };
+
+  const getMoodIcon = (mood) => {
+    const moodIcons = {
+      happy: <FaSmile />,
+      calm: <FaSmile />,
+      sad: <FaCommentDots />,
+      stressed: <FaCommentDots />,
+      angry: <FaCommentDots />,
+      tired: <FaCommentDots />,
+      neutral: <FaSmile />,
     };
+    return moodIcons[mood] || <FaSmile />;
+  };
 
-    const fetchAISuggestions = async () => {
-        try {
-            const response = await fetch(
-                `${API_BASE_URL}/dashboard/suggestions?user_id=default_user`
-            );
-            if (response.ok) {
-                const data = await response.json();
-                setAiSuggestions(
-                    data.suggestions.map((suggestion, index) => ({
-                        id: index + 1,
-                        text: suggestion.text,
-                        icon: suggestion.icon,
-                    }))
-                );
-            }
-        } catch (error) {
-            console.error("Error fetching AI suggestions:", error);
-            // Keep default suggestions on error
-        }
-    };
+  return (
+    <div className="soul-dashboard-root">
+      <Navbar />
 
-    const fetchWellnessData = async () => {
-        try {
-            const response = await fetch(
-                `${API_BASE_URL}/dashboard/wellness?user_id=default_user`
-            );
-            if (response.ok) {
-                const data = await response.json();
-                const wellness = data.wellness_data;
-                setWellnessData({
-                    score: wellness.wellness_score,
-                    trend: wellness.mood_trend,
-                    entries: wellness.total_entries,
-                });
-            }
-        } catch (error) {
-            console.error("Error fetching wellness data:", error);
-            // Keep default wellness data on error
-        }
-    };
-
-    const fetchTodaysMood = async () => {
-        try {
-            const response = await fetch(
-                `${API_BASE_URL}/dashboard/mood?user_id=default_user`
-            );
-            if (response.ok) {
-                const data = await response.json();
-                setTodaysMood({
-                    mood: data.mood,
-                    message: data.message,
-                    encouragement: data.encouragement,
-                });
-            }
-        } catch (error) {
-            console.error("Error fetching mood data:", error);
-            // Keep default mood on error
-        }
-    };
-
-    const handleJournalClick = () => {
-        navigate("/journal");
-    };
-
-    const getMoodEmoji = (mood) => {
-        const moodEmojis = {
-            happy: "😊",
-            calm: "😌",
-            sad: "😞",
-            stressed: "😰",
-            angry: "😠",
-            tired: "😴",
-            neutral: "😐",
-        };
-        return moodEmojis[mood] || "😊";
-    };
-
-    return (
-        <div className="dashboard-container dark-theme">
-            <Navbar />
-
-            <div className="dashboard-content">
-                {/* Main Character Section */}
-                <div className="character-section">
-                    <div className="character-avatar">
-                        <div className="avatar-display">
-                            <div className="avatar-image-large">
-                                <img
-                                    src={
-                                        userPreferences.selectedAvatar?.image ||
-                                        defaultAvatar
-                                    }
-                                    alt={
-                                        userPreferences.selectedAvatar?.name ||
-                                        "Avatar"
-                                    }
-                                    className="avatar-img"
-                                />
-                            </div>
-                            <div className="avatar-info-display">
-                                <h2 className="username-display">
-                                    Hello, {userPreferences.username}!
-                                </h2>
-                                <p className="avatar-name-display">
-                                    {userPreferences.selectedAvatar?.name ||
-                                        "Friendly"}{" "}
-                                    Avatar
-                                </p>
-                                <p className="avatar-description-display">
-                                    {userPreferences.selectedAvatar
-                                        ?.description ||
-                                        "Cheerful and optimistic"}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    {isLoading && (
-                        <div className="loading-indicator">
-                            <span>🔄 Loading your wellness data...</span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Dashboard Grid */}
-                <div className="dashboard-grid">
-                    {/* Take a Journal */}
-                    <div
-                        className="dashboard-card journal-card"
-                        onClick={handleJournalClick}
-                        role="button"
-                        tabIndex={0}
-                        onKeyPress={(e) =>
-                            e.key === "Enter" && handleJournalClick()
-                        }
-                    >
-                        <div className="card-header">
-                            <span className="card-icon">📝</span>
-                            <h3>Take a Journal</h3>
-                        </div>
-                        <p className="card-description">
-                            Write down your thoughts and feelings
-                        </p>
-                    </div>
-
-                    {/* Today's Mood */}
-                    <div className="dashboard-card mood-card">
-                        <div className="card-header">
-                            <h3>Today's Mood</h3>
-                            <button
-                                className="refresh-btn"
-                                onClick={fetchTodaysMood}
-                                aria-label="Refresh mood data"
-                            >
-                                🔄
-                            </button>
-                        </div>
-                        <div className="mood-content">
-                            <div className="mood-emoji">
-                                {getMoodEmoji(todaysMood.mood)}
-                            </div>
-                            <p className="mood-message">{todaysMood.message}</p>
-                            <p className="mood-encouragement">
-                                ✨ {todaysMood.encouragement}
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* AI Suggestions */}
-                    <div className="dashboard-card suggestions-card">
-                        <div className="card-header">
-                            <h3>AI Suggestions</h3>
-                            <button
-                                className="refresh-btn"
-                                onClick={fetchAISuggestions}
-                                aria-label="Refresh AI suggestions"
-                            >
-                                🔄
-                            </button>
-                        </div>
-                        <div className="suggestions-content">
-                            {aiSuggestions.map((suggestion) => (
-                                <div
-                                    key={suggestion.id}
-                                    className="suggestion-item"
-                                >
-                                    <span className="suggestion-icon">
-                                        {suggestion.icon}
-                                    </span>
-                                    <span className="suggestion-text">
-                                        {suggestion.text}
-                                    </span>
-                                </div>
-                            ))}
-                            <div className="api-placeholder">
-                                <small>🔄 Powered by AI Backend</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Wellness Dashboard */}
-                    <div className="dashboard-card wellness-card">
-                        <div className="card-header">
-                            <h3>Wellness Dashboard</h3>
-                            <button
-                                className="refresh-btn"
-                                onClick={fetchWellnessData}
-                                aria-label="Refresh wellness data"
-                            >
-                                🔄
-                            </button>
-                        </div>
-                        <div className="wellness-content">
-                            <div className="wellness-score">
-                                <span className="score-icon">🍎</span>
-                                <span className="score-number">
-                                    {wellnessData.score}
-                                </span>
-                            </div>
-                            <div className="wellness-stats">
-                                <div className="stat-item">
-                                    <span className="stat-label">
-                                        Mood trend
-                                    </span>
-                                    <div className="trend-container">
-                                        <div className="trend-bar">
-                                            <div
-                                                className="trend-fill"
-                                                style={{
-                                                    width: `${wellnessData.trend}%`,
-                                                }}
-                                            ></div>
-                                        </div>
-                                        <span className="stat-value">
-                                            {wellnessData.trend}%
-                                        </span>
-                                    </div>
-                                </div>
-                                <div className="stat-item">
-                                    <span className="stat-label">
-                                        {wellnessData.entries} entries
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="api-placeholder">
-                                <small>📊 Backend Analytics</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Achievements */}
-                    <div className="dashboard-card achievements-card">
-                        <div className="card-header">
-                            <h3>Achievements</h3>
-                        </div>
-                        <div className="achievements-content">
-                            <div className="achievements-grid">
-                                {achievements.map((achievement) => (
-                                    <div
-                                        key={achievement.id}
-                                        className={`achievement-item ${
-                                            achievement.unlocked
-                                                ? "unlocked"
-                                                : "locked"
-                                        }`}
-                                        title={achievement.name}
-                                    >
-                                        <span className="achievement-icon">
-                                            {achievement.icon}
-                                        </span>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="edit-placeholder">
-                                <small>✏️ Editable in future updates</small>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Real-Life Characters */}
-                    <div className="dashboard-card characters-card">
-                        <div className="card-header">
-                            <h3>Real-Life Characters</h3>
-                        </div>
-                        <div className="characters-content">
-                            {userPreferences.characters &&
-                            userPreferences.characters.length > 0 ? (
-                                <div className="characters-grid">
-                                    {userPreferences.characters.map(
-                                        (character, index) => (
-                                            <div
-                                                key={index}
-                                                className="character-item"
-                                            >
-                                                <div className="character-avatar-small">
-                                                    {character.name?.charAt(
-                                                        0
-                                                    ) || "👤"}
-                                                </div>
-                                                <div className="character-info">
-                                                    <span className="character-name">
-                                                        {character.name}
-                                                    </span>
-                                                    <span className="character-relation">
-                                                        {character.relation}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        )
-                                    )}
-                                </div>
-                            ) : (
-                                <div className="characters-placeholder">
-                                    <div className="character-item">
-                                        <div className="character-avatar-small">
-                                            👩
-                                        </div>
-                                        <div className="character-info">
-                                            <span className="character-name">
-                                                Mom
-                                            </span>
-                                            <span className="character-relation">
-                                                Family
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="character-item">
-                                        <div className="character-avatar-small">
-                                            👨
-                                        </div>
-                                        <div className="character-info">
-                                            <span className="character-name">
-                                                Best Friend
-                                            </span>
-                                            <span className="character-relation">
-                                                Friend
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div className="preferences-note">
-                                        <small>
-                                            💡 Add characters in preferences
-                                        </small>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
+      <main className="soul-dashboard-wrap">
+        {/* Left column cards */}
+        <section className="soul-col left-col">
+          <div
+            className="soul-card card-journal"
+            onClick={handleJournalClick}
+            role="button"
+            tabIndex={0}
+            onKeyPress={(e) => e.key === "Enter" && handleJournalClick()}
+          >
+            <div className="card-row">
+              <div className="card-icon">
+                <FaPen />
+              </div>
+              <div className="card-body">
+                <h4 className="card-title">Take a Journal</h4>
+                <p className="card-sub">Write down your thoughts and feelings</p>
+              </div>
             </div>
-        </div>
-    );
+          </div>
+
+          <div className="soul-card card-ai">
+            <div className="card-head">
+              <h4 className="card-title">AI Suggestions</h4>
+              <button
+                className="btn-refresh"
+                onClick={fetchAISuggestions}
+                aria-label="Refresh AI suggestions"
+              >
+                <FaSyncAlt />
+              </button>
+            </div>
+            <div className="ai-list">
+              {aiSuggestions.map((s) => (
+                <div key={s.id} className="ai-item">
+                  <span className="ai-icon">{s.icon}</span>
+                  <span className="ai-text">{s.text}</span>
+                </div>
+              ))}
+              <div className="ai-foot">
+                <small>
+                  <FaSyncAlt /> Powered by AI Backend
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div className="soul-card card-achievements">
+            <h4 className="card-title">Achievements</h4>
+            <div className="ach-grid">
+              {achievements.map((a) => (
+                <div
+                  key={a.id}
+                  className={`ach-bubble ${a.unlocked ? "unlocked" : "locked"}`}
+                  title={a.name}
+                >
+                  {a.icon}
+                </div>
+              ))}
+            </div>
+            <div className="ai-foot">
+              <small>✏️ Editable in future updates</small>
+            </div>
+          </div>
+        </section>
+
+        {/* Center avatar column */}
+        <section className="soul-col center-col">
+          <div className="avatar-panel">
+            <div className="avatar-figure">
+              <img src={avatar} alt="User Avatar" className="avatar-image"
+              />
+            </div>
+
+            <div className="avatar-meta">
+              <h2 className="greet">Hello, {userPreferences.username}!</h2>
+              <p className="avatar-name">
+                {userPreferences.selectedAvatar?.name || "Friendly"} Avatar
+              </p>
+              <p className="avatar-desc">
+                {userPreferences.selectedAvatar?.description ||
+                  "Cheerful and optimistic"}
+              </p>
+            </div>
+
+            {isLoading && (
+              <div className="loading-strip">
+                <FaSyncAlt /> Loading your wellness data...
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Right column cards */}
+        <section className="soul-col right-col">
+          <div className="soul-card card-mood">
+            <div className="card-head">
+              <h4 className="card-title">Today's Mood</h4>
+              <button
+                className="btn-refresh"
+                onClick={fetchTodaysMood}
+                aria-label="Refresh mood data"
+              >
+                <FaSyncAlt />
+              </button>
+            </div>
+            <div className="mood-body">
+              <div className="mood-emoji">{getMoodIcon(todaysMood.mood)}</div>
+              <div className="mood-texts">
+                <p className="mood-message">{todaysMood.message}</p>
+                <p className="mood-enc">{todaysMood.encouragement}</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="soul-card card-wellness">
+            <div className="card-head">
+              <h4 className="card-title">Wellness Dashboard</h4>
+              <button
+                className="btn-refresh"
+                onClick={fetchWellnessData}
+                aria-label="Refresh wellness data"
+              >
+                <FaSyncAlt />
+              </button>
+            </div>
+            <div className="wellness-body">
+              <div className="wellness-score">
+                <span className="well-icon">
+                  <FaAppleAlt />
+                </span>
+                <span className="well-num">{wellnessData.score}</span>
+              </div>
+              <div className="well-stats">
+                <div className="stat-row">
+                  <span className="stat-label">Mood trend</span>
+                  <div className="trend">
+                    <div
+                      className="trend-fill"
+                      style={{ width: `${wellnessData.trend}%` }}
+                    ></div>
+                  </div>
+                  <span className="stat-val">{wellnessData.trend}%</span>
+                </div>
+
+                <div className="stat-row">
+                  <span className="stat-label">{wellnessData.entries} entries</span>
+                </div>
+              </div>
+              <div className="ai-foot">
+                <small>
+                  <FaSyncAlt /> Backend Analytics
+                </small>
+              </div>
+            </div>
+          </div>
+
+          <div className="soul-card card-characters">
+            <h4 className="card-title">Real-Life Characters</h4>
+            <div className="chars-list">
+              {userPreferences.characters && userPreferences.characters.length > 0 ? (
+                userPreferences.characters.map((c, idx) => (
+                  <div key={idx} className="char-item">
+                    <div className="char-avatar-small">
+                      <FaUser />
+                    </div>
+                    <div className="char-info">
+                      <span className="c-name">{c.name}</span>
+                      <span className="c-rel">{c.relation}</span>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <>
+                  <div className="char-item">
+                    <div className="char-avatar-small">
+                      <FaUser />
+                    </div>
+                    <div className="char-info">
+                      <span className="c-name">Mom</span>
+                      <span className="c-rel">Family</span>
+                    </div>
+                  </div>
+                  <div className="char-item">
+                    <div className="char-avatar-small">
+                      <FaUserFriends />
+                    </div>
+                    <div className="char-info">
+                      <span className="c-name">Best Friend</span>
+                      <span className="c-rel">Friend</span>
+                    </div>
+                  </div>
+                  <div className="pref-note">
+                    <small>
+                      <FaLightbulb /> Add characters in preferences
+                    </small>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Mobile bottom nav (purely presentational) */}
+      <nav className="soul-mobile-nav" aria-hidden={false}>
+        <button className="nav-btn active">
+          <FaHome />
+          <span>Home</span>
+        </button>
+        <button className="nav-btn">
+          <FaBook />
+          <span>Journal</span>
+        </button>
+        <button className="nav-btn">
+          <FaUsers />
+          <span>Characters</span>
+        </button>
+        <button className="nav-btn">
+          <FaUserCircle />
+          <span>Profile</span>
+        </button>
+      </nav>
+    </div>
+  );
 }

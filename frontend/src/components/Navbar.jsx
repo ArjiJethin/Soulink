@@ -1,4 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { FiBell, FiUser, FiSettings, FiMenu } from "react-icons/fi";
 import "./comp-styles/Navbar.css";
 
 function Navbar() {
@@ -9,25 +10,30 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar dark-navbar">
+    <nav className="navbar">
       <div className="navbar-container">
-        <div className="logo">
-          <span className="logo-icon">🔗</span>
-          <span className="logo-text">Soul Link</span>
-        </div>
         
+        {/* Logo / Brand */}
+        <div className="logo">
+          <span className="logo-text">Soulink</span>
+        </div>
+
+        {/* Navigation Buttons */}
         <div className="nav-actions">
           <button className="nav-btn notification-btn">
-            <span>🔔</span>
+            <FiBell />
           </button>
-          <button className="nav-btn profile-btn" onClick={handleProfileClick}>
-            <span>👤</span>
+          <button
+            className="nav-btn profile-btn"
+            onClick={handleProfileClick}
+          >
+            <FiUser />
           </button>
           <button className="nav-btn settings-btn">
-            <span>⚙️</span>
+            <FiSettings />
           </button>
           <button className="nav-btn menu-btn">
-            <span>☰</span>
+            <FiMenu />
           </button>
         </div>
       </div>

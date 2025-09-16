@@ -1,850 +1,303 @@
-.dashboard-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f0f23 100%);
-  color: #e0e0e0;
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap");
+
+:root{
+  --page-bg: #eef1f6;      /* light page background */
+  --card-bg: #ffffff;      /* inner white card */
+  --muted: #6b7280;
+  --text: #0f1724;
+  --accent: #2b7cff;
+  --green: #39c16a;
+  --soft-border: rgba(15,23,42,0.06);
+  --glass: rgba(235,241,253,0.45);
+  --radius-xl: 24px;
+  --radius-md: 16px;
+  --radius-sm: 10px;
+  --shadow-1: 0 6px 18px rgba(11,20,40,0.04);
+  --shadow-2: 0 18px 60px rgba(11,20,40,0.08);
+  --max-width: 100vw;  /* max width for centered content */
 }
 
-.dashboard-content {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  padding-top: 100px; /* Account for navbar */
+/* ---- page reset ---- */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  background: var(--page-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: var(--text);
+  box-sizing: border-box;
+  /* prevent accidental horizontal scrolling caused by large fixed widths */
+  overflow-x: hidden;
 }
 
-.character-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 3rem;
-  text-align: center;
-}
+/* ensure all elements use border-box sizing */
+*, *::before, *::after { box-sizing: inherit; }
 
-.character-avatar {
-  position: relative;
-  margin-bottom: 1.5rem;
-}
-
-.avatar-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 1.5rem;
-}
-
-.avatar-image-large {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, #64b5f6, #42a5f5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 32px rgba(100, 181, 246, 0.3);
-  border: 4px solid rgba(255, 255, 255, 0.1);
-  overflow: hidden;
-  position: relative;
-}
-
-.avatar-img {
+/* ---- outer wrapper (no longer a "card") ----
+   The big white rounded framed look removed — page content sits directly on page bg.
+*/
+.soul-dashboard-root {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-
-.avatar-emoji-large {
-  font-size: 4rem;
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-}
-
-.avatar-info-display {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  max-width: 400px;
-}
-
-.username-display {
-  color: #ffffff;
-  font-size: 2.2rem;
-  font-weight: 700;
   margin: 0;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  background: linear-gradient(135deg, #64b5f6, #42a5f5);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  padding: 28px 16px; /* breathing space from page edges */
+  box-sizing: border-box;
+  background: transparent; /* removed white card background */
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
 }
 
-.avatar-name-display {
-  color: #64b5f6;
-  font-size: 1.4rem;
-  font-weight: 600;
-  margin: 0;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-}
-
-.avatar-description-display {
-  color: #b0b0b0;
-  font-size: 1.1rem;
-  margin: 0;
-  max-width: 350px;
-  line-height: 1.5;
-  font-style: italic;
-}
-
-.avatar-image {
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
-.loading-indicator {
-  margin-top: 1rem;
-  color: #64b5f6;
-  font-size: 0.9rem;
-  text-align: center;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-.dashboard-grid {
+/* Keep content centered inside the page */
+.soul-dashboard-wrap {
+  max-width: var(--max-width);
+  margin: 70px auto auto auto;
+  padding: 18px 22px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
-  max-width: 1200px;
+  /* fluid, responsive columns — won't overflow horizontally */
+  grid-template-columns: minmax(240px, 1fr) minmax(340px, 560px) minmax(240px, 1fr);
+  gap: 28px;
+  align-items: start;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* column base - allow children to shrink to avoid overflow */
+.soul-col { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+
+/* ---- Card base (used by internal cards) ---- */
+.soul-card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.99));
+  border-radius: var(--radius-md);
+  padding: 18px;
+  box-shadow: var(--shadow-1);
+  border: 1px solid var(--soft-border);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  overflow: hidden; /* ensure internal images/text do not overflow card */
+}
+
+/* slight lift on hover (desktop only) */
+.soul-card:hover { transform: translateY(-4px); box-shadow: 0 28px 78px rgba(11,20,40,0.07); }
+
+/* small helpers used inside cards */
+.card-row { display:flex; gap:14px; align-items:center; }
+.card-icon { font-size:22px; display:flex; align-items:center; justify-content:center; color:var(--muted); }
+.card-body .card-title { margin:0; font-size:20px; font-weight:600; color:var(--text); }
+.card-sub { margin:6px 0 0; color:var(--muted); font-size:14px; }
+
+/* header-like area inside cards (title + optional actions) */
+.card-head { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.card-head .card-title { margin:0; font-size:18px; font-weight:600; }
+
+/* refresh / action buttons (icons) */
+.btn-refresh { background:transparent; border:none; font-size:16px; cursor:pointer; color:var(--muted); padding:6px; border-radius:8px; }
+.btn-refresh:hover { color: var(--text); background: rgba(15,23,42,0.03); }
+
+/* ----- TAKE A JOURNAL (big pill) ----- */
+.card-journal {
+  padding: 16px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+  user-select: none;
+}
+
+.card-ai { max-height: 300px; overflow-y: auto; padding: 16px; border-radius: var(--radius-md); }
+.card-journal .card-row { gap: 18px; }
+.card-journal .card-icon { font-size:20px; color:#0f1724; }
+.card-journal .card-title { font-size:22px; font-weight:700; letter-spacing:-0.2px; color:#0f1724; }
+.card-journal:active { transform: translateY(1px); }
+
+/* ----- AI suggestions card (keeps content sparse like screenshot) ----- */
+.card-ai .card-title { font-size:20px; font-weight:700; }
+.ai-list { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
+.ai-item { display:flex; gap:12px; align-items:flex-start; }
+.ai-icon { font-size:18px; min-width:22px; display:flex; align-items:center; justify-content:center; color:var(--accent); }
+.ai-text { color:var(--text); line-height:1.45; font-size:16px; word-break: break-word; }
+.ai-foot { margin-top:8px; color:var(--muted); font-size:13px; }
+
+/* ----- Achievements row (colored rounded squares) ----- */
+.ach-grid { display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; }
+.ach-bubble {
+  width:54px; height:54px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center; font-size:20px;
+  box-shadow: 0 6px 18px rgba(11,20,40,0.04);
+}
+.ach-bubble.unlocked { background: linear-gradient(180deg, rgba(246,255,250,1), rgba(230,249,240,1)); color:#0f6b3d; }
+.ach-bubble.locked { background:#f6f7fb; color:var(--muted); opacity:0.8; }
+
+/* ----- CENTER: big avatar (centered vertically in column) ----- */
+.avatar-panel { display:flex; flex-direction:column; align-items:center; gap:14px; padding-top:6px; }
+
+/* Make the avatar container flexible rather than fixed tall height */
+.avatar-figure {
+  width: 100%;
+  max-width: 420px;
+  max-height: 60vh;             /* keeps huge avatars from overflowing the page */
+  display:flex;
+  align-items:center;
+  justify-content:center;
   margin: 0 auto;
 }
 
-.dashboard-card {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  /* Touch-friendly interactions */
-  -webkit-tap-highlight-color: transparent;
-  touch-action: manipulation;
-}
-
-.dashboard-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
-  border-color: rgba(100, 181, 246, 0.3);
-}
-
-.dashboard-card:active {
-  transform: translateY(-4px);
-  transition: transform 0.1s ease;
-}
-
-.card-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.card-header h3 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: #ffffff;
-  flex: 1;
-}
-
-.card-icon {
-  font-size: 1.5rem;
-}
-
-.card-description {
-  color: #b0b0b0;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
-}
-
-.refresh-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+/* keep avatar image responsive and clipped into a circle */
+.avatar-large {
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  max-height: 100%;
+  object-fit: cover;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.8rem;
-  -webkit-tap-highlight-color: transparent;
+  display:block;
+  transform: translateY(0);
+  box-shadow: 0 18px 40px rgba(11,20,40,0.06);
 }
 
-.refresh-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: rotate(180deg);
-  border-color: rgba(100, 181, 246, 0.5);
-}
+/* Hide avatar meta on desktop (keeps data but not visible) */
+.avatar-meta { display: none; }
 
-/* Journal Card */
-.journal-card {
-  background: linear-gradient(135deg, rgba(100, 181, 246, 0.1), rgba(66, 165, 245, 0.1));
-  border: 1px solid rgba(100, 181, 246, 0.2);
-}
+/* Loading strip (kept small) */
+.loading-strip { margin-top:8px; color:var(--muted); font-size:13px; }
 
-.journal-card:hover {
-  background: linear-gradient(135deg, rgba(100, 181, 246, 0.2), rgba(66, 165, 245, 0.2));
-}
-
-/* Mood Card */
-.mood-card {
-  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), rgba(139, 195, 74, 0.1));
-  border: 1px solid rgba(76, 175, 80, 0.2);
-}
-
-.mood-content {
-  text-align: center;
-}
-
+/* ----- RIGHT: mood, wellness, characters ----- */
+/* Mood card: large rounded green square with icon on left + copy on right */
+.mood-body { display:flex; gap:16px; align-items:center; margin-top:10px; }
 .mood-emoji {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  width:72px; height:72px; border-radius:16px; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(180deg, #3fda92 0%, #1fb36a 100%); color:#fff; font-size:30px;
+  box-shadow: 0 6px 30px rgba(57,193,106,0.12), inset 0 -6px 12px rgba(0,0,0,0.03);
+}
+.mood-message { margin:0; color:var(--text); font-weight:600; font-size:15.5px; line-height:1.35; word-break: break-word; }
+.mood-enc { margin-top:8px; color:var(--muted); font-size:14px; }
+
+/* Wellness card: score left + mini trend chart / bars on right */
+.wellness-body { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
+.wellness-score { display:flex; align-items:center; gap:12px; font-size:20px; font-weight:700; }
+.well-icon { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background: linear-gradient(180deg,#fff2f0,#fff8f6); color:#ef6b3a; font-size:18px; }
+.well-num { font-size:20px; color:#111827; margin-left:4px; }
+.well-stats { display:flex; flex-direction:column; gap:8px; }
+.stat-row { display:flex; align-items:center; gap:10px; }
+.stat-label { color:var(--muted); font-size:14px; }
+.trend { flex:1; height:8px; background:#eef2ff; border-radius:10px; overflow:hidden; position:relative; margin-left:6px; margin-right:6px; }
+.trend-fill { height:100%; background: linear-gradient(90deg,#6ee7b7,#60a5fa); border-radius:10px; transition: width 300ms ease; }
+
+/* Characters list: small circular avatars with label */
+.chars-list { display:flex; flex-direction:column; gap:12px; margin-top:10px; }
+.char-item { display:flex; gap:12px; align-items:center; }
+.char-avatar-small {
+  width:54px; height:54px; border-radius:12px; display:flex; align-items:center; justify-content:center;
+  background:#fff6fb; box-shadow: 0 6px 18px rgba(11,20,40,0.04); font-size:20px;
+}
+.c-name { font-weight:600; display:block; color:var(--text); }
+.c-rel { font-size:13px; color:var(--muted); }
+
+/* small note in cards */
+.ai-foot, .pref-note { color:var(--muted); font-size:13px; margin-top:6px; }
+
+/* ---- Mobile bottom nav (rounded bar) ---- */
+.soul-mobile-nav {
+  display:none;
 }
 
-.mood-message {
-  font-size: 1.1rem;
-  color: #e0e0e0;
-  margin-bottom: 0.5rem;
-}
-
-.mood-encouragement {
-  color: #4caf50;
-  font-weight: 500;
-}
-
-/* AI Suggestions Card */
-.suggestions-card {
-  background: linear-gradient(135deg, rgba(156, 39, 176, 0.1), rgba(142, 36, 170, 0.1));
-  border: 1px solid rgba(156, 39, 176, 0.2);
-}
-
-.suggestions-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.suggestion-icon {
-  font-size: 1.2rem;
-}
-
-.suggestion-text {
-  flex: 1;
-  color: #e0e0e0;
-}
-
-/* Wellness Card */
-.wellness-card {
-  background: linear-gradient(135deg, rgba(255, 152, 0, 0.1), rgba(255, 193, 7, 0.1));
-  border: 1px solid rgba(255, 152, 0, 0.2);
-}
-
-.wellness-content {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.wellness-score {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  justify-content: center;
-}
-
-.score-icon {
-  font-size: 2rem;
-}
-
-.score-number {
-  font-size: 3rem;
-  font-weight: bold;
-  color: #ff9800;
-}
-
-.wellness-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.stat-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.stat-label {
-  color: #b0b0b0;
-  min-width: 80px;
-  flex-shrink: 0;
-}
-
-.trend-container {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  flex: 1;
-  min-width: 120px;
-}
-
-.trend-bar {
-  flex: 1;
-  height: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-  min-width: 80px;
-}
-
-.trend-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #64b5f6, #42a5f5);
-  border-radius: 4px;
-  transition: width 0.3s ease;
-}
-
-.stat-value {
-  color: #64b5f6;
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-/* Achievements Card */
-.achievements-card {
-  background: linear-gradient(135deg, rgba(233, 30, 99, 0.1), rgba(236, 64, 122, 0.1));
-  border: 1px solid rgba(233, 30, 99, 0.2);
-}
-
-.achievements-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.achievement-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.3s ease;
-}
-
-.achievement-item.unlocked {
-  background: rgba(76, 175, 80, 0.2);
-  border-color: rgba(76, 175, 80, 0.3);
-}
-
-.achievement-item.locked {
-  opacity: 0.4;
-  filter: grayscale(100%);
-}
-
-.achievement-icon {
-  font-size: 1.5rem;
-}
-
-/* Characters Card */
-.characters-card {
-  background: linear-gradient(135deg, rgba(63, 81, 181, 0.1), rgba(92, 107, 192, 0.1));
-  border: 1px solid rgba(63, 81, 181, 0.2);
-}
-
-.characters-grid, .characters-placeholder {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.character-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.character-avatar-small {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(45deg, #64b5f6, #42a5f5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.2rem;
-  color: white;
-  flex-shrink: 0;
-}
-
-.character-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  flex: 1;
-  min-width: 0; /* Allow text to truncate */
-}
-
-.character-name {
-  font-weight: 600;
-  color: #e0e0e0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.character-relation {
-  color: #b0b0b0;
-  font-size: 0.9rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Placeholder text styles */
-.api-placeholder, .edit-placeholder, .preferences-note {
-  text-align: center;
-  padding: 1rem;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  border: 1px dashed rgba(255, 255, 255, 0.2);
-  margin-top: 1rem;
-}
-
-.api-placeholder small, .edit-placeholder small, .preferences-note small {
-  color: #888;
-  font-style: italic;
-}
-
-/* Responsive Design */
+/* ---- RESPONSIVE LAYOUTS ---- */
 @media (max-width: 1200px) {
-  .dashboard-grid {
-    grid-template-columns: repeat(2, 1fr);
-    max-width: 1000px;
+  .soul-dashboard-wrap {
+    /* collapse to two columns: left (stacked cards) + center (avatar) */
+    grid-template-columns: 1fr minmax(360px, 520px);
+    gap: 20px;
   }
+
+  /* ordering: left column first on narrow desktops */
+  .left-col { order: 1; }
+  .center-col { order: 2; }
+  .right-col { order: 3; }
+
+  /* avatar sizing tuned for mid-width screens */
+  .avatar-figure { max-width: 380px; max-height: 55vh; }
+  .avatar-large { max-width: 320px; }
 }
 
-@media (max-width: 968px) {
-  .dashboard-content {
-    padding: 1.5rem 1rem;
-    padding-top: 100px;
+@media (max-width: 820px) {
+  .soul-dashboard-wrap {
+    grid-template-columns: 1fr; /* stack everything */
+    padding: 14px;
+    gap: 18px;
   }
-  
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-    max-width: 600px;
-  }
-  
-  .avatar-image-large {
-    width: 150px;
-    height: 150px;
-  }
-  
-  .username-display {
-    font-size: 2rem;
-  }
-  
-  .avatar-name-display {
-    font-size: 1.2rem;
-  }
-  
-  .avatar-description-display {
-    font-size: 1rem;
-    max-width: 300px;
-  }
-  
-  .avatar-emoji-large {
-    font-size: 3rem;
-  }
-  
-  .avatar-image {
-    width: 130px;
-    height: 130px;
-  }
-}
 
-@media (max-width: 768px) {
-  .dashboard-content {
-    padding: 1rem;
-    padding-top: 90px;
-  }
-  
-  .dashboard-card {
-    padding: 1.5rem;
-  }
-  
-  .card-header {
-    margin-bottom: 1rem;
-  }
-  
-  .card-header h3 {
-    font-size: 1.3rem;
-  }
-  
-  .mood-emoji {
-    font-size: 2.5rem;
-  }
-  
-  .wellness-score .score-number {
-    font-size: 2.5rem;
-  }
-  
-  .achievements-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.8rem;
-  }
-  
-  .achievement-item {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .achievement-icon {
-    font-size: 1.2rem;
-  }
-  
-  .suggestion-item {
-    padding: 0.8rem;
-  }
-  
-  .character-item {
-    padding: 0.8rem;
-  }
-}
+  /* stack order for mobile */
+  .center-col { order: 1; }
+  .left-col { order: 2; }
+  .right-col { order: 3; }
 
-@media (max-width: 640px) {
-  .dashboard-content {
-    padding: 0.8rem;
-    padding-top: 85px;
-  }
-  
-  .character-section {
-    margin-bottom: 2rem;
-  }
-  
-  .avatar-image-large {
-    width: 120px;
-    height: 120px;
-  }
-  
-  .username-display {
-    font-size: 1.8rem;
-  }
-  
-  .avatar-name-display {
-    font-size: 1.1rem;
-  }
-  
-  .avatar-description-display {
-    font-size: 0.95rem;
-    max-width: 250px;
-  }
-  
-  .avatar-emoji-large {
-    font-size: 2.5rem;
-    padding: 0.8rem;
-  }
-  
-  .avatar-image {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .dashboard-grid {
-    gap: 1.2rem;
-  }
-  
-  .dashboard-card {
-    padding: 1.2rem;
-  }
-  
-  .card-header h3 {
-    font-size: 1.2rem;
-  }
-  
-  .mood-content {
-    text-align: center;
-  }
-  
-  .mood-message {
-    font-size: 1rem;
-  }
-  
-  .wellness-stats {
-    gap: 0.8rem;
-  }
-  
-  .stat-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .trend-container {
-    width: 100%;
-    gap: 0.6rem;
-  }
-  
-  .trend-bar {
-    width: 100%;
-    height: 6px;
-  }
-  
-  .achievements-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.6rem;
-  }
-  
-  .achievement-item {
-    width: 45px;
-    height: 45px;
-  }
-  
-  .achievement-icon {
-    font-size: 1rem;
-  }
-}
+  .avatar-figure { width: 220px; height: auto; max-height: 45vh; margin: 6px auto; }
+  .avatar-large { max-width: 220px; }
 
-@media (max-width: 480px) {
-  .dashboard-content {
-    padding: 0.5rem;
-    padding-top: 80px;
-  }
-  
-  .avatar-image-large {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .username-display {
-    font-size: 1.6rem;
-  }
-  
-  .avatar-name-display {
-    font-size: 1rem;
-  }
-  
-  .avatar-description-display {
-    font-size: 0.9rem;
-    max-width: 220px;
-  }
-  
-  .avatar-emoji-large {
-    font-size: 2rem;
-    padding: 0.6rem;
-  }
-  
-  .avatar-image {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .dashboard-card {
-    padding: 1rem;
-    border-radius: 16px;
-  }
-  
-  .card-header {
-    gap: 0.8rem;
-    margin-bottom: 0.8rem;
-  }
-  
-  .card-header h3 {
-    font-size: 1.1rem;
-  }
-  
-  .card-icon {
-    font-size: 1.3rem;
-  }
-  
-  .mood-emoji {
-    font-size: 2rem;
-    margin-bottom: 0.8rem;
-  }
-  
-  .mood-message {
-    font-size: 0.95rem;
-  }
-  
-  .mood-encouragement {
-    font-size: 0.9rem;
-  }
-  
-  .wellness-score {
-    gap: 0.8rem;
-  }
-  
-  .score-icon {
-    font-size: 1.5rem;
-  }
-  
-  .score-number {
-    font-size: 2rem;
-  }
-  
-  .suggestion-item {
-    padding: 0.7rem;
-    gap: 0.8rem;
-  }
-  
-  .suggestion-text {
-    font-size: 0.9rem;
-  }
-  
-  .character-item {
-    padding: 0.7rem;
-    gap: 0.8rem;
-  }
-  
-  .character-avatar-small {
-    width: 35px;
-    height: 35px;
-    font-size: 1rem;
-  }
-  
-  .character-name {
-    font-size: 0.9rem;
-  }
-  
-  .character-relation {
-    font-size: 0.8rem;
-  }
-  
-  .achievements-grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0.5rem;
-  }
-  
-  .achievement-item {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
-  }
-  
-  .achievement-icon {
-    font-size: 0.9rem;
-  }
-  
-  .api-placeholder, .edit-placeholder, .preferences-note {
-    padding: 0.8rem;
-    margin-top: 0.8rem;
-  }
-  
-  .api-placeholder small, .edit-placeholder small, .preferences-note small {
-    font-size: 0.75rem;
-  }
-}
+  /* show meta on mobile (username & avatar desc) */
+  .avatar-meta { display:block; text-align:center; margin-top: 6px; }
+  .avatar-meta .greet { font-size:18px; margin:8px 0 0; }
+  .avatar-meta .avatar-name, .avatar-meta .avatar-desc { color:var(--muted); font-size:14px; margin:2px 0; }
 
-@media (max-width: 360px) {
-  .dashboard-content {
-    padding: 0.3rem;
-    padding-top: 75px;
-  }
-  
-  .character-section {
-    margin-bottom: 1.5rem;
-  }
-  
-  .avatar-image-large {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .username-display {
-    font-size: 1.4rem;
-  }
-  
-  .avatar-name-display {
-    font-size: 0.9rem;
-  }
-  
-  .avatar-description-display {
-    font-size: 0.8rem;
-    max-width: 180px;
-  }
-  
-  .avatar-emoji-large {
-    font-size: 1.8rem;
-    padding: 0.5rem;
-  }
-  
-  .avatar-image {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .dashboard-grid {
-    gap: 1rem;
-  }
-  
-  .dashboard-card {
-    padding: 0.8rem;
+  /* style the big journaling pill to be full width and larger text */
+  .card-journal { width: 100%; padding: 18px; border-radius: 16px; }
+  .card-journal .card-title { font-size:18px; }
+
+  /* stack smaller cards to look nice on mobile */
+  .soul-card { padding: 14px; border-radius: 12px; }
+
+  /* show bottom navigation as rounded bar */
+  .soul-mobile-nav {
+    display:flex;
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    background: var(--card-bg);
+    padding: 8px 12px;
     border-radius: 12px;
+    box-shadow: 0 18px 60px rgba(11,20,40,0.08);
+    border: 1px solid var(--soft-border);
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1200;
   }
-  
-  .card-header h3 {
-    font-size: 1rem;
+
+  .nav-btn {
+    display:flex;
+    background: transparent;
+    border: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+    padding: 6px 8px;
   }
-  
-  .mood-emoji {
-    font-size: 1.8rem;
-  }
-  
-  .score-number {
-    font-size: 1.8rem;
-  }
-  
-  .achievement-item {
-    width: 35px;
-    height: 35px;
-  }
-  
-  .achievement-icon {
-    font-size: 0.8rem;
-  }
+  .nav-btn svg { font-size: 20px; }
+  .nav-btn.active { color: var(--text); }
 }
+
+/* large screens tweak */
+@media (min-width: 1500px) {
+  .soul-dashboard-wrap { grid-template-columns: 380px 520px 380px; gap:40px; padding: 36px 48px; }
+  .avatar-figure { max-width: 420px; max-height: 70vh; }
+  .avatar-large { max-width: 380px; }
+}
+
+/* small helpers */
+.card-title { color: var(--text); font-weight:700; }
+.small-muted { color:var(--muted); font-size:13px; }
+
+/* Icon sizing helpers for react-icons SVGs */
+.card-icon svg, .ai-icon svg, .ach-bubble svg, .mood-emoji svg, .well-icon svg, .char-avatar-small svg {
+  width: 1.0em;
+  height: 1.0em;
+  display:block;
+}
+
+/* ensure images inside cards don't overflow and avatar images stay constrained */
+.soul-card img, .avatar-figure img { max-width: 100%; height: auto; display:block; }
+
+/* a small accessibility nicety — smooth transition for trend width change */
+.trend-fill { transition: width 400ms cubic-bezier(.2,.9,.3,1); }
