@@ -8,7 +8,7 @@
   --accent: #2b7cff;
   --green: #39c16a;
   --soft-border: rgba(15,23,42,0.06);
-  --glass: rgba(235,241,253,0.45);
+  --glass: rgba(235,241,253,0.20); /* slightly more transparent to let background blobs show */
   --radius-xl: 24px;
   --radius-md: 16px;
   --radius-sm: 10px;
@@ -27,71 +27,90 @@ html, body, #root {
   font-family: "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   color: var(--text);
   box-sizing: border-box;
-  /* prevent accidental horizontal scrolling caused by large fixed widths */
   overflow-x: hidden;
 }
-
-/* ensure all elements use border-box sizing */
 *, *::before, *::after { box-sizing: inherit; }
 
-/* ---- outer wrapper (no longer a "card") ----
-   The big white rounded framed look removed — page content sits directly on page bg.
-*/
+/* ---------- ROOT WRAPPER (fixed navbar offset + background blobs) ---------- */
 .soul-dashboard-root {
-  width: 100%;
+  width: 100vw;                  /* prevent horizontal scroll caused by 100vw */
   margin: 0;
-  padding: 28px 16px; /* breathing space from page edges */
+  padding: 96px 16px 28px;       /* still offsets for navbar */
   box-sizing: border-box;
-  background: transparent; /* removed white card background */
+  background: transparent;
   border-radius: 0;
   box-shadow: none;
   border: none;
+  position: relative;            /* anchors background blobs if you have them */
+  height: 50vh;                  /* let content decide height */
+  overflow: visible;             /* allow content to expand naturally */
 }
+
+
+/* background decorative blurred circles (under content) */
+.bg-circle {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.13;
+  z-index: 0;
+  pointer-events: none;
+  transform: translate3d(0,0,0);
+}
+
+/* tuned positions & colors */
+.bg-blue  { width: 420px; height: 420px; left: -10%; top: -6%; background: #4285f4; }
+.bg-red   { width: 360px; height: 360px; right: -6%; top: -8%; background: #ea4335; }
+.bg-yellow{ width: 240px; height: 240px; left: 6%; bottom: -8%; background: #f4b400; opacity: 0.08; }
+.bg-green { width: 300px; height: 300px; right: 18%; bottom: -6%; background: #34a853; }
+
+/* Keep the dashboard content above the blobs */
+.soul-dashboard-wrap { z-index: 1; position: relative; }
 
 /* Keep content centered inside the page */
 .soul-dashboard-wrap {
   max-width: var(--max-width);
-  margin: 70px auto auto auto;
+  width: 100%;
+  margin: 0 auto;
   padding: 18px 22px;
   display: grid;
-  /* fluid, responsive columns — won't overflow horizontally */
   grid-template-columns: minmax(240px, 1fr) minmax(340px, 560px) minmax(240px, 1fr);
   gap: 28px;
   align-items: start;
   box-sizing: border-box;
-  width: 100%;
+  height: auto;
 }
 
-/* column base - allow children to shrink to avoid overflow */
+/* column base */
 .soul-col { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
 
-/* ---- Card base (used by internal cards) ---- */
-.soul-card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.99));
-  border-radius: var(--radius-md);
-  padding: 18px;
-  box-shadow: var(--shadow-1);
-  border: 1px solid var(--soft-border);
-  transition: transform 160ms ease, box-shadow 160ms ease;
-  overflow: hidden; /* ensure internal images/text do not overflow card */
-}
-
-/* slight lift on hover (desktop only) */
-.soul-card:hover { transform: translateY(-4px); box-shadow: 0 28px 78px rgba(11,20,40,0.07); }
-
-/* small helpers used inside cards */
+/* small helpers */
 .card-row { display:flex; gap:14px; align-items:center; }
 .card-icon { font-size:22px; display:flex; align-items:center; justify-content:center; color:var(--muted); }
 .card-body .card-title { margin:0; font-size:20px; font-weight:600; color:var(--text); }
 .card-sub { margin:6px 0 0; color:var(--muted); font-size:14px; }
 
-/* header-like area inside cards (title + optional actions) */
+/* header inside cards */
 .card-head { display:flex; justify-content:space-between; align-items:center; gap:10px; }
 .card-head .card-title { margin:0; font-size:18px; font-weight:600; }
 
 /* refresh / action buttons (icons) */
 .btn-refresh { background:transparent; border:none; font-size:16px; cursor:pointer; color:var(--muted); padding:6px; border-radius:8px; }
 .btn-refresh:hover { color: var(--text); background: rgba(15,23,42,0.03); }
+
+/* ----- base CARDS (glassmorphic) ----- */
+.soul-card {
+  border: 1px solid rgba(139, 139, 139, 0.457);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: 0 6px 18px rgba(11,20,40,0.05), inset 0 1px 1px rgba(255,255,255,0.04);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  overflow: hidden;
+}
+.soul-card:hover { transform: translateY(-4px); box-shadow: 0 28px 78px rgba(11,20,40,0.12); }
 
 /* ----- TAKE A JOURNAL (big pill) ----- */
 .card-journal {
@@ -102,15 +121,16 @@ html, body, #root {
   cursor: pointer;
   transition: box-shadow 160ms ease, transform 160ms ease;
   user-select: none;
+  border: 1px solid rgba(139, 139, 139, 0.457);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: 0 6px 18px rgba(11,20,40,0.05), inset 0 1px 1px rgba(255,255,255,0.04);
 }
-
-.card-ai { max-height: 300px; overflow-y: auto; padding: 16px; border-radius: var(--radius-md); }
 .card-journal .card-row { gap: 18px; }
 .card-journal .card-icon { font-size:20px; color:#0f1724; }
 .card-journal .card-title { font-size:22px; font-weight:700; letter-spacing:-0.2px; color:#0f1724; }
 .card-journal:active { transform: translateY(1px); }
 
-/* ----- AI suggestions card (keeps content sparse like screenshot) ----- */
+/* ----- AI suggestions ----- */
 .card-ai .card-title { font-size:20px; font-weight:700; }
 .ai-list { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
 .ai-item { display:flex; gap:12px; align-items:flex-start; }
@@ -118,7 +138,7 @@ html, body, #root {
 .ai-text { color:var(--text); line-height:1.45; font-size:16px; word-break: break-word; }
 .ai-foot { margin-top:8px; color:var(--muted); font-size:13px; }
 
-/* ----- Achievements row (colored rounded squares) ----- */
+/* Achievements */
 .ach-grid { display:flex; gap:12px; margin-top:10px; flex-wrap:wrap; }
 .ach-bubble {
   width:54px; height:54px; border-radius:12px;
@@ -128,21 +148,18 @@ html, body, #root {
 .ach-bubble.unlocked { background: linear-gradient(180deg, rgba(246,255,250,1), rgba(230,249,240,1)); color:#0f6b3d; }
 .ach-bubble.locked { background:#f6f7fb; color:var(--muted); opacity:0.8; }
 
-/* ----- CENTER: big avatar (centered vertically in column) ----- */
+/* Center / Avatar */
 .avatar-panel { display:flex; flex-direction:column; align-items:center; gap:14px; padding-top:6px; }
-
-/* Make the avatar container flexible rather than fixed tall height */
 .avatar-figure {
   width: 100%;
   max-width: 420px;
-  max-height: 60vh;             /* keeps huge avatars from overflowing the page */
+  max-height: 60vh;
   display:flex;
+  background: none;
   align-items:center;
   justify-content:center;
-  margin: 0 auto;
+  margin: 50px auto auto auto;
 }
-
-/* keep avatar image responsive and clipped into a circle */
 .avatar-large {
   width: 100%;
   max-width: 360px;
@@ -152,17 +169,13 @@ html, body, #root {
   border-radius: 50%;
   display:block;
   transform: translateY(0);
-  box-shadow: 0 18px 40px rgba(11,20,40,0.06);
 }
-
-/* Hide avatar meta on desktop (keeps data but not visible) */
 .avatar-meta { display: none; }
 
-/* Loading strip (kept small) */
+/* Loading strip */
 .loading-strip { margin-top:8px; color:var(--muted); font-size:13px; }
 
-/* ----- RIGHT: mood, wellness, characters ----- */
-/* Mood card: large rounded green square with icon on left + copy on right */
+/* Mood / Wellness / Characters (unchanged styling intent) */
 .mood-body { display:flex; gap:16px; align-items:center; margin-top:10px; }
 .mood-emoji {
   width:72px; height:72px; border-radius:16px; display:flex; align-items:center; justify-content:center;
@@ -172,7 +185,6 @@ html, body, #root {
 .mood-message { margin:0; color:var(--text); font-weight:600; font-size:15.5px; line-height:1.35; word-break: break-word; }
 .mood-enc { margin-top:8px; color:var(--muted); font-size:14px; }
 
-/* Wellness card: score left + mini trend chart / bars on right */
 .wellness-body { margin-top:10px; display:flex; flex-direction:column; gap:10px; }
 .wellness-score { display:flex; align-items:center; gap:12px; font-size:20px; font-weight:700; }
 .well-icon { display:inline-flex; align-items:center; justify-content:center; width:36px; height:36px; border-radius:10px; background: linear-gradient(180deg,#fff2f0,#fff8f6); color:#ef6b3a; font-size:18px; }
@@ -183,7 +195,7 @@ html, body, #root {
 .trend { flex:1; height:8px; background:#eef2ff; border-radius:10px; overflow:hidden; position:relative; margin-left:6px; margin-right:6px; }
 .trend-fill { height:100%; background: linear-gradient(90deg,#6ee7b7,#60a5fa); border-radius:10px; transition: width 300ms ease; }
 
-/* Characters list: small circular avatars with label */
+/* Characters list styles */
 .chars-list { display:flex; flex-direction:column; gap:12px; margin-top:10px; }
 .char-item { display:flex; gap:12px; align-items:center; }
 .char-avatar-small {
@@ -193,40 +205,22 @@ html, body, #root {
 .c-name { font-weight:600; display:block; color:var(--text); }
 .c-rel { font-size:13px; color:var(--muted); }
 
-/* small note in cards */
 .ai-foot, .pref-note { color:var(--muted); font-size:13px; margin-top:6px; }
 
-/* ---- Mobile bottom nav (rounded bar) ---- */
-.soul-mobile-nav {
-  display:none;
-}
+/* mobile bottom nav (glassy) */
+.soul-mobile-nav { display:none; }
 
-/* ---- RESPONSIVE LAYOUTS ---- */
 @media (max-width: 1200px) {
-  .soul-dashboard-wrap {
-    /* collapse to two columns: left (stacked cards) + center (avatar) */
-    grid-template-columns: 1fr minmax(360px, 520px);
-    gap: 20px;
-  }
-
-  /* ordering: left column first on narrow desktops */
+  .soul-dashboard-wrap { grid-template-columns: 1fr minmax(360px, 520px); gap: 20px; }
   .left-col { order: 1; }
   .center-col { order: 2; }
   .right-col { order: 3; }
-
-  /* avatar sizing tuned for mid-width screens */
   .avatar-figure { max-width: 380px; max-height: 55vh; }
   .avatar-large { max-width: 320px; }
 }
 
 @media (max-width: 820px) {
-  .soul-dashboard-wrap {
-    grid-template-columns: 1fr; /* stack everything */
-    padding: 14px;
-    gap: 18px;
-  }
-
-  /* stack order for mobile */
+  .soul-dashboard-wrap { grid-template-columns: 1fr; padding: 14px; gap: 18px; }
   .center-col { order: 1; }
   .left-col { order: 2; }
   .right-col { order: 3; }
@@ -234,51 +228,50 @@ html, body, #root {
   .avatar-figure { width: 220px; height: auto; max-height: 45vh; margin: 6px auto; }
   .avatar-large { max-width: 220px; }
 
-  /* show meta on mobile (username & avatar desc) */
   .avatar-meta { display:block; text-align:center; margin-top: 6px; }
   .avatar-meta .greet { font-size:18px; margin:8px 0 0; }
   .avatar-meta .avatar-name, .avatar-meta .avatar-desc { color:var(--muted); font-size:14px; margin:2px 0; }
 
-  /* style the big journaling pill to be full width and larger text */
   .card-journal { width: 100%; padding: 18px; border-radius: 16px; }
   .card-journal .card-title { font-size:18px; }
 
-  /* stack smaller cards to look nice on mobile */
   .soul-card { padding: 14px; border-radius: 12px; }
 
-  /* show bottom navigation as rounded bar */
   .soul-mobile-nav {
     display:flex;
     position: fixed;
     left: 12px;
     right: 12px;
     bottom: 12px;
-    background: var(--card-bg);
+    border: 1px solid rgba(139, 139, 139, 0.457);
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    box-shadow: 0 6px 18px rgba(11,20,40,0.05), inset 0 1px 1px rgba(255,255,255,0.04);
+    backdrop-filter: blur(14px) saturate(160%);
+    -webkit-backdrop-filter: blur(14px) saturate(160%);
     padding: 8px 12px;
-    border-radius: 12px;
-    box-shadow: 0 18px 60px rgba(11,20,40,0.08);
-    border: 1px solid var(--soft-border);
+    border-radius: 50px;
     justify-content: space-between;
     align-items: center;
     z-index: 1200;
   }
 
-  .nav-btn {
+  .soul-mobile-nav .nav-btn {
     display:flex;
-    background: transparent;
-    border: none;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    box-shadow: 0 6px 18px rgba(11,20,40,0.05), inset 0 1px 1px rgba(255,255,255,0.04);
     flex-direction: column;
     align-items: center;
-    gap: 6px;
     font-size: 13px;
     color: var(--muted);
-    padding: 6px 8px;
+    padding: 6px 16px;
   }
-  .nav-btn svg { font-size: 20px; }
-  .nav-btn.active { color: var(--text); }
+  .nav-btn > FaHome, .nav-btn > FaUser, .nav-btn > FaRobot, .nav-btn > FaSmile { border-radius: 20px;padding: 6px 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: 0 6px 18px rgba(11,20,40,0.05), inset 0 1px 1px rgba(255,255,255,0.04); }
+  .soul-mobile-nav .nav-btn svg { font-size: 20px; }
+  .soul-mobile-nav .nav-btn.active { color: var(--text); }
 }
 
-/* large screens tweak */
 @media (min-width: 1500px) {
   .soul-dashboard-wrap { grid-template-columns: 380px 520px 380px; gap:40px; padding: 36px 48px; }
   .avatar-figure { max-width: 420px; max-height: 70vh; }
@@ -299,5 +292,5 @@ html, body, #root {
 /* ensure images inside cards don't overflow and avatar images stay constrained */
 .soul-card img, .avatar-figure img { max-width: 100%; height: auto; display:block; }
 
-/* a small accessibility nicety — smooth transition for trend width change */
+/* trend width transition */
 .trend-fill { transition: width 400ms cubic-bezier(.2,.9,.3,1); }

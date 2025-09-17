@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
@@ -229,9 +228,16 @@ export default function Dashboard() {
 
   return (
     <div className="soul-dashboard-root">
+      {/* Navbar is fixed by itself; put it here so it renders once per page */}
       <Navbar />
 
-      <main className="soul-dashboard-wrap">
+      {/* decorative background blobs (positioned under the content) */}
+      <div className="bg-circle bg-blue" aria-hidden="true"></div>
+      <div className="bg-circle bg-red" aria-hidden="true"></div>
+      <div className="bg-circle bg-yellow" aria-hidden="true"></div>
+      <div className="bg-circle bg-green" aria-hidden="true"></div>
+
+      <main className="soul-dashboard-wrap" role="main" aria-label="Dashboard">
         {/* Left column cards */}
         <section className="soul-col left-col">
           <div
@@ -297,12 +303,11 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Center avatar column */}
         <section className="soul-col center-col">
           <div className="avatar-panel">
             <div className="avatar-figure">
-              <img src={avatar} alt="User Avatar" className="avatar-image"
-              />
+              {/* classname changed to match CSS (.avatar-large) */}
+              <img src={avatar} alt="User Avatar" className="avatar-large" />
             </div>
 
             <div className="avatar-meta">
@@ -324,7 +329,6 @@ export default function Dashboard() {
           </div>
         </section>
 
-        {/* Right column cards */}
         <section className="soul-col right-col">
           <div className="soul-card card-mood">
             <div className="card-head">
@@ -380,11 +384,6 @@ export default function Dashboard() {
                   <span className="stat-label">{wellnessData.entries} entries</span>
                 </div>
               </div>
-              <div className="ai-foot">
-                <small>
-                  <FaSyncAlt /> Backend Analytics
-                </small>
-              </div>
             </div>
           </div>
 
@@ -435,23 +434,18 @@ export default function Dashboard() {
         </section>
       </main>
 
-      {/* Mobile bottom nav (purely presentational) */}
       <nav className="soul-mobile-nav" aria-hidden={false}>
-        <button className="nav-btn active">
+        <button className="nav-btn active" aria-label="Home">
           <FaHome />
-          <span>Home</span>
         </button>
-        <button className="nav-btn">
+        <button className="nav-btn" aria-label="Library">
           <FaBook />
-          <span>Journal</span>
         </button>
-        <button className="nav-btn">
+        <button className="nav-btn" aria-label="Community">
           <FaUsers />
-          <span>Characters</span>
         </button>
-        <button className="nav-btn">
+        <button className="nav-btn" aria-label="Profile">
           <FaUserCircle />
-          <span>Profile</span>
         </button>
       </nav>
     </div>

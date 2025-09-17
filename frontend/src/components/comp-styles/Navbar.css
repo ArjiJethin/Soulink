@@ -1,119 +1,148 @@
-/* -------------------- NAVBAR -------------------- */
+/* ---------- Navbar.css ---------- */
+/* Glassy, centered, responsive navbar — drop this file in comp-styles/Navbar.css */
+
 .navbar {
-  width: 100%;
-  padding: 1rem 2rem;
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
   z-index: 1000;
+  border-radius: 40px;
+  padding: 10px 18px;
 
-  /* White frosted glass look */
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(18px) saturate(160%);
-  -webkit-backdrop-filter: blur(18px) saturate(160%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(139, 139, 139, 0.457);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: 0 6px 18px rgba(11,20,40,0.05), inset 0 1px 1px rgba(255,255,255,0.04);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
 
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: box-shadow 180ms ease, transform 180ms ease, background 180ms ease;
 }
 
 .navbar-container {
-  max-width: 1400px;
+  width: 100%;
+  max-width: 1280px;
   margin: 0 auto;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
+  gap: 12px;
 }
 
-/* -------- LOGO -------- */
-.logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
+/* Logo */
+.logo { display: flex; align-items: center; gap: 12px; }
+.logo-text {
   font-weight: 700;
-  font-size: 1.6rem;
-  letter-spacing: -0.5px;
+  font-size: 1.15rem;
 }
 
-.logo-icon {
-  font-size: 1.8rem;
-  background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* -------- NAV ACTIONS -------- */
+/* Actions (right side) */
 .nav-actions {
   display: flex;
+  gap: 10px;
   align-items: center;
-  gap: 0.8rem;
+  position: relative; /* anchor for mobile menu */
 }
 
 .nav-btn {
-  width: 44px;
-  height: 44px;
+  --btn-size: 44px;
+  width: var(--btn-size);
+  height: var(--btn-size);
+  min-width: var(--btn-size);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  background: rgba(255, 255, 255, 0.3);
-  color: #333;
-
-  display: flex;
+  border: 1px solid rgba(234, 234, 234, 0.457);
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  box-shadow: 0 6px 18px rgba(11,20,40,0.05), inset 0 1px 1px rgba(255,255,255,0.04);
+  color: inherit;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-
   cursor: pointer;
-  transition: all 0.25s ease;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 140ms ease, box-shadow 140ms ease, background 140ms ease;
 }
+
+.nav-btn svg { width: 20px; height: 20px; }
 
 .nav-btn:hover {
-  background: rgba(255, 255, 255, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 10px 28px rgba(11,20,40,0.12);
 }
 
-/* Colorful hover accents */
-.notification-btn:hover {
-  color: #fbbc05;
-  box-shadow: 0 0 10px rgba(251, 188, 5, 0.4);
+.nav-btn:active { transform: translateY(-1px); }
+
+.nav-btn:focus {
+  outline: none;
+  box-shadow: 0 0 0 6px rgba(43,124,255,0.08);
 }
 
-.profile-btn:hover {
-  color: #4285f4;
-  box-shadow: 0 0 10px rgba(66, 133, 244, 0.4);
+/* Colorful hover accents (keeps your original idea but stronger glow and softer color) */
+.notification-btn:hover { box-shadow: 0 6px 24px rgba(251,188,5,0.14); }
+.profile-btn:hover { box-shadow: 0 6px 24px rgba(66,133,244,0.14); }
+.settings-btn:hover { box-shadow: 0 6px 24px rgba(52,168,83,0.14); }
+.menu-btn:hover { box-shadow: 0 6px 24px rgba(234,67,53,0.14); }
+
+/* Mobile dropdown menu (used when the menu button is toggled) */
+.mobile-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 160px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(11,20,40,0.14);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 1200;
 }
 
-.settings-btn:hover {
-  color: #34a853;
-  box-shadow: 0 0 10px rgba(52, 168, 83, 0.4);
+.mobile-menu-item {
+  padding: 10px 12px;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+.mobile-menu-item:hover { background: rgba(255,255,255,0.02); }
+
+/* RESPONSIVE tweaks */
+@media (max-width: 920px) {
+  .navbar { top: 18px; padding: 8px 14px; border-radius: 32px; }
+  .logo-text { font-size: 1.05rem; }
 }
 
-.menu-btn:hover {
-  color: #ea4335;
-  box-shadow: 0 0 10px rgba(234, 67, 53, 0.4);
+@media (min-width: 921px) {
+  .menu-btn { display: none; } /* hide menu button on larger screens */
 }
 
-/* -------- MOBILE -------- */
-@media (max-width: 768px) {
-  .navbar {
-    padding: 0.75rem 1rem;
-  }
+@media (max-width: 720px) {
+  /* On small screens hide the three action buttons and keep the single menu button visible */
+  .nav-actions { gap: 8px; }
+  .nav-btn { --btn-size: 40px; }
+  .nav-btn:not(.menu-btn) { display: none; }
+  .menu-btn { display: inline-flex; }
+}
 
-  .logo {
-    font-size: 1.3rem;
-  }
+@media (min-width: 721px) {
+  /* show all buttons on larger screens */
+  .menu-btn { display: inline-flex; }
+}
 
-  .nav-actions {
-    gap: 0.5rem;
-  }
+/* small accessibility helper for keyboard users */
+.nav-btn[aria-pressed="true"] { box-shadow: 0 8px 30px rgba(43,124,255,0.12); }
 
-  .nav-btn {
-    width: 40px;
-    height: 40px;
-    font-size: 1.1rem;
-    border-radius: 10px;
-  }
+/* ensure the navbar content never visually overflows on very small viewports */
+@media (max-width: 420px) {
+  .navbar { width: calc(100% - 20px); left: 50%; transform: translateX(-50%); }
+  .logo-text { font-size: 1rem; }
 }
