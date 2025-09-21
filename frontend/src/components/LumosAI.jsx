@@ -65,7 +65,7 @@ function LumosAI({ suggestions }) {
                                 className="lumos-toggle"
                                 onClick={() => setIsMaximized(!isMaximized)}
                             >
-                                {isMaximized ? "🗗" : "🗖"}
+                                {isMaximized ? "↙︎" : "↖"}
                             </button>
                             <button
                                 className="lumos-close"

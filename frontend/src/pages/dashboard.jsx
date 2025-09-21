@@ -25,7 +25,7 @@ import {
     FaUserCircle,
 } from "react-icons/fa";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const API_BASE_URL = "https://soul-link-1y76.onrender.com/api";
 
 export default function Dashboard() {
     // --- state (kept identical to your existing logic) ---
@@ -160,7 +160,10 @@ export default function Dashboard() {
             );
             if (response.ok) {
                 const data = await response.json();
-                console.debug("[Dashboard] /dashboard/suggestions response:", data);
+                console.debug(
+                    "[Dashboard] /dashboard/suggestions response:",
+                    data
+                );
                 setAiSuggestions(
                     data.suggestions.map((suggestion, index) => ({
                         id: index + 1,

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "./page-styles/Questionnaire.css";
 import userAvatarUrl from "../assets/imgs/bp1.png";
 
-const API_BASE_URL = "http://127.0.0.1:5000/api";
+const API_BASE_URL = "https://soul-link-1y76.onrender.com/api";
 
 // Questions (15)
 const questions = [

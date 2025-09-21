@@ -140,19 +140,22 @@ Navbar {
     flex-direction: column;
     border-radius: var(--radius-md);
     z-index: 1300;
-    transition: all 0.3s ease-in-out;
+    transform-origin: bottom right; /* animations pivot from button */
+    transition: all 0.35s cubic-bezier(0.2, 0.9, 0.3, 1);
 }
 
 /* Fullscreen (maximize mode) */
 .lumos-box.fullscreen {
-    position: fixed; /* make sure it ignores parent grid/containers */
     top: 0;
     left: 0;
+    bottom: 0;
+    right: 0;
     width: 100vw;
     min-height: 100vh;
     border-radius: 0;
     margin: 0;
-    z-index: 2000; /* above everything */
+    z-index: 2000;
+    transform-origin: center; /* expand into full screen */
 }
 
 /* ===============================
@@ -176,10 +179,12 @@ Navbar {
     font-size: 20px;
     cursor: pointer;
     color: var(--muted);
+    transition: transform 0.2s ease;
 }
 .lumos-toggle:hover,
 .lumos-close:hover {
     color: var(--text);
+    transform: scale(1.2);
 }
 
 /* ===============================
