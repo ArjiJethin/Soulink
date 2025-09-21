@@ -10,6 +10,8 @@ import avatar from "../assets/imgs/avatar/Male1-no bg.png";
 // FontAwesome Icons
 import {
     FaPen,
+    FaQuestionCircle,
+    FaExchangeAlt,
     FaSyncAlt,
     FaLightbulb,
     FaSmile,
@@ -60,6 +62,16 @@ export default function Dashboard() {
         { id: 4, icon: <FaStar />, name: "Achievement", unlocked: false },
     ]);
     const [isLoading, setIsLoading] = useState(true);
+
+    const [isJournalMode, setIsJournalMode] = useState(true);
+
+    const handleToggle = () => {
+        setIsJournalMode((prev) => !prev);
+    };
+
+    const handleCardClick = () => {
+        navigate(isJournalMode ? "/journal" : "/questionnaire");
+    };
 
     const navigate = useNavigate();
 
@@ -250,24 +262,48 @@ export default function Dashboard() {
                 {/* Left column cards */}
                 <section className="soul-col left-col">
                     <div
-                        className="soul-card card-journal"
-                        onClick={handleJournalClick}
+                        className={`soul-card card-journal toggle-card ${
+                            isJournalMode
+                                ? "journal-mode"
+                                : "questionnaire-mode"
+                        }`}
+                        onClick={handleCardClick}
                         role="button"
                         tabIndex={0}
                         onKeyPress={(e) =>
-                            e.key === "Enter" && handleJournalClick()
+                            e.key === "Enter" && handleCardClick()
                         }
                     >
                         <div className="card-row">
                             <div className="card-icon">
-                                <FaPen />
+                                {isJournalMode ? (
+                                    <FaPen />
+                                ) : (
+                                    <FaQuestionCircle />
+                                )}
                             </div>
                             <div className="card-body">
-                                <h4 className="card-title">Take a Journal</h4>
+                                <h4 className="card-title">
+                                    {isJournalMode
+                                        ? "Take a Journal"
+                                        : "Take a Questionnaire"}
+                                </h4>
                                 <p className="card-sub">
-                                    Write down your thoughts and feelings
+                                    {isJournalMode
+                                        ? "Write down your thoughts and feelings"
+                                        : "Answer questions to reflect and grow"}
                                 </p>
                             </div>
+                            <button
+                                className="toggle-arrow"
+                                onClick={(e) => {
+                                    e.stopPropagation(); // prevent navigating
+                                    handleToggle();
+                                }}
+                                aria-label="Switch between journal and questionnaire"
+                            >
+                                <FaExchangeAlt />
+                            </button>
                         </div>
                     </div>
 
