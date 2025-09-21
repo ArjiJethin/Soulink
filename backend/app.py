@@ -17,8 +17,8 @@ app = Flask(__name__)
 CORS(app)
 
 # Configuration
-DATA_FOLDER = os.getenv('DATA_FOLDER', 'data/sessions')
-MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
+DATA_FOLDER = "data/sessions"
+MISTRAL_API_KEY = "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"
 
 # Initialize Mistral client for OpenRouter
 mistral_client = None

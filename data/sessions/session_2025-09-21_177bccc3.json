@@ -66,13 +66,21 @@
       "sentiment_label": "positive",
       "mood": "happy",
       "created_at": "2025-09-21T17:25:59.605814"
+    },
+    {
+      "id": 9,
+      "content": "Dear Diary, \n i wonder how i wonder why",
+      "sentiment_score": 0.5,
+      "sentiment_label": "neutral",
+      "mood": "stressed",
+      "created_at": "2025-09-21T17:55:21.984977"
     }
   ],
   "wellness_metrics": {
     "wellness_score": 3,
-    "mood_trend": 59,
-    "total_entries": 8,
-    "weekly_average": 0.59375
+    "mood_trend": 58,
+    "total_entries": 9,
+    "weekly_average": 0.5833333333333334
   },
   "mood_history": [],
   "ai_interactions": [
@@ -332,7 +340,40 @@
         "reasoning": "The use of the word 'happy' is a clear indicator of a positive emotional state. The context is straightforward and the author expresses their emotion directly, indicating a medium level of emotional intensity. The use of 'Dear Diary' suggests a level of personal reflection, but the lack of additional emotional language or context suggests a more objective tone.",
         "analysis_method": "mistral_ai"
       }
+    },
+    {
+      "timestamp": "2025-09-21T17:55:29.594609",
+      "journal_entry_id": 9,
+      "suggestions": [
+        {
+          "text": "Try the '5-4-3-2-1' grounding technique to reduce stress: Name 5 things you see, 4 things you feel, 3 things you hear, 2 things you smell, and 1 thing you taste. This can help bring you back to the present moment and reduce stress.",
+          "icon": "🧘‍♀️"
+        },
+        {
+          "text": "Reflect on your recent happiness entries. What specifically brought you joy in those moments? Write down 3 things from those experiences that you could incorporate into your daily routine to maintain your positive mood.",
+          "icon": "💡"
+        },
+        {
+          "text": "Set a timer for 5 minutes and journal about 'I wonder how I wonder why' without judgment. This free-writing exercise can help you process your thoughts and uncover underlying emotions or questions you might be avoiding.",
+          "icon": "✍️"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "neutral",
+        "mood": "stressed",
+        "polarity": 0.0,
+        "subjectivity": 0.8,
+        "intensity": "medium",
+        "emotional_indicators": [
+          "wonder",
+          "why"
+        ],
+        "confidence": 0.8,
+        "reasoning": "The use of 'wonder' and 'why' in the journal entry suggests a state of confusion or questioning, which can often be associated with stress. The high subjectivity score indicates a personal, emotional tone in the text.",
+        "analysis_method": "mistral_ai"
+      }
     }
   ],
-  "updated_at": "2025-09-21T17:26:04.999791"
+  "updated_at": "2025-09-21T17:55:29.594609"
 }
