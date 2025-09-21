@@ -28,7 +28,7 @@ const userPreferences = {
   ],
 };
 
-const API_BASE_URL = "https://soul-link-1y76.onrender.com/api";
+const API_BASE_URL = "http://localhost:5000/api";
 
 export default function Journal() {
   const [isLoading, setIsLoading] = useState(false);

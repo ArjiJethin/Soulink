@@ -69,8 +69,15 @@ def save_session_data(session_id, data):
     """Save session data to JSON file"""
     file_path = get_session_file_path(session_id)
     data["updated_at"] = datetime.now().isoformat()
+    # Write file and log details for debugging
     with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(data, f, indent=2, ensure_ascii=False)
+
+    try:
+        print(f"[save_session_data] Saved session '{session_id}' -> {file_path} (journals={len(data.get('journals', []))})")
+    except Exception:
+        # Avoid crashing on logging
+        print("[save_session_data] Saved session (could not compute journal count)")
 
 def get_current_session_id():
     """Get or create current session ID for today"""
@@ -157,7 +164,10 @@ def analyze_sentiment_with_mistral(text):
     if not mistral_client:
         return analyze_sentiment_fallback(text)
     
-    prompt = f"""Analyze the emotional sentiment of this journal entry and provide a detailed psychological assessment.
+    # Use a non-f-string template to avoid Python formatting errors caused by
+    # literal JSON braces in the template. We'll safely replace the placeholder
+    # with the (escaped) journal text.
+    prompt_template = """Analyze the emotional sentiment of this journal entry and provide a detailed psychological assessment.
 
 JOURNAL ENTRY: "{text}"
 
@@ -183,6 +193,10 @@ OUTPUT FORMAT (must be valid JSON):
 }
 
 Be precise and psychological in your analysis. Consider context, nuance, and underlying emotions."""
+
+    # Escape double-quotes in the entry so the prompt remains valid JSON-like text
+    safe_text = text.replace('"', '\\"') if isinstance(text, str) else str(text)
+    prompt = prompt_template.replace('{text}', safe_text)
     try:
         headers = {
             "Authorization": f"Bearer {mistral_client['api_key']}",
@@ -515,13 +529,29 @@ Return only JSON."""
         response = requests.post(mistral_client['base_url'], headers=headers, json=payload, timeout=60)
         response.raise_for_status()
         chat_response = response.json()
-        suggestions_text = chat_response['choices'][0]['message']['content']
+        # Get the model's text output safely
+        suggestions_text = None
+        try:
+            suggestions_text = chat_response['choices'][0]['message']['content']
+        except Exception:
+            # Try alternate keys (defensive)
+            try:
+                suggestions_text = chat_response['choices'][0]['text']
+            except Exception:
+                suggestions_text = str(chat_response)
+
+        # Debug: log a truncated raw model response so we can inspect problems
+        try:
+            print("[generate_ai_suggestions_mistral] raw model output (truncated 2000 chars):", suggestions_text[:2000])
+        except Exception:
+            print("[generate_ai_suggestions_mistral] raw model output: <unprintable>")
 
         # Try to extract JSON array from the model's response
-        suggestions_text = suggestions_text.strip()
-        # Strategy: find the first JSON array-like content
-        match = re.search(r'\[[\s\S]*\]', suggestions_text)
+        suggestions_text = (suggestions_text or "").strip()
         parsed_response = None
+
+        # 1) Look for a JSON array anywhere in the text
+        match = re.search(r'\[[\s\S]*\]', suggestions_text)
         if match:
             json_text = match.group(0)
             # Cleanup common non-JSON artifacts
@@ -532,17 +562,34 @@ Return only JSON."""
             try:
                 parsed_response = json.loads(json_text)
             except json.JSONDecodeError:
-                # Try to fix unquoted keys/values heuristically
                 try:
                     parsed_response = json.loads(json_text.replace("'", '"'))
                 except Exception:
                     parsed_response = None
-        else:
-            # Try to parse directly
+
+        # 2) If no array found, try to parse the whole text as JSON
+        if parsed_response is None:
             try:
                 parsed_response = json.loads(suggestions_text)
             except Exception:
                 parsed_response = None
+
+        # 3) Try ast.literal_eval as a last-ditch attempt for Python-like dicts
+        if parsed_response is None:
+            try:
+                import ast
+                maybe = suggestions_text
+                # Replace smart quotes
+                maybe = maybe.replace('“', '"').replace('”', '"').replace("‘", "'").replace("’", "'")
+                parsed_response = ast.literal_eval(maybe)
+            except Exception:
+                parsed_response = None
+
+        # Debug: log parse outcome
+        try:
+            print("[generate_ai_suggestions_mistral] parsed_response type:", type(parsed_response), "value (truncated):", str(parsed_response)[:1000])
+        except Exception:
+            pass
 
         if isinstance(parsed_response, list) and len(parsed_response) >= 1:
             # Normalize and ensure 3 items
@@ -639,40 +686,43 @@ def calculate_wellness_metrics(session_data):
 def save_journal():
     try:
         data = request.get_json()
-        content = data.get('content', '').strip()
+        if not data or not isinstance(data, dict):
+            return jsonify({"error": "Invalid or missing JSON body"}), 400
+
+        content = (data.get('content') or '').strip()
         user_id = data.get('user_id', 'default_user')
         session_id = data.get('session_id') or get_current_session_id()
-        
+
         if not content:
             return jsonify({"error": "Content is required"}), 400
-        
+
         # Load session data
         session_data = load_session_data(session_id)
-        
+
         # Analyze sentiment
         sentiment_data = analyze_sentiment(content)
-        
+
         # Create journal entry
         journal_entry = {
-            "id": len(session_data['journals']) + 1,
+            "id": len(session_data.get('journals', [])) + 1,
             "content": content,
-            "sentiment_score": sentiment_data['sentiment_score'],
-            "sentiment_label": sentiment_data['sentiment_label'],
-            "mood": sentiment_data['mood'],
+            "sentiment_score": sentiment_data.get('sentiment_score'),
+            "sentiment_label": sentiment_data.get('sentiment_label'),
+            "mood": sentiment_data.get('mood'),
             "created_at": datetime.now().isoformat()
         }
-        
+
         # Add to session data
-        session_data['journals'].append(journal_entry)
+        session_data.setdefault('journals', []).append(journal_entry)
         session_data['user_id'] = user_id
-        
+
         # Generate AI suggestions using Mistral
         ai_suggestions = generate_ai_suggestions_mistral(content, sentiment_data, session_data)
-        
+
         # Calculate updated wellness metrics
         wellness_metrics = calculate_wellness_metrics(session_data)
         session_data['wellness_metrics'] = wellness_metrics
-        
+
         # Record AI interaction
         ai_interaction = {
             "timestamp": datetime.now().isoformat(),
@@ -680,11 +730,12 @@ def save_journal():
             "suggestions": ai_suggestions,
             "sentiment_data": sentiment_data
         }
-        session_data['ai_interactions'].append(ai_interaction)
-        
-        # Save session data
+        session_data.setdefault('ai_interactions', []).append(ai_interaction)
+
+        # Save session data (and log)
         save_session_data(session_id, session_data)
-        
+        print(f"[save_journal] Session '{session_id}' now has {len(session_data.get('journals', []))} journals")
+
         return jsonify({
             "success": True,
             "session_id": session_id,
@@ -694,14 +745,18 @@ def save_journal():
             "wellness_metrics": wellness_metrics,
             "message": "Journal entry saved successfully"
         })
-        
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Internal server error", "detail": str(e)}), 500
 
 @app.route('/api/questionnaire', methods=['POST'])
 def save_questionnaire():
     try:
         data = request.get_json()
+        if not data or not isinstance(data, dict):
+            return jsonify({"error": "Invalid or missing JSON body"}), 400
+
         answers = data.get('answers', [])
         user_id = data.get('user_id', 'default_user')
         session_id = data.get('session_id') or get_current_session_id()
@@ -762,7 +817,9 @@ def save_questionnaire():
         })
 
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        import traceback
+        traceback.print_exc()
+        return jsonify({"error": "Internal server error", "detail": str(e)}), 500
 
 @app.route('/api/dashboard/mood', methods=['GET'])
 def get_todays_mood():

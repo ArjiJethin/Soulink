@@ -2,12 +2,45 @@
   "session_id": "session_2025-09-21_021c6da5",
   "created_at": "2025-09-21T13:24:54.631031",
   "user_id": "default_user",
-  "journals": [],
+  "journals": [
+    {
+      "id": 1,
+      "content": "Dear Diary, \n dawdawdwadwaddddddddddddddddd",
+      "sentiment_score": 0.5,
+      "sentiment_label": "neutral",
+      "mood": "calm",
+      "created_at": "2025-09-21T16:15:55.774264"
+    },
+    {
+      "id": 2,
+      "content": "Dear Diary, \n im dying",
+      "sentiment_score": 0.0,
+      "sentiment_label": "negative",
+      "mood": "sad",
+      "created_at": "2025-09-21T16:17:32.145157"
+    },
+    {
+      "id": 3,
+      "content": "Dear Diary, \n hi",
+      "sentiment_score": 0.5,
+      "sentiment_label": "neutral",
+      "mood": "calm",
+      "created_at": "2025-09-21T16:18:43.806389"
+    },
+    {
+      "id": 4,
+      "content": "Dear Diary, \n hi im dying",
+      "sentiment_score": 0.0,
+      "sentiment_label": "negative",
+      "mood": "sad",
+      "created_at": "2025-09-21T16:20:20.080804"
+    }
+  ],
   "wellness_metrics": {
-    "wellness_score": 3,
-    "mood_trend": 40,
-    "total_entries": 2,
-    "weekly_average": 0.4085
+    "wellness_score": 2,
+    "mood_trend": 30,
+    "total_entries": 6,
+    "weekly_average": 0.30283333333333334
   },
   "mood_history": [],
   "ai_interactions": [
@@ -56,6 +89,130 @@
           ],
           "count": 15
         }
+      }
+    },
+    {
+      "timestamp": "2025-09-21T16:15:57.388998",
+      "journal_entry_id": 1,
+      "suggestions": [
+        {
+          "text": "Practice gentle stretching or a short walk to stay present",
+          "icon": "🤸‍♀️"
+        },
+        {
+          "text": "Plan one small goal you can achieve tomorrow",
+          "icon": "🎯"
+        },
+        {
+          "text": "Take a midday moment to check in with yourself",
+          "icon": "☀️"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "neutral",
+        "mood": "calm",
+        "polarity": 0.0,
+        "subjectivity": 0.0,
+        "intensity": "low",
+        "keyword_matches": {
+          "calm": 0.3
+        },
+        "analysis_method": "textblob_keywords"
+      }
+    },
+    {
+      "timestamp": "2025-09-21T16:17:39.081229",
+      "journal_entry_id": 2,
+      "suggestions": [
+        {
+          "text": "Call a crisis hotline or reach out to a trusted person immediately. You are not alone, and your life matters. Here are some resources: National Suicide Prevention Lifeline (1-800-273-8255) or Crisis Text Line (Text HOME to 741741).",
+          "icon": "💔"
+        },
+        {
+          "text": "Engage in a grounding exercise to help manage overwhelming emotions. Try the 5-4-3-2-1 technique: Name 5 things you see, 4 things you feel, 3 things you hear, 2 things you smell, and 1 thing you taste.",
+          "icon": "🌿"
+        },
+        {
+          "text": "Write down 3 small, achievable steps you can take today to improve your well-being. For example, take a short walk, drink water, or talk to a friend. Break the problem into manageable parts.",
+          "icon": "✏️"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.0,
+        "sentiment_label": "negative",
+        "mood": "sad",
+        "polarity": -1.0,
+        "subjectivity": 1.0,
+        "intensity": "high",
+        "emotional_indicators": [
+          "dying"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The use of the word 'dying' is a strong indicator of a negative emotional state, particularly sadness. The high subjectivity score suggests that this entry is deeply personal and emotional. The word 'dying' is used in a metaphorical sense, likely indicating feelings of despair or hopelessness.",
+        "analysis_method": "mistral_ai"
+      }
+    },
+    {
+      "timestamp": "2025-09-21T16:18:46.786910",
+      "journal_entry_id": 3,
+      "suggestions": [
+        {
+          "text": "Hello there! Remember, it's okay to feel sad sometimes. Try engaging in an activity you enjoy to help lift your spirits today. Perhaps read a book, take a walk, or listen to your favorite music.",
+          "icon": "smile"
+        },
+        {
+          "text": "Consider reaching out to a trusted friend or family member to share your feelings. It might help to talk about what you're going through and find comfort in their support.",
+          "icon": "phone"
+        },
+        {
+          "text": "Remember, the sadness you're experiencing is temporary. Try focusing on the positive aspects of your life and write down three things you're grateful for today.",
+          "icon": "gratitude"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.5,
+        "sentiment_label": "neutral",
+        "mood": "calm",
+        "polarity": 0.0,
+        "subjectivity": 0.0,
+        "intensity": "low",
+        "keyword_matches": {
+          "calm": 0.3
+        },
+        "analysis_method": "textblob_keywords"
+      }
+    },
+    {
+      "timestamp": "2025-09-21T16:20:24.633460",
+      "journal_entry_id": 4,
+      "suggestions": [
+        {
+          "text": "Take 5 deep breaths, inhaling for 4 seconds, holding for 4, and exhaling for 4. This can help calm your nervous system.",
+          "icon": "🌬️"
+        },
+        {
+          "text": "Write down 3 things you're grateful for today, no matter how small. This can help shift your focus from distress to gratitude.",
+          "icon": "📝"
+        },
+        {
+          "text": "Reach out to someone you trust and share what you're feeling. You don't have to go through this alone.",
+          "icon": "📱"
+        }
+      ],
+      "sentiment_data": {
+        "sentiment_score": 0.0,
+        "sentiment_label": "negative",
+        "mood": "sad",
+        "polarity": -1.0,
+        "subjectivity": 1.0,
+        "intensity": "high",
+        "emotional_indicators": [
+          "dying"
+        ],
+        "confidence": 0.9,
+        "reasoning": "The use of the phrase 'I'm dying' suggests a strong feeling of despair, which is indicative of a negative emotional state. The phrase is highly subjective and personal, indicating a high level of emotional intensity.",
+        "analysis_method": "mistral_ai"
       }
     }
   ],
@@ -159,5 +316,5 @@
       "created_at": "2025-09-21T13:39:52.566903"
     }
   ],
-  "updated_at": "2025-09-21T13:39:52.567191"
+  "updated_at": "2025-09-21T16:20:24.633460"
 }
