@@ -679,3 +679,39 @@ body,
 .ai-assistant {
     min-height: 100vh;
 }
+
+/* Toggleable Journal/Questionnaire Card */
+.toggle-card {
+    position: relative;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.toggle-card.journal-mode {
+    background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.06),
+        rgba(255, 255, 255, 0.02)
+    );
+}
+.toggle-card.questionnaire-mode {
+    background: linear-gradient(
+        180deg,
+        rgba(240, 248, 255, 0.1),
+        rgba(230, 240, 255, 0.04)
+    );
+    transform: translateX(0) scale(1.02);
+}
+
+.toggle-arrow {
+    margin-left: auto;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    color: var(--muted);
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+.toggle-arrow:hover {
+    color: var(--text);
+    transform: translateY(-4px);
+}
