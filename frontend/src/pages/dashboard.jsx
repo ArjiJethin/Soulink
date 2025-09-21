@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "./page-styles/Dashboard.css";
+import LumosAI from "../components/LumosAI";
 // Import default avatar
 import defaultAvatar from "../assets/imgs/avatar/row-1-column-1.png";
 import avatar from "../assets/imgs/avatar/Male1-no bg.png";
@@ -494,6 +495,8 @@ export default function Dashboard() {
                     <FaUserCircle />
                 </button>
             </nav>
+
+            <LumosAI className="ai-assistant" />
         </div>
     );
 }
