@@ -7,6 +7,9 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 import requests
 import uuid
+import statistics
+import re
+import random
 
 load_dotenv()
 
@@ -21,13 +24,15 @@ MISTRAL_API_KEY = os.getenv('MISTRAL_API_KEY')
 mistral_client = None
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 if MISTRAL_API_KEY:
-    # For OpenRouter, we'll use requests directly since the Mistral SDK doesn't support custom base URLs properly
+    # For OpenRouter, we'll use requests directly
     mistral_client = {"api_key": MISTRAL_API_KEY, "base_url": OPENROUTER_URL}
 
 # Ensure data folder exists
 os.makedirs(DATA_FOLDER, exist_ok=True)
 
-# Session and file management
+# -----------------------
+# Session and file helpers
+# -----------------------
 def get_session_id():
     """Generate or get current session ID"""
     today = datetime.now().strftime("%Y-%m-%d")
@@ -80,7 +85,73 @@ def get_current_session_id():
         # Create new session for today
         return get_session_id()
 
-# AI-powered sentiment analysis using Mistral
+# -----------------------
+# Sentiment / AI helpers
+# -----------------------
+def analyze_sentiment_fallback(text):
+    """Fallback sentiment analysis using TextBlob + keyword detection"""
+    blob = TextBlob(text)
+    polarity = blob.sentiment.polarity
+    subjectivity = blob.sentiment.subjectivity
+    
+    text_lower = text.lower()
+    
+    stress_keywords = ['stress', 'overwhelm', 'pressure', 'anxiety', 'panic', 'deadline', 'busy', 'rush', 'worry', 'tense']
+    happy_keywords = ['happy', 'joy', 'excited', 'great', 'amazing', 'wonderful', 'love', 'grateful', 'blessed', 'proud']
+    sad_keywords = ['sad', 'depressed', 'down', 'cry', 'hurt', 'pain', 'lonely', 'empty', 'hopeless', 'disappointed']
+    calm_keywords = ['calm', 'peaceful', 'relaxed', 'quiet', 'serene', 'content', 'balanced', 'centered', 'tranquil']
+    angry_keywords = ['angry', 'mad', 'furious', 'irritated', 'frustrated', 'annoyed', 'rage', 'upset', 'pissed']
+    tired_keywords = ['tired', 'exhausted', 'drained', 'fatigue', 'weary', 'worn out', 'sleepy', 'burned out']
+    
+    stress_count = sum(1 for word in stress_keywords if word in text_lower)
+    happy_count = sum(1 for word in happy_keywords if word in text_lower)
+    sad_count = sum(1 for word in sad_keywords if word in text_lower)
+    calm_count = sum(1 for word in calm_keywords if word in text_lower)
+    angry_count = sum(1 for word in angry_keywords if word in text_lower)
+    tired_count = sum(1 for word in tired_keywords if word in text_lower)
+    
+    keyword_scores = {
+        'stressed': stress_count + (0.5 if polarity < -0.2 else 0),
+        'happy': happy_count + (1 if polarity > 0.3 else 0),
+        'sad': sad_count + (0.8 if polarity < -0.1 else 0),
+        'calm': calm_count + (0.3 if -0.1 <= polarity <= 0.1 else 0),
+        'angry': angry_count + (0.7 if polarity < -0.3 else 0),
+        'tired': tired_count
+    }
+    
+    if max(keyword_scores.values()) > 0:
+        mood = max(keyword_scores, key=keyword_scores.get)
+    else:
+        if polarity > 0.2:
+            mood = "happy"
+        elif polarity > -0.1:
+            mood = "calm"
+        elif polarity > -0.5:
+            mood = "sad"
+        else:
+            mood = "stressed"
+    
+    max_keyword_count = max(keyword_scores.values())
+    if max_keyword_count >= 3 or subjectivity > 0.8:
+        intensity = "high"
+    elif max_keyword_count >= 1 or subjectivity > 0.5:
+        intensity = "medium"
+    else:
+        intensity = "low"
+    
+    sentiment_score = (polarity + 1) / 2
+    
+    return {
+        "sentiment_score": sentiment_score,
+        "sentiment_label": "positive" if polarity > 0.1 else "negative" if polarity < -0.1 else "neutral",
+        "mood": mood,
+        "polarity": polarity,
+        "subjectivity": subjectivity,
+        "intensity": intensity,
+        "keyword_matches": {k: v for k, v in keyword_scores.items() if v > 0},
+        "analysis_method": "textblob_keywords"
+    }
+
 def analyze_sentiment_with_mistral(text):
     """Analyze sentiment using Mistral AI for more accurate results"""
     if not mistral_client:
@@ -99,7 +170,7 @@ INSTRUCTIONS:
 6. Provide confidence level in your analysis (0.0 to 1.0)
 
 OUTPUT FORMAT (must be valid JSON):
-{{
+{
     "mood": "primary_emotional_state",
     "sentiment_score": 0.0,
     "polarity": 0.0,
@@ -109,10 +180,9 @@ OUTPUT FORMAT (must be valid JSON):
     "emotional_indicators": ["list", "of", "key", "words", "or", "phrases"],
     "confidence": 0.0,
     "reasoning": "brief explanation of analysis"
-}}
+}
 
 Be precise and psychological in your analysis. Consider context, nuance, and underlying emotions."""
-
     try:
         headers = {
             "Authorization": f"Bearer {mistral_client['api_key']}",
@@ -137,23 +207,18 @@ Be precise and psychological in your analysis. Consider context, nuance, and und
             "temperature": 0.3
         }
         
-        response = requests.post(mistral_client['base_url'], headers=headers, json=payload)
+        response = requests.post(mistral_client['base_url'], headers=headers, json=payload, timeout=30)
         response.raise_for_status()
         
         chat_response = response.json()
         analysis_text = chat_response['choices'][0]['message']['content']
         
-        # Parse JSON response
         try:
             mistral_analysis = json.loads(analysis_text)
-            
-            # Validate required fields
             required_fields = ['mood', 'sentiment_score', 'polarity', 'subjectivity', 'intensity', 'sentiment_label']
             if all(field in mistral_analysis for field in required_fields):
-                # Convert sentiment_score to 0-1 scale
                 polarity = float(mistral_analysis['polarity'])
                 sentiment_score = (polarity + 1) / 2
-                
                 return {
                     "sentiment_score": sentiment_score,
                     "sentiment_label": mistral_analysis['sentiment_label'],
@@ -169,317 +234,123 @@ Be precise and psychological in your analysis. Consider context, nuance, and und
             else:
                 print(f"Missing required fields in Mistral response: {mistral_analysis}")
                 return analyze_sentiment_fallback(text)
-                
         except json.JSONDecodeError as e:
             print(f"JSON parsing error from Mistral sentiment analysis: {e}")
             print(f"Raw response: {analysis_text}")
             return analyze_sentiment_fallback(text)
-            
     except Exception as e:
         print(f"Error calling Mistral for sentiment analysis: {e}")
         return analyze_sentiment_fallback(text)
 
-# Enhanced fallback sentiment analysis function
-def analyze_sentiment_fallback(text):
-    """Fallback sentiment analysis using TextBlob + keyword detection"""
-    blob = TextBlob(text)
-    polarity = blob.sentiment.polarity
-    subjectivity = blob.sentiment.subjectivity
-    
-    # Detect specific emotional keywords for more accurate classification
-    text_lower = text.lower()
-    
-    # Emotional keyword patterns
-    stress_keywords = ['stress', 'overwhelm', 'pressure', 'anxiety', 'panic', 'deadline', 'busy', 'rush', 'worry', 'tense']
-    happy_keywords = ['happy', 'joy', 'excited', 'great', 'amazing', 'wonderful', 'love', 'grateful', 'blessed', 'proud']
-    sad_keywords = ['sad', 'depressed', 'down', 'cry', 'hurt', 'pain', 'lonely', 'empty', 'hopeless', 'disappointed']
-    calm_keywords = ['calm', 'peaceful', 'relaxed', 'quiet', 'serene', 'content', 'balanced', 'centered', 'tranquil']
-    angry_keywords = ['angry', 'mad', 'furious', 'irritated', 'frustrated', 'annoyed', 'rage', 'upset', 'pissed']
-    tired_keywords = ['tired', 'exhausted', 'drained', 'fatigue', 'weary', 'worn out', 'sleepy', 'burned out']
-    
-    # Count keyword matches
-    stress_count = sum(1 for word in stress_keywords if word in text_lower)
-    happy_count = sum(1 for word in happy_keywords if word in text_lower)
-    sad_count = sum(1 for word in sad_keywords if word in text_lower)
-    calm_count = sum(1 for word in calm_keywords if word in text_lower)
-    angry_count = sum(1 for word in angry_keywords if word in text_lower)
-    tired_count = sum(1 for word in tired_keywords if word in text_lower)
-    
-    # Determine mood based on keywords and polarity
-    keyword_scores = {
-        'stressed': stress_count + (0.5 if polarity < -0.2 else 0),
-        'happy': happy_count + (1 if polarity > 0.3 else 0),
-        'sad': sad_count + (0.8 if polarity < -0.1 else 0),
-        'calm': calm_count + (0.3 if -0.1 <= polarity <= 0.1 else 0),
-        'angry': angry_count + (0.7 if polarity < -0.3 else 0),
-        'tired': tired_count
-    }
-    
-    # Get the mood with highest score
-    if max(keyword_scores.values()) > 0:
-        mood = max(keyword_scores, key=keyword_scores.get)
-    else:
-        # Fallback to polarity-based mood if no keywords match
-        if polarity > 0.2:
-            mood = "happy"
-        elif polarity > -0.1:
-            mood = "calm"
-        elif polarity > -0.5:
-            mood = "sad"
-        else:
-            mood = "stressed"
-    
-    # Determine intensity based on subjectivity and keyword count
-    max_keyword_count = max(keyword_scores.values())
-    if max_keyword_count >= 3 or subjectivity > 0.8:
-        intensity = "high"
-    elif max_keyword_count >= 1 or subjectivity > 0.5:
-        intensity = "medium"  
-    else:
-        intensity = "low"
-    
-    # Convert to 0-1 scale for sentiment score
-    sentiment_score = (polarity + 1) / 2
-    
-    return {
-        "sentiment_score": sentiment_score,
-        "sentiment_label": "positive" if polarity > 0.1 else "negative" if polarity < -0.1 else "neutral",
-        "mood": mood,
-        "polarity": polarity,
-        "subjectivity": subjectivity,
-        "intensity": intensity,
-        "keyword_matches": {k: v for k, v in keyword_scores.items() if v > 0},
-        "analysis_method": "textblob_keywords"
-    }
-
-# Main sentiment analysis function with Mistral integration
 def analyze_sentiment(text):
     """Main sentiment analysis function - uses Mistral AI if available, falls back to TextBlob"""
     return analyze_sentiment_with_mistral(text)
 
-# Generate AI suggestions using Mistral
-def generate_ai_suggestions_mistral(content, sentiment_data, session_data):
-    """Generate AI suggestions using Mistral API"""
-    if not mistral_client:
-        # Fallback to rule-based suggestions
-        return generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
-    
-    # Prepare context from session data
-    recent_journals = session_data.get('journals', [])[-5:]  # Last 5 entries for more context
-    mood_history = [entry.get('mood', 'calm') for entry in recent_journals]
-    recent_entries = [entry.get('content', '')[:100] + '...' for entry in recent_journals[-2:]]
-    
-    # Calculate mood trend
-    if len(mood_history) >= 2:
-        mood_counts = {'happy': 0, 'calm': 0, 'sad': 0, 'stressed': 0}
-        for mood in mood_history:
-            mood_counts[mood] = mood_counts.get(mood, 0) + 1
-        dominant_mood = max(mood_counts, key=mood_counts.get)
-        mood_trend = f"Recent mood pattern: {dominant_mood} (appears {mood_counts[dominant_mood]} times in last {len(mood_history)} entries)"
-    else:
-        mood_trend = "Not enough history for trend analysis"
-    
-    # Enhanced deep contextual analysis prompt
-    prompt = f"""You are Dr. Elena Rodriguez, a licensed clinical psychologist and wellness coach with 15+ years of experience in cognitive behavioral therapy, trauma-informed care, and positive psychology. You specialize in analyzing personal narratives to provide deeply personalized, evidence-based interventions.
+# -----------------------
+# Questionnaire analyzer
+# -----------------------
+def analyze_questionnaire(answers):
+    """
+    Convert Likert answers to a sentiment-like score and related metrics.
+    `answers` expected to be a list (ordered) of responses like:
+      ["Agree", "Neutral", "Disagree", ...]
+    Returns a dict with sentiment_score (0-1), sentiment_label, mood, intensity, and raw stats.
+    """
+    if not answers or not isinstance(answers, (list, tuple)):
+        return {
+            "sentiment_score": 0.5,
+            "sentiment_label": "neutral",
+            "mood": "neutral",
+            "intensity": "low",
+            "analysis_method": "questionnaire_likert_simple",
+            "details": {}
+        }
 
-DEEP CONTEXT ANALYSIS:
-📝 CURRENT JOURNAL ENTRY: "{content}"
+    # Map Likert to numeric 1..5
+    likert_map = {
+        "Strongly Disagree": 1,
+        "Disagree": 2,
+        "Neutral": 3,
+        "Agree": 4,
+        "Strongly Agree": 5
+    }
 
-🧠 PSYCHOLOGICAL PROFILE:
-- Primary emotion: {sentiment_data['mood']} (confidence: {sentiment_data.get('confidence', 0.8):.1f})
-- Emotional intensity: {sentiment_data.get('intensity', 'medium')}
-- Sentiment polarity: {sentiment_data['sentiment_score']:.2f} (range: 0.0-1.0)
-- Reasoning: {sentiment_data.get('reasoning', 'Basic sentiment analysis')}
+    # Indices that are negatively worded and should be reverse-scored
+    # (0-based indices based on the frontend question order)
+    negative_indices = {2, 4, 6, 9, 11, 13}
 
-📊 BEHAVIORAL PATTERNS:
-- Mood progression: {mood_trend}
-- Historical context: {recent_entries if recent_entries else 'First-time user - establish baseline'}
-- Total reflective sessions: {len(session_data.get('journals', []))}
-- Emotional keywords detected: {sentiment_data.get('emotional_indicators', [])}
+    numeric_scores = []
+    for i, ans in enumerate(answers):
+        val = likert_map.get(ans, None)
+        if val is None:
+            # treat missing/unrecognized as neutral
+            val = 3
+        # Normalize to 0..1
+        norm = (val - 1) / 4.0
+        if i in negative_indices:
+            norm = 1.0 - norm  # reverse-coded
+        numeric_scores.append(norm)
 
-DEEP ANALYSIS REQUIREMENTS:
-1. **Content Analysis**: Extract specific situations, triggers, relationships, stressors, or positive events mentioned
-2. **Emotional Subtext**: Identify underlying emotions beyond surface-level expressions
-3. **Behavioral Patterns**: Notice recurring themes, coping mechanisms, or avoidance patterns
-4. **Contextual Triggers**: Identify environmental, social, or personal factors influencing their state
-5. **Strength Recognition**: Highlight resilience, positive coping, or personal growth shown
-
-INTERVENTION STRATEGY:
-Create 3 highly personalized suggestions that:
-- Address the SPECIFIC situation/concern they mentioned
-- Utilize evidence-based therapeutic techniques (CBT, DBT, mindfulness, somatic approaches)
-- Acknowledge their unique emotional experience
-- Provide concrete, actionable steps they can implement today
-- Build on their existing strengths and resources
-- Consider their apparent coping style and preferences
-
-OUTPUT FORMAT (valid JSON only):
-[
-    {{"text": "specific intervention text", "icon": "💭"}},
-    {{"text": "emotional regulation strategy text", "icon": "🧘"}},
-    {{"text": "resilience building strategy text", "icon": "🌱"}}
-]
-
-EXAMPLES OF DEPTH:
-❌ Generic: "Practice deep breathing when stressed"
-✅ Contextual: "Since you mentioned feeling overwhelmed by work deadlines, try the 5-4-3-2-1 grounding technique when you notice your thoughts spiraling about tomorrow's presentation"
-
-❌ Generic: "Exercise for better mood"  
-✅ Contextual: "Given that you feel energized after your morning walks but struggle with evening anxiety, consider a 10-minute walking meditation after dinner to channel that restless energy productively"
-
-❌ Generic: "Write in a gratitude journal"
-✅ Contextual: "You mentioned feeling proud of helping your colleague today - this shows your natural tendency toward connection. Write down 3 specific moments when helping others brought you joy this week"
-
-Now analyze this journal entry with the depth of a skilled therapist and provide highly personalized, situation-specific wellness interventions.
-
-RESPOND WITH ONLY VALID JSON ARRAY - NO OTHER TEXT:
-[
-    {{"text": "your specific intervention here", "icon": "💭"}},
-    {{"text": "your emotional regulation strategy here", "icon": "🧘"}},
-    {{"text": "your resilience building strategy here", "icon": "🌱"}}
-]"""
-    
+    # Aggregate
+    avg = sum(numeric_scores) / len(numeric_scores)
     try:
-        # Use OpenRouter API directly with requests
-        headers = {
-            "Authorization": f"Bearer {mistral_client['api_key']}",
-            "Content-Type": "application/json",
-            "HTTP-Referer": "http://localhost:3000",  # Optional: for OpenRouter
-            "X-Title": "Soul-Link"  # Optional: for OpenRouter
-        }
-        
-        payload = {
-            "model": "mistralai/mistral-7b-instruct",
-            "messages": [
-                {
-                    "role": "system",
-                    "content": "You are Dr. Elena Rodriguez, an expert clinical psychologist. Your responses MUST be valid JSON only - absolutely no explanatory text, comments, or additional content. Return exactly 3 therapeutic suggestions as a JSON array. Each object must have 'text' and 'icon' fields. Focus on specific, actionable, evidence-based interventions tailored to the user's exact situation."
-                },
-                {
-                    "role": "user",
-                    "content": prompt,
-                },
-            ],
-            "max_tokens": 600,
-            "temperature": 0.7
-        }
-        
-        response = requests.post(mistral_client['base_url'], headers=headers, json=payload)
-        response.raise_for_status()
-        
-        chat_response = response.json()
-        suggestions_text = chat_response['choices'][0]['message']['content']
-        
-        # Try to parse JSON from response
-        try:
-            # Clean the response to extract valid JSON
-            suggestions_text = suggestions_text.strip()
-            
-            # Multiple strategies to extract valid JSON
-            import re
-            
-            # Strategy 1: Direct parsing
-            try:
-                parsed_response = json.loads(suggestions_text)
-            except json.JSONDecodeError:
-                # Strategy 2: Extract JSON array with more comprehensive cleaning
-                json_match = re.search(r'\[[\s\S]*\]', suggestions_text)
-                if json_match:
-                    json_text = json_match.group(0)
-                    
-                    # Clean various non-JSON artifacts
-                    json_text = re.sub(r'//.*?$', '', json_text, flags=re.MULTILINE)  # Remove line comments
-                    json_text = re.sub(r'/\*.*?\*/', '', json_text, flags=re.DOTALL)  # Remove block comments
-                    json_text = re.sub(r'[\r\n\t]+', ' ', json_text)  # Normalize whitespace
-                    json_text = re.sub(r',(\s*[}\]])', r'\1', json_text)  # Remove trailing commas
-                    
-                    # Try to fix common JSON issues
-                    json_text = re.sub(r'"([^"]*)"(\s*:)', r'"\1"\2', json_text)  # Fix unquoted keys
-                    json_text = re.sub(r':\s*"([^"]*)"([^,}\]]*)', r': "\1"', json_text)  # Fix unquoted values
-                    
-                    parsed_response = json.loads(json_text)
-                else:
-                    # Strategy 3: Try to construct from text patterns
-                    # Look for structured text patterns that suggest suggestions
-                    # Improved pattern to avoid extracting colons and empty strings
-                    suggestions_pattern = r'"text"\s*:\s*"([^"]{10,})"'  # At least 10 characters
-                    suggestions_found = re.findall(suggestions_pattern, suggestions_text, re.IGNORECASE)
-                    
-                    if suggestions_found and len(suggestions_found) >= 1:
-                        # Create suggestions from found text
-                        parsed_response = []
-                        icons = ["💭", "🧘", "🌱"]  # Default icons
-                        for i, text in enumerate(suggestions_found[:3]):
-                            parsed_response.append({
-                                "text": text.strip(),
-                                "icon": icons[i] if i < len(icons) else "💡"
-                            })
-                    else:
-                        # If all parsing strategies fail, use fallback
-                        raise json.JSONDecodeError("No valid JSON or suggestions found", suggestions_text, 0)
-            
-            # Handle both array and object responses
-            if isinstance(parsed_response, dict) and 'suggestions' in parsed_response:
-                suggestions = parsed_response['suggestions']
-            elif isinstance(parsed_response, list):
-                suggestions = parsed_response
-            else:
-                # If it's an object but not the expected format, try to extract suggestions
-                suggestions = list(parsed_response.values())[0] if parsed_response else []
-            
-            # Validate and clean suggestions format
-            if isinstance(suggestions, list) and len(suggestions) >= 1:
-                valid_suggestions = []
-                for suggestion in suggestions[:3]:  # Take max 3
-                    if isinstance(suggestion, dict) and 'text' in suggestion:
-                        text = suggestion['text'].strip()
-                        
-                        # Validate text content - must be meaningful
-                        if len(text) >= 5 and text not in [':', '...', 'N/A', 'None']:
-                            # Ensure icon is present and valid
-                            if 'icon' not in suggestion or not suggestion['icon']:
-                                suggestion['icon'] = "💡"
-                            # Clean text of any JSON artifacts
-                            suggestion['text'] = re.sub(r'["\']$', '', text)
-                            valid_suggestions.append(suggestion)
-                
-                if len(valid_suggestions) >= 1:
-                    # Pad with fallback suggestions if needed
-                    while len(valid_suggestions) < 3:
-                        fallback_suggestions = generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
-                        for fb_suggestion in fallback_suggestions:
-                            if len(valid_suggestions) < 3:
-                                valid_suggestions.append(fb_suggestion)
-                    
-                    return valid_suggestions[:3]
-            
-            print(f"Invalid suggestions format from Mistral: {suggestions}")
-            return generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
-                
-        except json.JSONDecodeError as e:
-            print(f"JSON parsing error from Mistral response: {e}")
-            print(f"Raw response: {suggestions_text}")
-            return generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
-            
-    except Exception as e:
-        print(f"Error calling Mistral API: {e}")
-        return generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
+        stddev = statistics.pstdev(numeric_scores) if len(numeric_scores) > 1 else 0.0
+    except Exception:
+        stddev = 0.0
 
-# Fallback suggestions when AI is not available
-def generate_ai_suggestions_fallback(sentiment_data, content="", recent_journals=[]):
-    """Enhanced rule-based suggestions with more variety"""
-    mood = sentiment_data['mood']
-    polarity = sentiment_data['polarity']
-    
-    # More diverse suggestions based on mood and polarity
+    # sentiment_label thresholds
+    if avg >= 0.66:
+        label = "positive"
+        mood = "happy"
+    elif avg >= 0.45:
+        label = "neutral"
+        mood = "calm"
+    elif avg >= 0.25:
+        label = "negative"
+        mood = "sad"
+    else:
+        label = "negative"
+        mood = "stressed"
+
+    # intensity based on variability and closeness to extremes
+    if stddev > 0.28 or abs(avg - 0.5) > 0.3:
+        intensity = "high"
+    elif stddev > 0.12 or abs(avg - 0.5) > 0.15:
+        intensity = "medium"
+    else:
+        intensity = "low"
+
+    return {
+        "sentiment_score": round(avg, 3),
+        "sentiment_label": label,
+        "mood": mood,
+        "intensity": intensity,
+        "stddev": round(stddev, 3),
+        "analysis_method": "questionnaire_likert_simple",
+        "details": {
+            "numeric_scores": [round(s, 3) for s in numeric_scores],
+            "count": len(numeric_scores)
+        }
+    }
+
+# -----------------------
+# AI suggestions (Mistral + fallback)
+# -----------------------
+def generate_ai_suggestions_fallback(sentiment_data, content="", recent_journals=None):
+    """Enhanced rule-based suggestions without meditation as the second suggestion."""
+    recent_journals = recent_journals or []
+    mood = sentiment_data.get('mood', 'calm')
+    polarity = sentiment_data.get('polarity', sentiment_data.get('sentiment_score', 0.5) * 2 - 1)
+
+    # Prepare suggestions pools with helpful, actionable alternatives (no meditation as second item)
     if mood == "stressed" or polarity < -0.3:
         suggestions_pool = [
-            {"text": "Try the 4-7-8 breathing technique: inhale 4, hold 7, exhale 8", "icon": "�"},
-            {"text": "Take a 10-minute walk outside to clear your mind", "icon": "🚶‍♀️"},
-            {"text": "Listen to calming nature sounds or meditation music", "icon": "🎵"},
-            {"text": "Write down 3 things you can control right now", "icon": "✏️"},
-            {"text": "Try progressive muscle relaxation starting with your toes", "icon": "🧘"},
-            {"text": "Have a warm cup of herbal tea and sit quietly", "icon": "🍵"}
+            {"text": "Try the 4-7-8 breathing technique: inhale 4, hold 7, exhale 8", "icon": "🫁"},
+            {"text": "Write down 3 concrete next actions to regain control (small, achievable steps)", "icon": "📝"},
+            {"text": "Take a 10-minute walk outside to clear your mind and reset", "icon": "🚶‍♀️"},
+            {"text": "Write down what you can delegate or postpone to reduce pressure", "icon": "📤"},
+            {"text": "Try progressive muscle relaxation starting with your toes", "icon": "💆‍♂️"},
+            {"text": "Have a warm cup of herbal tea and pause for 5 minutes", "icon": "🍵"}
         ]
     elif mood == "sad" or polarity < 0:
         suggestions_pool = [
@@ -487,85 +358,260 @@ def generate_ai_suggestions_fallback(sentiment_data, content="", recent_journals
             {"text": "Write down 3 things you're grateful for today", "icon": "🙏"},
             {"text": "Watch a funny video or movie that makes you smile", "icon": "😊"},
             {"text": "Do one small act of kindness for yourself", "icon": "💝"},
-            {"text": "Step outside for some fresh air and sunlight", "icon": "☀️"},
+            {"text": "Step outside for fresh air and sunlight", "icon": "☀️"},
             {"text": "Listen to music that matches then lifts your mood", "icon": "🎶"}
         ]
     elif mood == "happy" or polarity > 0.2:
         suggestions_pool = [
             {"text": "Share your positive energy with someone you care about", "icon": "✨"},
-            {"text": "Write about what made you feel this way today", "icon": "📝"},
+            {"text": "Write about what made you feel this way today to reinforce it", "icon": "📝"},
             {"text": "Take a photo or create something to remember this moment", "icon": "📸"},
-            {"text": "Plan a small celebration or treat for yourself", "icon": "�"},
+            {"text": "Plan a small celebration or treat for yourself", "icon": "🎉"},
             {"text": "Use this energy to tackle a goal you've been putting off", "icon": "🎯"},
-            {"text": "Send a thank you message to someone who helped you", "icon": "�"}
+            {"text": "Send a thank you message to someone who helped you", "icon": "💌"}
         ]
-    else:  # calm
+    else:  # calm / neutral
         suggestions_pool = [
             {"text": "Set a positive intention for the rest of your day", "icon": "🌟"},
-            {"text": "Try 5 minutes of mindfulness meditation", "icon": "🧘"},
+            {"text": "Write down one achievement from today and why it mattered", "icon": "📝"},  # replaced meditation
             {"text": "Reflect on one thing you learned about yourself today", "icon": "🤔"},
             {"text": "Plan one small goal you can achieve tomorrow", "icon": "🎯"},
             {"text": "Organize a small area of your space mindfully", "icon": "🏠"},
-            {"text": "Practice gentle stretching or yoga poses", "icon": "🤸‍♀️"}
+            {"text": "Practice gentle stretching or a short walk to stay present", "icon": "🤸‍♀️"}
         ]
-    
-    # Analyze content for specific themes  
-    content_lower = content.lower() if content else ""
+
+    content_lower = (content or "").lower()
     work_stress = any(word in content_lower for word in ['work', 'job', 'boss', 'deadline', 'meeting', 'office', 'colleague'])
-    
-    # Enhanced suggestions based on content analysis
+
+    # If content suggests work stress and mood is stressed, inject more work-focused suggestions
     if work_stress and (mood == "stressed" or polarity < -0.3):
-        suggestions_pool = [
+        work_pool = [
             {"text": "Take a 5-minute break and step away from your workspace", "icon": "⏰"},
-            {"text": "Try the Pomodoro technique: 25 min work, 5 min break", "icon": "🍅"},
-            {"text": "Practice desk yoga or shoulder rolls to release tension", "icon": "🧘‍♀️"},
+            {"text": "Use the Pomodoro technique: 25 min focused work, 5 min break", "icon": "🍅"},
             {"text": "Write down your top 3 priorities to regain focus", "icon": "📝"},
             {"text": "Talk to a trusted colleague about workload concerns", "icon": "💬"},
-            {"text": "Set boundaries: no work emails after a certain time", "icon": "📵"}
+            {"text": "Set a clear boundary: no work emails after a certain hour", "icon": "📵"},
+            {"text": "Do a 2-minute desk stretch to release tension", "icon": "🧍‍♂️"}
         ]
-    
-    # Add time-aware suggestions
-    import datetime
-    current_hour = datetime.datetime.now().hour
-    
-    if 6 <= current_hour < 12:  # Morning
-        suggestions_pool.append({"text": "Start your day with intention and purpose", "icon": "🌅"})
-    elif 12 <= current_hour < 17:  # Afternoon  
-        suggestions_pool.append({"text": "Take a midday moment to check in with yourself", "icon": "☀️"})
-    elif 17 <= current_hour < 22:  # Evening
-        suggestions_pool.append({"text": "Reflect on the positive moments from today", "icon": "🌇"})
-    else:  # Night
-        suggestions_pool.append({"text": "Prepare for restful sleep with a calming routine", "icon": "🌙"})
-    
-    # Return 3 random suggestions from the pool
-    import random
-    return random.sample(suggestions_pool, 3)
+        # Combine and randomize to give variety
+        suggestions_pool = work_pool + suggestions_pool
 
-# Calculate wellness metrics from session data
-def calculate_wellness_metrics(session_data):
-    """Calculate wellness metrics from journal entries"""
+    # Add time-aware suggestion
+    current_hour = datetime.now().hour
+    if 6 <= current_hour < 12:
+        suggestions_pool.append({"text": "Start your day with intention and purpose", "icon": "🌅"})
+    elif 12 <= current_hour < 17:
+        suggestions_pool.append({"text": "Take a midday moment to check in with yourself", "icon": "☀️"})
+    elif 17 <= current_hour < 22:
+        suggestions_pool.append({"text": "Reflect on the positive moments from today", "icon": "🌇"})
+    else:
+        suggestions_pool.append({"text": "Prepare for restful sleep with a calming routine", "icon": "🌙"})
+
+    # Return 3 suggestions randomized but deterministic enough
+    try:
+        if len(suggestions_pool) <= 3:
+            return suggestions_pool
+        return random.sample(suggestions_pool, 3)
+    except Exception:
+        # Fallback simple suggestions
+        return [
+            {"text": "Take a short break and notice your breath", "icon": "🫁"},
+            {"text": "Write one small action you can take now", "icon": "📝"},
+            {"text": "Connect with someone who cares about you", "icon": "🤝"}
+        ]
+
+def generate_ai_suggestions_mistral(content, sentiment_data, session_data):
+    """Generate AI suggestions using Mistral API (OpenRouter). Falls back safely.
+
+    This function now gathers recent context from both `journals` and `questionnaires` so
+    questionnaire submissions will be considered when producing suggestions.
+    """
+    # Prepare context from session data: combine journals and questionnaires
     journals = session_data.get('journals', [])
+    questionnaires = session_data.get('questionnaires', [])
+
+    # Convert questionnaires to journal-like snippets for context
+    combined_entries = []
+    for j in journals:
+        combined_entries.append({
+            'content': j.get('content', ''),
+            'mood': j.get('mood', ''),
+            'created_at': j.get('created_at')
+        })
+    for q in questionnaires:
+        answers = q.get('answers', [])
+        # Create a short content summary for the questionnaire
+        content_summary = 'Questionnaire responses: ' + '; '.join([str(a) for a in answers])
+        q_mood = q.get('sentiment_analysis', {}).get('mood', '')
+        combined_entries.append({
+            'content': content_summary,
+            'mood': q_mood,
+            'created_at': q.get('created_at')
+        })
+
+    # Sort by created_at and take last 5 entries for context
+    def parse_date_safe(dt):
+        if not dt:
+            return datetime.fromtimestamp(0)
+        try:
+            return datetime.fromisoformat(dt.replace('Z', '+00:00'))
+        except Exception:
+            try:
+                return datetime.fromisoformat(dt)
+            except Exception:
+                return datetime.fromtimestamp(0)
+
+    combined_entries_sorted = sorted(combined_entries, key=lambda x: parse_date_safe(x.get('created_at')), reverse=True)
+    recent_journals = combined_entries_sorted[:5]
+
+    if not mistral_client:
+        return generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
     
-    if not journals:
+    mood_history = [entry.get('mood', 'calm') for entry in combined_entries]
+    recent_entries = [entry.get('content', '')[:100] + '...' for entry in recent_journals[:2]]
+    
+    # Calculate mood trend
+    if len(mood_history) >= 2:
+        mood_counts = {}
+        for mood in mood_history:
+            mood_counts[mood] = mood_counts.get(mood, 0) + 1
+        dominant_mood = max(mood_counts, key=mood_counts.get)
+        mood_trend = f"Recent mood pattern: {dominant_mood} (appears {mood_counts[dominant_mood]} times in last {len(mood_history)} entries)"
+    else:
+        mood_trend = "Not enough history for trend analysis"
+    
+    prompt = f"""You are Dr. Elena Rodriguez, a licensed clinical psychologist and wellness coach with 15+ years of experience in CBT and positive psychology.
+
+CURRENT ENTRY:
+{content}
+
+PROFILE:
+- Primary emotion: {sentiment_data.get('mood')}
+- Intensity: {sentiment_data.get('intensity')}
+- Mood trend: {mood_trend}
+- Recent snippets: {recent_entries if recent_entries else 'none'}
+
+Task: Provide exactly 3 personalized, actionable suggestions tailored to this person's entry. Output MUST be valid JSON array with 3 objects: each object must have 'text' and 'icon' keys.
+
+Return only JSON."""
+
+    try:
+        headers = {
+            "Authorization": f"Bearer {mistral_client['api_key']}",
+            "Content-Type": "application/json",
+            "HTTP-Referer": "http://localhost:3000",
+            "X-Title": "Soul-Link"
+        }
+        payload = {
+            "model": "mistralai/mistral-7b-instruct",
+            "messages": [
+                {"role": "system", "content": "You are an expert clinical psychologist. Respond with only valid JSON array of 3 objects, each with 'text' and 'icon'."},
+                {"role": "user", "content": prompt}
+            ],
+            "max_tokens": 600,
+            "temperature": 0.7
+        }
+
+        response = requests.post(mistral_client['base_url'], headers=headers, json=payload, timeout=60)
+        response.raise_for_status()
+        chat_response = response.json()
+        suggestions_text = chat_response['choices'][0]['message']['content']
+
+        # Try to extract JSON array from the model's response
+        suggestions_text = suggestions_text.strip()
+        # Strategy: find the first JSON array-like content
+        match = re.search(r'\[[\s\S]*\]', suggestions_text)
+        parsed_response = None
+        if match:
+            json_text = match.group(0)
+            # Cleanup common non-JSON artifacts
+            json_text = re.sub(r'//.*?$', '', json_text, flags=re.MULTILINE)
+            json_text = re.sub(r'/\*.*?\*/', '', json_text, flags=re.DOTALL)
+            json_text = re.sub(r'[\r\n\t]+', ' ', json_text)
+            json_text = re.sub(r',(\s*[}\]])', r'\1', json_text)
+            try:
+                parsed_response = json.loads(json_text)
+            except json.JSONDecodeError:
+                # Try to fix unquoted keys/values heuristically
+                try:
+                    parsed_response = json.loads(json_text.replace("'", '"'))
+                except Exception:
+                    parsed_response = None
+        else:
+            # Try to parse directly
+            try:
+                parsed_response = json.loads(suggestions_text)
+            except Exception:
+                parsed_response = None
+
+        if isinstance(parsed_response, list) and len(parsed_response) >= 1:
+            # Normalize and ensure 3 items
+            valid = []
+            for item in parsed_response:
+                if isinstance(item, dict) and 'text' in item:
+                    text = str(item.get('text', '')).strip()
+                    icon = item.get('icon') or "💡"
+                    if len(text) >= 5:
+                        valid.append({"text": text, "icon": icon})
+            # Pad or truncate
+            while len(valid) < 3:
+                filler = generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
+                for f in filler:
+                    if len(valid) < 3 and f not in valid:
+                        valid.append(f)
+            return valid[:3]
+        else:
+            # Fallback
+            return generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
+    except Exception as e:
+        print(f"Error calling Mistral API for suggestions: {e}")
+        return generate_ai_suggestions_fallback(sentiment_data, content, recent_journals)
+
+# -----------------------
+# Wellness metrics
+# -----------------------
+def calculate_wellness_metrics(session_data):
+    """Calculate wellness metrics from journal entries and questionnaires"""
+    journals = session_data.get('journals', [])
+    questionnaires = session_data.get('questionnaires', [])
+    
+    all_entries = []
+    for j in journals:
+        all_entries.append({
+            'created_at': j.get('created_at'),
+            'sentiment_score': j.get('sentiment_score')
+        })
+    for q in questionnaires:
+        sa = q.get('sentiment_analysis', {})
+        all_entries.append({
+            'created_at': q.get('created_at'),
+            'sentiment_score': sa.get('sentiment_score')
+        })
+    
+    if not all_entries:
         return {
             "wellness_score": 3,
             "mood_trend": 50,
             "total_entries": 0,
             "weekly_average": 0.5
         }
-    
-    # Get entries from last 7 days
+
     week_ago = datetime.now() - timedelta(days=7)
     recent_entries = []
-    
-    for journal in journals:
-        entry_date = datetime.fromisoformat(journal['created_at'].replace('Z', '+00:00'))
+
+    for entry in all_entries:
+        try:
+            entry_date = datetime.fromisoformat(entry['created_at'].replace('Z', '+00:00'))
+        except Exception:
+            try:
+                entry_date = datetime.fromisoformat(entry['created_at'])
+            except Exception:
+                continue
         if entry_date >= week_ago:
-            recent_entries.append(journal)
-    
+            recent_entries.append(entry)
+
     if recent_entries:
-        sentiment_scores = [entry['sentiment_score'] for entry in recent_entries if entry.get('sentiment_score') is not None]
-        
+        sentiment_scores = [e.get('sentiment_score') for e in recent_entries if e.get('sentiment_score') is not None]
         if sentiment_scores:
             weekly_average = sum(sentiment_scores) / len(sentiment_scores)
             wellness_score = min(5, max(1, int(weekly_average * 5) + 1))
@@ -578,14 +624,17 @@ def calculate_wellness_metrics(session_data):
         weekly_average = 0.5
         wellness_score = 3
         mood_trend = 50
-    
+
     return {
         "wellness_score": wellness_score,
         "mood_trend": mood_trend,
-        "total_entries": len(journals),
+        "total_entries": len(all_entries),
         "weekly_average": weekly_average
     }
 
+# -----------------------
+# API Endpoints
+# -----------------------
 @app.route('/api/journal', methods=['POST'])
 def save_journal():
     try:
@@ -653,11 +702,11 @@ def save_journal():
 def save_questionnaire():
     try:
         data = request.get_json()
-        answers = data.get('answers', {})
+        answers = data.get('answers', [])
         user_id = data.get('user_id', 'default_user')
         session_id = data.get('session_id') or get_current_session_id()
 
-        if not answers:
+        if not answers or not isinstance(answers, (list, tuple)) or len(answers) == 0:
             return jsonify({"error": "Answers are required"}), 400
 
         # Load session data
@@ -680,9 +729,24 @@ def save_questionnaire():
         session_data["questionnaires"].append(questionnaire_entry)
         session_data["user_id"] = user_id
 
+        # Generate AI suggestions using Mistral (now considers questionnaires too)
+        # Create a short content summary for the questionnaire to pass into the generator
+        content_summary = 'Questionnaire: ' + '; '.join([str(a) for a in answers])
+        ai_suggestions = generate_ai_suggestions_mistral(content_summary, sentiment_data, session_data)
+
         # Calculate updated wellness metrics
         wellness_metrics = calculate_wellness_metrics(session_data)
         session_data['wellness_metrics'] = wellness_metrics
+
+        # Record AI interaction (tagged as questionnaire)
+        ai_interaction = {
+            "timestamp": datetime.now().isoformat(),
+            "questionnaire_entry_id": questionnaire_entry["id"],
+            "entry_type": "questionnaire",
+            "suggestions": ai_suggestions,
+            "sentiment_data": sentiment_data
+        }
+        session_data['ai_interactions'].append(ai_interaction)
 
         # Save session data
         save_session_data(session_id, session_data)
@@ -692,13 +756,13 @@ def save_questionnaire():
             "session_id": session_id,
             "questionnaire_id": questionnaire_entry["id"],
             "sentiment_analysis": sentiment_data,
+            "ai_suggestions": ai_suggestions,
             "wellness_metrics": wellness_metrics,
             "message": "Questionnaire responses saved successfully"
         })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-
 
 @app.route('/api/dashboard/mood', methods=['GET'])
 def get_todays_mood():
@@ -714,16 +778,17 @@ def get_todays_mood():
         todays_entries = []
         
         for journal in session_data.get('journals', []):
-            entry_date = datetime.fromisoformat(journal['created_at']).date()
+            try:
+                entry_date = datetime.fromisoformat(journal['created_at']).date()
+            except Exception:
+                continue
             if entry_date == today:
                 todays_entries.append(journal)
         
         if todays_entries:
-            # Use the most recent entry today
             latest_entry = max(todays_entries, key=lambda x: x['created_at'])
-            mood = latest_entry['mood']
+            mood = latest_entry.get('mood', 'neutral')
             
-            # Generate mood message based on sentiment
             if mood == "happy":
                 message = "You're radiating positivity today!"
                 encouragement = "Keep spreading that joy!"
@@ -737,7 +802,6 @@ def get_todays_mood():
                 message = "You seem overwhelmed today"
                 encouragement = "Take it one step at a time!"
         else:
-            # Default mood if no entries today
             mood = "neutral"
             message = "How are you feeling today?"
             encouragement = "Your mood matters to us!"
@@ -766,14 +830,12 @@ def get_ai_suggestions():
         ai_interactions = session_data.get('ai_interactions', [])
         
         if ai_interactions:
-            # Use most recent AI suggestions
             latest_interaction = max(ai_interactions, key=lambda x: x['timestamp'])
-            suggestions = latest_interaction['suggestions']
+            suggestions = latest_interaction.get('suggestions', [])
         else:
-            # Generate default suggestions
             suggestions = [
                 {"text": "Start your day with journaling", "icon": "📝"},
-                {"text": "Take a moment to breathe deeply", "icon": "🧘"},
+                {"text": "Take a moment to notice one thing you accomplished", "icon": "✅"},  # replaced meditation suggestion
                 {"text": "Set a positive intention for today", "icon": "🌟"}
             ]
         
@@ -834,22 +896,16 @@ def get_journals():
 @app.route('/api/sessions', methods=['GET'])
 def get_sessions():
     try:
-        # List all available sessions
         sessions = []
         
         for filename in os.listdir(DATA_FOLDER):
             if filename.endswith('.json'):
                 session_id = filename.replace('.json', '')
                 file_path = os.path.join(DATA_FOLDER, filename)
-                
-                # Get file modification time
                 modified_time = datetime.fromtimestamp(os.path.getmtime(file_path))
-                
-                # Load basic session info
                 try:
                     with open(file_path, 'r', encoding='utf-8') as f:
                         session_data = json.load(f)
-                    
                     sessions.append({
                         "session_id": session_id,
                         "created_at": session_data.get('created_at'),
@@ -860,7 +916,6 @@ def get_sessions():
                 except:
                     continue
         
-        # Sort by update time (most recent first)
         sessions.sort(key=lambda x: x['updated_at'], reverse=True)
         
         return jsonify({
@@ -874,14 +929,11 @@ def get_sessions():
 @app.route('/api/session/<session_id>', methods=['GET'])
 def get_session_data(session_id):
     try:
-        # Load and return complete session data
         session_data = load_session_data(session_id)
-        
         return jsonify({
             "success": True,
             "session_data": session_data
         })
-        
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
