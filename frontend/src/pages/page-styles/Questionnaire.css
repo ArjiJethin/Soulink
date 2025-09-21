@@ -1,0 +1,224 @@
+/* Questionnaire.css (fixed)
+   - q-questions-list uses full width (100%)
+   - q-actions brought closer to content (reduced gap)
+   - radio inputs fixed so clicks/keyboard work reliably
+   - improved responsive behavior
+*/
+
+/* ============== RESET & THEME ============== */
+*,
+*::before,
+*::after { box-sizing: border-box; }
+
+:root{
+  --primary: #2d88ff;
+  --primary-strong: #1b6df6;
+  --text: #0f1724;
+  --muted: #6b7280;
+  --card-bg: rgba(255,255,255,0.95);
+  --border: rgba(20,20,20,0.06);
+  --radius: 14px;
+  --shadow-strong: 0 30px 80px rgba(14,24,40,0.08);
+  --shadow-soft: 0 10px 26px rgba(20,30,60,0.04);
+}
+
+/* ============== PAGE LAYOUT ============== */
+.q-page{
+  width: 100vw;
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(12px, 2.25vw, 36px);
+  background: linear-gradient(180deg,#fbfdfc 0%, #fff 100%);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  font-family: system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* CARD: full width up to a sensible max */
+.q-card{
+  width: calc(100% - 48px);   /* leaves 24px gutters each side on wide screens */
+  max-width: 1400px;          /* sensible cap */
+  margin: 0 auto;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  padding: clamp(12px, 1.6vw, 24px);
+  box-shadow: var(--shadow-strong), inset 0 1px 0 rgba(255,255,255,0.6);
+  border: 1px solid rgba(20,20,60,0.05);
+  position: relative;
+  overflow: visible;
+}
+
+/* HEADER */
+.q-card-body{ width: 100%; padding: .25rem 0; }
+.q-header{ display:flex; gap:1rem; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; margin-bottom:.6rem; }
+
+.q-title{ font-size: clamp(28px, 4vw, 36px); font-weight:800; color:var(--text); margin: 0 0 .25rem 0; }
+.q-subtitle{ margin:0; color:var(--muted); font-size: clamp(0.95rem,1.2vw,1rem); }
+
+.q-card-header{ display:flex; align-items:center; gap:.75rem; }
+.q-header-actions{ display:flex; align-items:center; gap:.75rem; }
+
+.q-back-btn{
+  background: rgba(255,255,255,0.7);
+  border: 1px solid var(--border);
+  padding: .45rem .9rem;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(12,26,60,0.04);
+}
+.q-avatar-circle{
+  width:44px; height:44px; border-radius:50%;
+  display:inline-flex; align-items:center; justify-content:center; overflow:hidden;
+  background: linear-gradient(180deg,#fff,#fbfbff);
+  box-shadow: 0 6px 18px rgba(22,32,60,0.06);
+  border: 1px solid rgba(20,20,20,0.05);
+}
+
+/* TOOLBAR */
+.q-questionnaire{ margin-top:.6rem; border-radius:12px; position:relative; }
+.q-toolbar{ display:flex; justify-content:space-between; align-items:center; margin-bottom:.6rem; padding-bottom:.6rem; border-bottom:1px solid rgba(20,20,20,0.03); flex-wrap:wrap; gap:.5rem; }
+.q-date{ color: var(--primary); font-weight:700; font-size:1rem; }
+
+/* QUESTIONS LIST - ALWAYS use full width of the card */
+.q-questions-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-top:8px;
+  padding: 6px 2px;
+  padding-bottom: 120px; /* enough bottom space so sticky actions don't cover last item */
+  width: 100%; /* <-- FULL WIDTH inside card */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* QUESTION BLOCK */
+.q-question-block{
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,255,255,0.98));
+  border: 1px solid rgba(20,20,60,0.04);
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: var(--shadow-soft);
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.q-question-block:hover{ transform: translateY(-3px); box-shadow: 0 16px 40px rgba(20,30,60,0.06); }
+.q-question-text{ margin:0 0 10px 0; color:var(--text); font-weight:700; font-size:15px; line-height:1.25; }
+
+/* OPTIONS - chips that wrap nicely */
+.q-options{ display:flex; gap:.6rem; flex-wrap:wrap; align-items:center; }
+
+/* LABEL + INPUT - accessibility friendly */
+.q-option{
+  display:inline-flex;
+  align-items:center;
+  cursor:pointer;
+  user-select:none;
+  font-weight:700;
+  font-size:13px;
+  position:relative; /* anchor for absolute input */
+  flex: 1 1 160px;   /* flexible but avoids being too tiny */
+  min-width: 0;
+}
+
+/* keep input focusable & reachable (do NOT disable pointer-events) */
+.q-option input[type="radio"]{
+  position:absolute;
+  opacity:0;
+  width:1px;
+  height:1px;
+  margin:0;
+  left:0;
+  top:0;
+}
+
+/* visible chip */
+.q-option span{
+  display:inline-flex; align-items:center; justify-content:center;
+  padding:8px 12px; border-radius:999px;
+  border:1px solid rgba(20,20,20,0.06);
+  background: rgba(255,255,255,0.92);
+  box-shadow: 0 6px 18px rgba(12,22,40,0.03);
+  min-width: 110px; text-align:center; letter-spacing:0.01em;
+  transition: all .12s ease; color:var(--text); white-space:normal; width:100%; box-sizing:border-box;
+}
+
+/* checked state */
+.q-option input[type="radio"]:checked + span{
+  background: linear-gradient(180deg, var(--primary), var(--primary-strong));
+  color:#fff; border:none; transform: translateY(-2px);
+  box-shadow: 0 18px 42px rgba(17,24,39,0.12);
+}
+
+/* keyboard focus */
+.q-option input[type="radio"]:focus + span{
+  outline: 3px solid rgba(45,136,255,0.14);
+  outline-offset: 2px;
+}
+
+/* smaller screens: stack options vertically */
+@media (max-width: 740px){
+  .q-option{ flex: 1 1 100%; }
+  .q-option span{ min-width: 0; padding:10px; font-size:14px; }
+}
+
+/* ============== ACTIONS (sticky & close) ============== */
+.q-actions{
+  display:flex;
+  gap:.6rem;
+  justify-content:flex-end;
+  align-items:center;
+  margin-top: 12px;            /* reduced gap from questions */
+  flex-wrap:wrap;
+  position: sticky;
+  bottom: 12px;                /* stay near bottom of viewport while scrolling */
+  left: 0;
+  right: 0;
+  padding: 8px 0;
+  backdrop-filter: blur(6px);
+  background: linear-gradient(180deg, rgba(255,255,255,0.66), rgba(255,255,255,0.9));
+  border-top: 1px solid rgba(20,20,20,0.02);
+  z-index: 30;
+}
+
+/* buttons */
+.btn{
+  padding:12px 18px; border-radius:12px; font-weight:800; font-size:15px; cursor:pointer;
+  border:1px solid var(--border); min-width:140px; letter-spacing:.01em; transition:transform .14s ease, box-shadow .14s ease;
+}
+.btn.primary{ background: linear-gradient(180deg, var(--primary), var(--primary-strong)); color:#fff; border:none; box-shadow: 0 14px 42px rgba(17,24,39,0.18); }
+.btn.secondary{ background: rgba(255,255,255,0.94); border:1px solid rgba(20,20,20,0.06); color:var(--text); }
+.btn[disabled]{ opacity:.62; cursor:not-allowed; transform:none; box-shadow:none; }
+
+/* save-status */
+.q-save-status{ margin-top: 1rem; padding:.85rem; border-radius:10px; text-align:center; font-weight:700; transition:all .2s ease; border:1px solid transparent; }
+.q-save-status.success{ background: linear-gradient(180deg, rgba(34,197,94,0.08), rgba(34,197,94,0.05)); border-color: rgba(34,197,94,0.14); color:#166534; }
+.q-save-status.error{ background: linear-gradient(180deg, rgba(244,67,54,0.06), rgba(244,67,54,0.04)); border-color: rgba(244,67,54,0.12); color:#7f1d1d; }
+
+/* RESPONSIVE SMALL DEVICES */
+@media (max-width: 640px){
+  .q-card{ width: calc(100% - 24px); padding:12px; border-radius:12px; }
+  .q-toolbar{ flex-direction:column; align-items:flex-start; gap:.4rem; padding-bottom:.5rem; }
+  .q-title{ font-size:26px; }
+  .q-questions-list{ padding-bottom: 220px; } /* slightly more to allow stacked actions */
+  .q-actions{ flex-direction: column-reverse; gap:.6rem; align-items:stretch; padding:12px; border-radius:10px; }
+  .btn{ width:100%; min-width: unset; padding:12px 14px; border-radius:10px; }
+}
+@media (max-width: 420px){
+  .q-title{ font-size:22px; }
+  .q-question-text{ font-size:14px; }
+  .q-option span{ padding:10px; font-size:13px; }
+  .q-questions-list{ padding-bottom: 240px; }
+}
+
+/* print */
+@media print {
+  .q-page{ background:white; padding:.5rem; }
+  .q-back-btn, .q-actions, .q-avatar-circle { display:none !important; }
+  .q-card{ border:none; box-shadow:none; }
+}
+
+/* utility */
+.color-blue { color: var(--primary); }

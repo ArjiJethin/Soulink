@@ -649,6 +649,57 @@ def save_journal():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/api/questionnaire', methods=['POST'])
+def save_questionnaire():
+    try:
+        data = request.get_json()
+        answers = data.get('answers', {})
+        user_id = data.get('user_id', 'default_user')
+        session_id = data.get('session_id') or get_current_session_id()
+
+        if not answers:
+            return jsonify({"error": "Answers are required"}), 400
+
+        # Load session data
+        session_data = load_session_data(session_id)
+
+        # Analyze answers (convert Likert scale to sentiment-ish values)
+        sentiment_data = analyze_questionnaire(answers)
+
+        # Create questionnaire entry
+        questionnaire_entry = {
+            "id": len(session_data.get('questionnaires', [])) + 1,
+            "answers": answers,
+            "sentiment_analysis": sentiment_data,
+            "created_at": datetime.now().isoformat()
+        }
+
+        # Add to session data
+        if "questionnaires" not in session_data:
+            session_data["questionnaires"] = []
+        session_data["questionnaires"].append(questionnaire_entry)
+        session_data["user_id"] = user_id
+
+        # Calculate updated wellness metrics
+        wellness_metrics = calculate_wellness_metrics(session_data)
+        session_data['wellness_metrics'] = wellness_metrics
+
+        # Save session data
+        save_session_data(session_id, session_data)
+
+        return jsonify({
+            "success": True,
+            "session_id": session_id,
+            "questionnaire_id": questionnaire_entry["id"],
+            "sentiment_analysis": sentiment_data,
+            "wellness_metrics": wellness_metrics,
+            "message": "Questionnaire responses saved successfully"
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 @app.route('/api/dashboard/mood', methods=['GET'])
 def get_todays_mood():
     try:

@@ -3,6 +3,7 @@ import Landing from "./pages/Landing";
 import Preferences from "./pages/Preferences.jsx";
 import Dashboard from "./pages/dashboard";
 import Journal from "./pages/Journal.jsx";
+import Questionnaire from "./pages/Questionnaire.jsx";
 import "./App.css";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
                 <Route path="/preferences" element={<Preferences />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/journal" element={<Journal />} />
+                <Route path="/questionnaire" element={<Questionnaire />} />
             </Routes>
         </Router>
     );
